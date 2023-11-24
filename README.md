@@ -1,5 +1,5 @@
 # IdS_Municipath
-Progetto per Ingegneria del Software (Prof. Polini - Prof. Morichetta) [ST0496] - [Descrizione progetto](https://docs.google.com/document/d/1kqarA2bRB8I8StOazcWotmkxf4Afycyl34a-n536JHo/edit)
+Progetto per Ingegneria del Software (Prof. Morichetta - Prof. Polini) [ST0496] - [Descrizione progetto](https://docs.google.com/document/d/1kqarA2bRB8I8StOazcWotmkxf4Afycyl34a-n536JHo/edit)
 
 Team: [Sikri Twinkal](https://github.com/ToWinKallSikri) [119251] - [Sincini Marvin](https://github.com/Sassas98) [118311] 
 
