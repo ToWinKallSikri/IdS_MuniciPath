@@ -3,7 +3,8 @@
 ![285245594-fb00665e-4791-4fb5-ad75-41d68df75403 (1)](https://github.com/ToWinKallSikri/IdS_Municipath/assets/118466836/f36ece69-d313-49b2-81cf-caf6498e058c)
 
 Team: [Sikri Twinkal](https://github.com/ToWinKallSikri) [119251] - [Sincini Marvin](https://github.com/Sassas98) [118311] 
-<font color="green"> Progetto per Ingegneria del Software (Prof. Morichetta - Prof. Polini) [ST0496] - [Descrizione progetto](https://docs.google.com/document/d/1kqarA2bRB8I8StOazcWotmkxf4Afycyl34a-n536JHo/edit) </font>
+
+Progetto per Ingegneria del Software (Prof. Morichetta - Prof. Polini) [ST0496] - [Descrizione progetto](https://docs.google.com/document/d/1kqarA2bRB8I8StOazcWotmkxf4Afycyl34a-n536JHo/edit)
 
 ## Descrizione
 
@@ -16,10 +17,6 @@ Benvenuti in **Municipath**, la piattaforma che trasforma i territori comunali i
 - **Categorizzazione avanzata**: Municipath offre una categorizzazione dettagliata dei punti di interesse. Organizza le tue scoperte per tipo, durata e appartenenza, consentendoti di personalizzare la tua esperienza di esplorazione.
 
 - **Contribuisci all'arricchimento della piattaforma**: Fai parte della crescita di Municipath! Grazie al nostro sistema di contributi, gli utenti possono aggiungere nuovi luoghi, recensioni e dettagli, contribuendo così a creare una mappa sempre più completa e accurata dei territori comunali.
-
-### Supporto
-
-Per eventuali domande, segnalazioni di bug o suggerimenti, apri una [issue](link_issue) sul nostro repository.
 
 ### Ringraziamenti
 
