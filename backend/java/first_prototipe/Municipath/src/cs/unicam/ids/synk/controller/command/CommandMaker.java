@@ -53,8 +53,6 @@ public class CommandMaker {
 	
 
 	private Command create(String[] input) {
-		if(input.length == 1)
-			return navigation(input);
 		if(input[1].toLowerCase().equals("post") && input.length > 4) 
 			return createPost(input);
 		if(input[1].toLowerCase().equals("city") && input.length == 7) 
@@ -90,7 +88,7 @@ public class CommandMaker {
 
 	private Command manage(String[] input, boolean b) {
 		return input.length != 1 || this.state != NavigationState.PENDINGPOST ? error() 
-				: new ManagePostCommand(log, city, pos, state, null);
+				: new ManagePostCommand(log, city, pos, state, new String[]{b ? "y" : "n"});
 	}
 
 	private Command back(String[] input) {

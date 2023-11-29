@@ -10,7 +10,7 @@ import cs.unicam.ids.synk.model.UserLog;
 
 public class UserData {
 	
-	private HashMap<User, String> users;
+	private final HashMap<User, String> users;
 	
 	private static UserData singleton;
 	
@@ -25,7 +25,7 @@ public class UserData {
 	}
 	
 	public synchronized boolean registration(String username, String password) {
-		if(users.keySet().stream().filter(u -> u.getUsername().equals(username)).count()==0)
+		if(users.keySet().stream().anyMatch(u -> u.getUsername().equals(username)))
 			return false;
 		users.put(new User(username), password);
 		return true;
@@ -41,20 +41,13 @@ public class UserData {
 		if(manager.isPlatformManager() && Ouser.isPresent()) {
 			User user = Ouser.get();
 			if(! user.isCurator()) {
-				addCurator(user, newCity);
+                user.setCityCurator(newCity.getID());
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	private void addCurator(User oldCurator, City newCity) {
-		User newUser = new User(oldCurator.getUsername(),
-				newCity.getID(), oldCurator.getPostIDs(), oldCurator.getPlatformManager());
-		String psw = this.users.get(oldCurator);
-		this.users.remove(oldCurator);
-		this.users.put(newUser, psw);
-	}
+
 	
 	private Optional<User> findUser(String username) {
 		return this.users.keySet().stream()
@@ -65,9 +58,7 @@ public class UserData {
 		Optional<ArrayList<String>> result = this.users.keySet().stream().parallel()
 			.map(User::getPostIDs).filter(l -> l.contains(postID)).findFirst();
 		if(result.isPresent()) return false;
-		Optional<User> user = this.users.keySet().stream().parallel()
-				.filter(u -> u.getUsername().equals(username)).findFirst();
-		return user.get().getPostIDs().add(postID);
-	}
+        return findUser(username).map(value -> value.getPostIDs().add(postID)).orElse(false);
+    }
 	
 }

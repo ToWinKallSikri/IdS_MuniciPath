@@ -45,11 +45,16 @@ public class CityData {
 				.parallel().filter(p -> p.getPosition().equals(position))
 				.filter(p -> p.getCityID().equals(cityID)).filter(Post::getApproved).toList();
 	}
-	
-	public synchronized Optional<Post> getPost(String postID) {
-		return this.posts.stream().parallel().filter(p -> p.getID()
-				.equals(postID)).filter(Post::getApproved).findFirst();
-	}
+
+    public synchronized Post getPost(String postID) {
+        Optional<Post> Opost = getFromAllPost(postID);
+        return Opost.isPresent() && Opost.get().getApproved() ? Opost.get() : null;
+    }
+
+    public synchronized Optional<Post> getFromAllPost(String postID) {
+        return this.posts.stream().parallel().filter(p -> p.getID()
+                .equals(postID)).findFirst();
+    }
 	
 	public synchronized boolean addCity(UserLog manager, String cityName, 
 			String CAP, Position position, String newCurator) {
@@ -84,14 +89,18 @@ public class CityData {
 		return false;
 	}
 	
-	public synchronized boolean managePending(UserLog manager, String postID, boolean approved) {
-		Optional<Post> post = getPost(postID);
-		if(manager.isPlatformManager() && post.isPresent()) {
-			if(approved) post.get().setApproved(approved);
+	public synchronized boolean managePending(UserLog curator, String postID, boolean approved) {
+		Optional<Post> post = getFromAllPost(postID);
+		if(post.isPresent() && isCuratorOf(curator, post.get())) {
+			if(approved) post.get().setApproved(true);
 			else posts.remove(post.get());
 		}
 		return false;
 	}
+
+    private boolean isCuratorOf(UserLog curator, Post post){
+        return post.getCityID().equals(curator.getCityCurator());
+    }
 	
 	public synchronized Response apply(Command cmd) {
 		return cmd.execute(this);
