@@ -34,6 +34,7 @@ public class Position {
 			return false;
 		Position other = (Position) obj;
 		return Double.doubleToLongBits(lat) == Double.doubleToLongBits(other.lat)
+				&& Double.doubleToLongBits(lon) == Double.doubleToLongBits(other.lon);
 	}
 	
 	@Override
