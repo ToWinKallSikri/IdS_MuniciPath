@@ -34,6 +34,10 @@ public class CityData {
 		return cities;
 	}
 	
+	public synchronized List<Post> getPosts(){
+		return posts;
+	}
+	
 	public synchronized List<Position> getPoints(String cityID){
 		return this.posts.stream().parallel()
 				.filter(p -> p.getCityID().equals(cityID)).filter(Post::getApproved)
@@ -59,7 +63,7 @@ public class CityData {
 	public synchronized boolean addCity(UserLog manager, String cityName, 
 			String CAP, Position position, String newCurator) {
 		if(manager.isPlatformManager() && isNewCity(cityName+CAP)) {
-			City city = new City(position, cityName+CAP, cityName, newCurator);
+			City city = new City(position, cityName+CAP, cityName, CAP, newCurator);
 			if(this.users.makeCurator(manager, city, newCurator)) {
 				return this.cities.add(city);
 			}
@@ -91,9 +95,12 @@ public class CityData {
 	
 	public synchronized boolean managePending(UserLog curator, String postID, boolean approved) {
 		Optional<Post> post = getFromAllPost(postID);
+		System.out.println(postID);
+		System.out.println(isCuratorOf(curator, post.get()));
 		if(post.isPresent() && isCuratorOf(curator, post.get())) {
 			if(approved) post.get().setApproved(true);
 			else posts.remove(post.get());
+			return true;
 		}
 		return false;
 	}

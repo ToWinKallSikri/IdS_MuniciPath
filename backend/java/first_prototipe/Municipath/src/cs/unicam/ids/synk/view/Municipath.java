@@ -14,7 +14,7 @@ public class Municipath {
 	private CityData data;
 	private LogHandler log;
 	private NavigationState state;
-	private String lastCity;
+	private String lastCity, lastPost;
 	private Position lastPosition;
 	private CommandMaker cmdMaker;
 	private ResponseMaker rspMaker;
@@ -23,14 +23,15 @@ public class Municipath {
 		this.log = new LogHandler();
 		this.data = CityData.getCityData();
 		this.state = NavigationState.HOME;
-		this.lastCity = null;
-		this.lastPosition = null;
+		this.lastCity = "null";
+		this.lastPost = "null";
+		this.lastPosition = new Position(0,0);
 		this.cmdMaker = new CommandMaker();
 		this.rspMaker = new ResponseMaker();
 	}
 	
 	public String apply(String operation) {
-		Command cmd = cmdMaker.makeCommand(log.getLoggedUser(), lastCity, lastPosition, state, operation);
+		Command cmd = cmdMaker.makeCommand(log.getLoggedUser(), lastCity, lastPost, lastPosition, state, operation);
 		return apply(cmd);
 	}
 	
@@ -38,6 +39,7 @@ public class Municipath {
 		Response response = getResponse(cmd);
 		this.lastCity = response.getLastCity();
 		this.lastPosition = response.getPosition();
+		this.lastPost = response.getLastPost();
 		this.state = response.getState();
 		return response.getMessage();
 	}

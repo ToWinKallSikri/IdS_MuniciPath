@@ -10,7 +10,7 @@ public class App {
 		Scanner scanner = new Scanner(System.in);
 		String input, output;
 		while(true) {
-			input = scanner.next();
+			input = scanner.nextLine();
 			if(help(input))
 				output = getHelp();
 			else output = app.apply(input);

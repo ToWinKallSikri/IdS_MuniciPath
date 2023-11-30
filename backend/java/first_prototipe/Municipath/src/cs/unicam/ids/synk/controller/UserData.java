@@ -16,6 +16,7 @@ public class UserData {
 	
 	private UserData() {
 		this.users = new HashMap<>();
+		users.put(new User("marvin", null, new ArrayList<String>(), true), "123");
 	}
 	
 	public static synchronized UserData getUserData() {

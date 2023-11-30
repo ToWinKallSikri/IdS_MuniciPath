@@ -1,5 +1,7 @@
 package cs.unicam.ids.synk.model;
 
+import java.util.Objects;
+
 public class Position {
 	
 	private double lat, lon;
@@ -18,12 +20,25 @@ public class Position {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
-		if(o != null && o instanceof Position) {
-			Position other = (Position) o;
-			return this.lat == other.lat && this.lon == other.lon;
-		}
-		return false;
+	public int hashCode() {
+		return Objects.hash(lat, lon);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Position other = (Position) obj;
+		return Double.doubleToLongBits(lat) == Double.doubleToLongBits(other.lat)
+	}
+	
+	@Override
+	public String toString() {
+		return this.lat + " " + this.lon;
 	}
 	
 	public SettablePosition makeSettablePosition(){

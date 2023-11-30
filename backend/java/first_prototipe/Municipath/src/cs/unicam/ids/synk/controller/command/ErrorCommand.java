@@ -8,8 +8,10 @@ import cs.unicam.ids.synk.model.UserLog;
 
 public class ErrorCommand extends Command {
 
-	public ErrorCommand(UserLog userLog, String lastCity, Position position, NavigationState state, String[] info) {
-		super(userLog, lastCity, position, state, info);
+	public ErrorCommand(UserLog userLog, String lastCity, String lastPost, Position position,
+			NavigationState state, String[] info) {
+		super(userLog, lastCity, lastPost, position, state, info);
+		this.type = CommandType.ERROR;
 	}
 
 	@Override

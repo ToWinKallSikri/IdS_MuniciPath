@@ -5,21 +5,21 @@ import java.util.ArrayList;
 public class City {
 	
 	private Position position;
-	private String ID;
-	private String name;
+	private String ID, name, CAP;
 	private ArrayList<String> postIDs;
 	private String curator;
 	
-	public City(Position position, String ID, String name, String curator, ArrayList<String> postIDs) {
+	public City(Position position, String ID, String name, String CAP, String curator, ArrayList<String> postIDs) {
 		this.position = position;
 		this.ID = ID;
 		this.name = name;
+		this.CAP = CAP;
 		this.curator = curator;
 		this.postIDs = postIDs;
 	}
 	
-	public City(Position position, String ID, String name, String curator) {
-		this(position, ID, name, curator, new ArrayList<String>());
+	public City(Position position, String ID, String name, String CAP, String curator) {
+		this(position, ID, name, CAP, curator, new ArrayList<String>());
 	}
 	
 	public City() {}
@@ -62,6 +62,14 @@ public class City {
 
 	public void setCurator(String curator) {
 		this.curator = curator;
+	}
+
+	public String getCAP() {
+		return CAP;
+	}
+
+	public void setCAP(String cAP) {
+		CAP = cAP;
 	}
 	
 	

@@ -8,9 +8,9 @@ import cs.unicam.ids.synk.model.UserLog;
 
 public class LogCommand extends Command {
 
-	public LogCommand(UserLog userLog, String lastCity, Position position, NavigationState state,
+	public LogCommand(UserLog userLog, String lastCity, String lastPost, Position position, NavigationState state,
 			String[] info, CommandType type) {
-		super(userLog, lastCity, position, state, info);
+		super(userLog, lastCity, lastPost, position, state, info);
 		this.type = type;
 	}
 

@@ -6,7 +6,7 @@ import cs.unicam.ids.synk.model.Response;
 public class ResponseMaker {
 	
 	public Response make(String info, Command cmd) {
-		return new Response(info, cmd.getLastCity(), cmd.getPosition(), cmd.getState());
+		return new Response(info, cmd.getLastCity(), cmd.getLastPost(), cmd.getPosition(), cmd.getState());
 	}
 	
 }

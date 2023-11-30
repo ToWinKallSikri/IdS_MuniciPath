@@ -11,15 +11,17 @@ public abstract class Command {
 	protected CommandType type;
 	private UserLog userLog;
 	private String lastCity;
+	private String lastPost;
 	private Position position;
 	private NavigationState state;
 	private String [] info;
 	
 	
-	public Command(UserLog userLog, String lastCity, 
+	public Command(UserLog userLog, String lastCity, String lastPost,
 			Position position, NavigationState state, String[] info) {
 		this.userLog = userLog;
 		this.lastCity = lastCity;
+		this.lastPost = lastPost;
 		this.position = position;
 		this.state = state;
 		this.info = info;
@@ -47,6 +49,10 @@ public abstract class Command {
 
 	public String[] getInfo() {
 		return info;
+	}
+	
+	public String getLastPost() {
+		return lastPost;
 	}
 
 	public abstract Response execute(CityData data);
