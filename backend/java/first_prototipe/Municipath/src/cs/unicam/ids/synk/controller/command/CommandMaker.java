@@ -22,8 +22,8 @@ public class CommandMaker {
 		this.post = lastPost;
 		this.pos = lastPosition;
 		this.state = state;
-		if(input.isEmpty())
-			return error();
+		if(input.isBlank())
+			return navigation(new String [] {input}, false);
 		return makeCommand(input.split(" "));
 	}
 	

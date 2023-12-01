@@ -64,6 +64,5 @@ public class Post {
 		this.approved = approved;
 	}
 	
-	
-	
 }
+

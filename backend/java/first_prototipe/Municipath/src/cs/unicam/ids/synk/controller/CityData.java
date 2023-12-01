@@ -1,8 +1,13 @@
 package cs.unicam.ids.synk.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 import cs.unicam.ids.synk.controller.command.Command;
 import cs.unicam.ids.synk.model.City;
@@ -10,6 +15,8 @@ import cs.unicam.ids.synk.model.Position;
 import cs.unicam.ids.synk.model.Post;
 import cs.unicam.ids.synk.model.Response;
 import cs.unicam.ids.synk.model.UserLog;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 public class CityData {
 	
@@ -19,9 +26,23 @@ public class CityData {
 	private static CityData cityData;
 	
 	private CityData(){
-		cities = new ArrayList<>();
-		posts = new ArrayList<>();
+		Gson gson = new Gson();
+		Type type = new TypeToken<ArrayList<City>>() {}.getType();
+		cities = gson.fromJson(getJson("city"), type);
+		type = new TypeToken<ArrayList<Post>>() {}.getType();
+		posts = gson.fromJson(getJson("post"), type);
 		users = UserData.getUserData();
+	}
+	
+	private String getJson(String name) {
+		try {
+			File file = new File(name + ".json");
+		    @SuppressWarnings("resource")
+			Scanner myReader = new Scanner(file);
+		    return myReader.nextLine();
+		} catch (FileNotFoundException e) {
+			return "[]";
+		}
 	}
 	
 	public static synchronized CityData getCityData() {
@@ -65,7 +86,9 @@ public class CityData {
 		if(manager.isPlatformManager() && isNewCity(cityName+CAP)) {
 			City city = new City(position, cityName+CAP, cityName, CAP, newCurator);
 			if(this.users.makeCurator(manager, city, newCurator)) {
-				return this.cities.add(city);
+				this.cities.add(city);
+				saveAll();
+				return true;
 			}
 		}
 		return false;
@@ -88,7 +111,9 @@ public class CityData {
 		Optional<City> city = getCity(cityID);
 		if(this.users.addPostToUser(author.getUsername(), ""+this.posts.size()) && city.isPresent()) {
 			city.get().getPostIDs().add(postID);
-			return this.posts.add(post);
+			this.posts.add(post);
+			saveAll();
+			return true;
 		}
 		return false;
 	}
@@ -100,6 +125,7 @@ public class CityData {
 		if(post.isPresent() && isCuratorOf(curator, post.get())) {
 			if(approved) post.get().setApproved(true);
 			else posts.remove(post.get());
+			saveAll();
 			return true;
 		}
 		return false;
@@ -111,6 +137,24 @@ public class CityData {
 	
 	public synchronized Response apply(Command cmd) {
 		return cmd.execute(this);
+	}
+	
+	private void saveAll() {
+		Gson gson = new Gson(); 
+		saveFile("post", gson.toJson(this.posts));
+		saveFile("city", gson.toJson(this.cities));
+	}
+	
+	private void saveFile(String name, String data) {
+	    try {
+			File file = new File(name + ".json");
+			file.createNewFile();
+			FileWriter writer = new FileWriter(file);
+			writer.write(data);
+			writer.close();
+	    } catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
 }
