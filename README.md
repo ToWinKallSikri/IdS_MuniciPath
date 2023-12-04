@@ -1,4 +1,4 @@
-# Municipath
+# MuniciPath®
 
 ![Immagine Municipath](https://github.com/ToWinKallSikri/IdS_Municipath/assets/118466836/f36ece69-d313-49b2-81cf-caf6498e058c)
 
