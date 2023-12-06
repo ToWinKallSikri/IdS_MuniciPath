@@ -1,0 +1,34 @@
+convalida account
+osserva statistiche comunali
+gestisci richiesta autorizzazione
+rimuovi moderatore
+aggiungi moderatore
+elimina post altrui
+modifica post altrui
+elimina insieme altrui
+cambia ruolo utente
+leggi segnalazioni
+modifica insieme altrui
+gestisci pending
+dichiara vincitore contest
+termina evento
+modifica insieme
+crea insieme
+notifica evento ai partecipanti
+proponi creazione post
+proponi modifica post
+proponi modifica insieme
+proponi proponi creazione insieme
+segnala contenuto inappropriato
+elimina mio insieme
+partecipa a contest
+richiedi autorizzazione
+salva tra i preferiti
+valuta post
+rimuovi dai preferiti
+segui contributor
+condividi su altro social
+creazione account
+autenticazione
+visita insieme
+cambia lingua
