@@ -1,8 +1,9 @@
+import { Post } from './Post';
+
 export interface Comune{
-    id : string;
     name : string;
     cap : string;
     lat : number;
     lng : number;
-    points : any[];
+    posts : Post[];
 }

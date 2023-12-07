@@ -12,10 +12,18 @@ export class MapComponent implements OnInit {
   private markers: any[] = [];
 
   ngOnInit(): void {
-    this.map = L.map('map').setView([43.13748102156574, 13.070254325866701], 15);
+    this.map = L.map('map').setView([44, 13], 5.5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
+    this.map.setMaxZoom(12);
+    this.map.setMinZoom(5.5);
+    this.map.setMaxBounds([
+      [47.0, 6.0],
+      [35.0, 19.0]
+    ]);
+    
     this.map.on('click', (event: any) => {
       this.addMaker(event.latlng.lat, event.latlng.lng);
+      console.log(event.latlng);
     });
   }
 

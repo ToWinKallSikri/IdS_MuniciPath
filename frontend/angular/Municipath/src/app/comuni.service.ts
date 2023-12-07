@@ -12,6 +12,6 @@ export class ComuniService {
   constructor(private HttpClient: HttpClient) { }
 
   public getComuni() : Observable<Comune[]> {
-    return this.HttpClient.get<Comune[]>(environment.baseUrl + "/api/comuni");
+    return this.HttpClient.get<Comune[]>(environment.baseUrl + "/api/v1/home");
   }
 }
