@@ -15,20 +15,119 @@ termina evento
 modifica insieme
 crea insieme
 notifica evento ai partecipanti
-proponi creazione post
-proponi modifica post
-proponi modifica insieme
-proponi proponi creazione insieme
-segnala contenuto inappropriato
-elimina mio insieme
-partecipa a contest
-richiedi autorizzazione
-salva tra i preferiti
-valuta post
-rimuovi dai preferiti
-segui contributor
-condividi su altro social
-creazione account
-autenticazione
-visita insieme
-cambia lingua
+
+[proponi creazione post]
+Il caso d'uso è utilizzato dal Contributor Non Autorizzato, quando egli ha intenzione di pubblicare un post. 
+Il post, una volta creato e pubblicato, verrà prima verificato dal Moderatore o dal Curatore ed, eventualmente, 
+successivamente pubblicato.
+Il caso d'uso ha inizio quando il Contributor Non Autorizzato propone un post da pubblicare.
+
+[proponi modifica post]
+Il caso d'uso è utilizzato dal Contributor Non Autorizzato, quando egli ha intenzione di modificare un suo post. 
+La modifica verrà poi verificata dal Moderatore o dal Curatore ed eventualmente verrà ripubblicato il post modificato.
+Il caso d'uso ha inizio quando il Contributor Non Autorizzato propone una modifica ad un suo post.
+
+[proponi modifica insieme]
+Il caso d'uso è utilizzato dal Contributor Non Autorizzato, quando egli ha intenzione di modificare un insieme di punti. 
+La modifica verrà poi verificata dal Moderatore o dal Curatore ed eventualmente verrà ripubblicato l'insieme modificato.
+Il caso d'uso ha inizio quando il Contributor Non Autorizzato propone una modifica ad un insieme.
+
+
+[proponi proponi creazione insieme]
+Il caso d'uso è utilizzato dal Contributor Non Autorizzato, quando egli ha intenzione di creare un insieme di punti. 
+L'insieme, una volta creato, verrà poi verificato dal Moderatore o dal Curatore ed eventualmente pubblicato.
+Il caso d'uso ha inizio quando il Contributor Non Autorizzato propone un insieme da pubblicare.
+
+
+[segnala contenuto inappropriato]
+Il caso d'uso è utilizzato dal Turista Autenticato, quando egli ha intenzione di segnalare un contenuto che,
+secondo lui, è inappropriato.
+La segnalazione passerà poi al Moderatore. Il Moderatore assume la responsabilità di esaminare la segnalazione, 
+determinando se il contenuto dev'essere eliminato o corretto.
+Il caso d'uso ha inizio quando il Turista Autenticato ha visualizzato un contenuto, secondo lui, inappropriato e 
+quindi lo segnala.
+
+
+[elimina mio insieme]
+Il caso d'uso è utilizzato dal Turista Autenticato, quando egli ha intenzione di elimina un suo insieme di punti. 
+Il Turista Autenticato confermerà o annullerà l'operazione di eliminazione, dall'apposita finestra a comparsa.
+Il caso d'uso ha inizio quando il Turista Autenticato vuole eliminare un suo insieme.
+
+
+[partecipa a contest]
+Il caso d'uso è utilizzato dal Turista Autenticato, quando egli decide di partecipare ad un contest.
+Il Turista Autenticato partecipa al contest, allegando ed inviando dei contenuti multimediali,
+nell'apposita inserzione. I contenuti allegati saranno sempre visionati dal Moderatore ed eventualmente eliminati o corretti.
+Il caso ha inizio quando il Turista Autenticato visualizza un contest e decide di partecipare, 
+inviando a sua volta un contenuto.
+
+
+[richiedi autorizzazione]
+Il caso d'uso è utilizzato dal Contributor Non Autorizzato e dal Turista Autenticato, quando vogliono richiedere al curatore o 
+al moderatore, l'accreditamento di privilegi più alti.
+Il Turista Autenticato potrà diventare Contributor Non Autorizzato e il Contributor Non Autorizzato, potrà diventare 
+Contributor Autorizzato.
+Il caso d'uso ha inizio quando uno dei due attori, farà richiesta di accreditamento.
+
+
+[salva tra i preferiti]
+Il caso d'uso è utilizzato dal Turista Autenticato, quando egli visualizza un contenuto e vuole salvarlo.
+Una volta che il Turista Autenticato avrà salvato il post, esso potrà essere trovato nella lista dei preferiti,
+a patto che non venga eliminato globalmente o localmente. 
+Quando il post salvato viene eliminato globalmente, esso viene eliminato anche dalla lista dei preferiti e, 
+chiunque lo aveva salvato antecedentemente, verrà notificato.
+Il caso d'uso ha inizio quando il Turista Autenticato visualizza un post di suo interesse e decide di salvarlo.
+
+
+[valuta post]
+Il caso d'uso è utilizzato dal Turista Autenticato, quando egli, visualizzato un post, vuole recensirlo e quindi dare un feedback
+all'autore.
+Il Turista Autenticato potrà dare un voto da 1 a 5 al post. Ogni volta che qualcuno farà una recensione, l'autore può scegliere
+se essere notificato o meno.
+Il caso d'uso ha inizio quando il Turista Autenticato, mentre visualizza un contenuto, decide di recensirlo.
+
+
+[rimuovi dai preferiti]
+Il caso d'uso è utilizzato dal Turista Autenticato, quando egli vuole eliminare un post dalla sua lista dei preferiti.
+Il Turista Autenticato accederà alla sua lista dei preferiti, sceglierà il post da eliminare e poi potrà confermare o annullare 
+l'operazione.
+Il caso d'uso ha inzio quando il Turista Autenticato decide di eliminare un post dalla sua lista dei preferiti.
+
+
+[segui contributor]
+Il caso d'uso è utilizzato dal Turista Autenticato, quando egli vuole seguire il flusso di contenuti pubblicati da un certo 
+Contributor. Il Turista Autenticato riceverà notifiche push, ogni volta che uno dei Contributor che segue pubblicherà 
+nuovi contenuti.
+Il caso d'uso ha inizio quando il Turista Autenticato decide di seguire un certo Contributor.
+
+
+[condividi su altro social]
+Il caso d'uso è utilizzato dal Turista e coinvolge i Social Network Esterni, quando egli vuole pubblicare un contenuto,
+sia sulla piattaforma, sia su un Social Network Esterno.
+Il caso d'uso ha inizio quando il Turista decide di pubblicare, su un Social Network Esterno, un contenuto interno alla piattaforma.
+
+
+[creazione account]
+Il caso d'uso è utilizzato dal Turista, quando egli decide di creare un account sulla piattaforma.
+Il Turista, specifiando delle informazioni, un nome utente ed una parola chiave, potrà creare un suo account personale.
+Creando l'account, gli verrano automaticamente accreditati i privilegi da Turista Autenticato.
+Il caso d'uso ha inizio quando il Turista accederà alla pagina per la creazione dell'account
+
+
+[autenticazione]
+Il caso d'uso è utilizzato dal Turista, quando egli vuole accedere al suo account personale.
+Il Turista, dalla pagina di autenticazione immetterà le informazioni per l'accesso e lo potrà effettuare.
+Accedendo, gli verrano automaticamente accreditati i privilegi da Turista Autenticato.
+Il caso d'uso ha inizio quando il Turista accederà alla pagina per l'autenticazione.
+
+
+[visita insieme]
+Il caso d'uso è utilizzato dal Sistema OSM (OpenStreetMap) e dal Turista, quando quest'ultimo vuole consultare un insieme di punti.
+Il Sistema OSM, fornisce le coordinate dei punti in questione e fa in modo che il Turista possa consultare tutte le informazioni relative
+all'insieme che egli sta visualizzando.
+Il caso d'uso ha inizio quando il Turista accede ad un insieme di punti, da un post.
+
+[cambia lingua]
+Il caso d'uso è utilizzato dal Traduttore e dal Turista, quando quest'ultimo vuole cambiare la lingua dell'interfaccia da Italiano ad Inglese.
+Il Traduttore, tradurrà tutte le parole e le frasi dell'interfaccia in Inglese.
+Il caso d'uso ha inizio quando il Turista accede al menù a tendina [Traduci].
