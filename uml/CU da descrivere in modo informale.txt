@@ -1,20 +1,55 @@
-convalida account
-osserva statistiche comunali
-gestisci richiesta autorizzazione
-rimuovi moderatore
-aggiungi moderatore
-elimina post altrui
-modifica post altrui
-elimina insieme altrui
-cambia ruolo utente
-leggi segnalazioni
-modifica insieme altrui
-gestisci pending
-dichiara vincitore contest
-termina evento
-modifica insieme
-crea insieme
-notifica evento ai partecipanti
+[Convalida Account]
+Questo caso d’uso è gestito dalla Gestione della Piattaforma. Il caso d'uso inizia quando la gestione desidera convalidare nuovi account. Apre la lista di account non convalidati e autorizza quelli che ritiene non dannosi per la piattaforma. Il sistema autorizza quei account rendendoli liberi di accedere al loro profilo d'ora in poi.
+
+[Osserva Statistiche Comunali] 
+Questo caso d’uso è specifico per il Curatore. Il Curatore ha la responsabilità di monitorare le statistiche della comunità. Questo può includere il numero di contributors attivi, il numero di post pubblicati, e altre metriche rilevanti. Il caso d'uso inizia quando il Curatore, trovandosi nella pagina del suo comune, accedere alla pagina delle statistiche. Il curatore clicca "admin" per accedere alla schermata di amministrazione e poi su "statistiche", accedendo alla schermata con il resoconto del suo comune.
+
+[Gestisci Richiesta Autorizzazione] 
+Questo caso d'uso serve al Moderatore (o anche al Curatore) di gestire le richieste di autorizzazione degli utenti relative al loro permesso di pubblicare contenuti nel loro comune. Il caso d'uso inizia quando il moderatore accede, dalla pagina del comune dove possiede questa autorizzazione, alla pagina delle richieste cliccando su "admin" e successivamente su "richieste". Il moderatore sceglie una delle richieste e la legge. Successivamente, decide se cambiare l'autorizzazione dell'utente o negare la richiesta.
+
+[Rimuovi Moderatore] 
+Questo caso d’uso è specifico per il Curatore. Se un moderatore non sta rispettando le regole della comunità, il Curatore ha l’autorità di rimuoverlo. Il caso d'uso inizia quando il curatore si trova nella pagina del suo comune e vuole rimuovere un moderatore. Clicca su "admin" per accedere alla pagina di moderazione e accedere alla sezione "moderatori". Quindi clicca su "rimuovi" al fianco del moderatore che vuole eliminare e dopo aver confermato l'azione il moderatore perde i suoi privilegi e diventa un semplice utente autenticato per il comune.
+
+[Aggiungi Moderatore] 
+Questo caso d’uso è specifico per il Curatore. Il Curatore può aggiungere un nuovo moderatore per aiutare a gestire la comunità. Il caso d'uso inizia quando il curatore si trova nella pagina del suo comune e vuole aggiungere un moderatore. Clicca su "admin" per accedere alla pagina di moderazione e accedere alla sezione "moderatori". Quindi clicca su "aggiungi" e dopo aver inserito l'username del nuovo moderatore, l'utente ottiene i suoi privilegi e diventa un moderatore per il comune.
+
+[Elimina Post Altrui] 
+Il Moderatore (o il Curatore) ha l’autorità di eliminare i post degli utenti. Questo può essere necessario se un post viola le regole della comunità. Il caso d'uso inizia quando il moderatore accede ad un post che desidera eliminare. Il moderatore clicca su "elimina" e dopo aver confermato la scelta il post viene eliminato.
+
+[Modifica Post Altrui] 
+Il Moderatore (o il Curatore) può modificare i post degli utenti. Questo può essere necessario per correggere informazioni errate o per rimuovere contenuti inappropriati. Il caso d'uso inizia quando il moderatore accede ad un post che desidera modificare. Il moderatore clicca su "modifica" e dopo aver modificato le informazioni relatve al post e cliccato su "salva", il post viene modificato.
+
+[Elimina Insieme Altrui] 
+Il Moderatore (o il Curatore) può eliminare un insieme di punti creato da un utente. Questo può essere necessario se l’insieme contiene informazioni errate o inappropriate. Il caso d'uso inizia quando il moderatore accede all'insieme che desidera eliminare. Il moderatore clicca su "elimina" e dopo aver confermato la scelta l'insieme viene eliminato.
+
+[Modifica Insieme Altrui] 
+Il Moderatore (o il Curatore) può modificare gli insiemi degli utenti. Questo può essere necessario per correggere informazioni errate o per rimuovere contenuti inappropriati. Il caso d'uso inizia quando il moderatore accede ad un insieme che desidera modificare. Il moderatore clicca su "modifica" e dopo aver modificato le informazioni e il cenuto dell'insieme, clicca su "salva" e il post viene modificato.
+
+[Cambia Ruolo Utente] 
+Il Moderatore (o il Curatore) può cambiare il ruolo di un utente. Questo può includere l’aggiornamento di un utente da Contributor Non Autorizzato a Contributor Autorizzato. Il caso d'uso inizia quando il moderatore si trova nella pagina del suo comune e vuole cambiare il ruolo di un utente. Clicca su "admin" per accedere alla pagina di moderazione e accedere alla sezione "ruoli". Inserisce l'username dell'utente e il nuovo ruolo che ricoprirà per quel comune tra: contributor autorizzato, contributor non autorizzato, utente comune e utente limitato. Infine, il curatore clicca su salva confermando la scelta.
+
+[Leggi Segnalazioni] 
+Il Moderatore (o il Curatore) legge le segnalazioni inviate dagli utenti. Questo aiuta a identificare e risolvere eventuali problemi nella comunità. Il caso d'uso inizia quando il moderatore si trova nella pagina del suo comune e vuole leggere le nuove segnalazioni. Clicca su "admin" per accedere alla pagina di moderazione e accedere alla sezione "segnalazioni". Tutte le segnalazioni gli vengono elencate davanti in ordine cronologico.
+
+[Gestisci Pending] Il Moderatore (o il Curatore) gestice la creazione e la modifica dei contenuti in sospeso. Il caso d'uso inizia quando il moderatore si trova nella pagina del suo comune e vuole leggere i nuovi contenuti in pending. Clicca su "admin" per accedere alla pagina di moderazione e accedere alla sezione "pending". Tutte i contenuti in pending gli vengono mostrati, ordinati in ordine cronologico. Per gestirli il moderatore ne apre uno e lo legge. Una volta fatto, può scegliere di accettarlo e renderlo pubblicato o rifiutarlo, eliminandolo.
+
+[Dichiara Vincitore Contest] 
+Questo caso d’uso è specifico per il Contributor Autorizzato che ha creato il contest. Una volta che il contest è concluso, l’autore può dichiarare il vincitore scegliendo uno dei contenuti ricevuti. Il caso d'uso inizia quando l'autore entra nella schermata del contest concluso. Clicca su "scegli vincitore" e dopo aver selezionato il contenuto vittorioso lo conferma cliccando su "dichiara vincitore". Viene quindi dichiarato pubblicamente il vincitore del contest.
+
+[Termina evento] 
+Questo caso d’uso è gestito dal tempo. Quando arriva il momento di fine di un evento, l’evento viene automaticamente terminato.
+Il caso d'uso inizia quando arriva il momento di fine di un evento. Se l'evento non ha persistenza viene eliminato, altrimenti diventa "terminato" e solo l'autore, i moderatori e il curatore del comune saranno in grado di vederlo sulla mappa.
+
+[Modifica Insieme] 
+Questo caso d’uso è specifico per il Contributor Autorizzato. Se un Contributor Autorizzato ha creato un insieme di punti, può modificarlo secondo necessità. Il caso d'uso inizia quando l'autore di un insieme vuole modificarlo. Accede alla schermata dell'inzieme e clicca su "modifica". Aggiorna quindi il suo titolo, i post che contiene, il suo tipo e/o l'ordine dei post. Clicca quindi su "salva" e confermando le modifiche.
+
+[Crea Insieme] 
+Questo caso d’uso è specifico per il Contributor Autorizzato. Un Contributor Autorizzato può creare un nuovo insieme di punti per condividere con la comunità. Il caso d'uso inizia quando 
+il contributor autorizzato si trova nella schermata di un post e desidera creare un insieme partendo da lui. Clicca su "crea insieme" ed inserisce quindi il titolo del nuovo insieme. Aggiunge poi uno alla volta tutti i post che desidera, navigando nel comune. Infine, conferma la scelta cliccando su "salva".
+
+[Notifica Evento ai Partecipanti] 
+Questo caso d’uso è gestito dal Contributor (autorizzato o non) che ha creato l’evento. L’autore dell’evento può inviare una notifica a tutti coloro che hanno salvato l’evento.
+Il caso d'uso inizia quando l'autore dell'evento si trova nella schermata dell'evento e vuole notificarlo a tutti i possibili partecipanti. Scrive un messaggio di notifica e clicca su "notifica". Il sistema invierà la notifica a tutti gli utenti che hanno salvato l'evento.
 
 [proponi creazione post]
 Il caso d'uso è utilizzato dal Contributor Non Autorizzato, quando egli ha intenzione di pubblicare un post. 
@@ -33,7 +68,7 @@ La modifica verrà poi verificata dal Moderatore o dal Curatore ed eventualmente
 Il caso d'uso ha inizio quando il Contributor Non Autorizzato propone una modifica ad un insieme.
 
 
-[proponi proponi creazione insieme]
+[proponi creazione insieme]
 Il caso d'uso è utilizzato dal Contributor Non Autorizzato, quando egli ha intenzione di creare un insieme di punti. 
 L'insieme, una volta creato, verrà poi verificato dal Moderatore o dal Curatore ed eventualmente pubblicato.
 Il caso d'uso ha inizio quando il Contributor Non Autorizzato propone un insieme da pubblicare.
