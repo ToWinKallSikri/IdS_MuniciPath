@@ -10,6 +10,11 @@ declare let L: any;
 export class MapComponent implements OnInit {
   private map: any;
   private markers: any[] = [];
+  authority = 'https://i.postimg.cc/GpP8xRfs/Authority.png';
+  event = 'https://i.postimg.cc/q7H6Kq1T/Event.png'
+  health = 'https://i.postimg.cc/7Yc2xm7b/Health.png'
+  social = 'https://i.postimg.cc/RFM3P8rp/Social.png'
+  turistic = 'https://i.postimg.cc/QxV7GRFR/Turistic.png'
 
   ngOnInit(): void {
     this.map = L.map('map').setView([44, 13], 5.5);
@@ -28,8 +33,21 @@ export class MapComponent implements OnInit {
   }
 
   private addMaker(lat: number, lng: number): void {
-    const marker = L.marker([lat, lng]).addTo(this.map).on('click', (event: any) => {
+    var myIcon = L.icon({
+      iconUrl: this.authority,
+      iconSize: [28, 40],
+      iconAnchor: [22, 94],
+      popupAnchor: [-3, -76]
+  });
+    const marker = L.marker([lat, lng], {icon:myIcon}).addTo(this.map).on('click', (event: any) => {
       this.removeAllCircles();
+    });
+    marker.bindPopup('<p style="text-align: center"><b>Camerino<br>62032</b></p>',  {closeButton: false})
+    .on('mouseover', (event: any) => {
+      marker.openPopup();
+    });
+    marker.on('mouseout', (event : any) =>{
+      marker.closePopup();
     });
     this.markers.push(marker);
   }
