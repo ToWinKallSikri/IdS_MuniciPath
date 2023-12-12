@@ -27,14 +27,24 @@ export class MapComponent implements OnInit {
     ]);
     
     this.map.on('click', (event: any) => {
-      this.addMaker(event.latlng.lat, event.latlng.lng);
+      this.addMarker(event.latlng.lat, event.latlng.lng);
       console.log(event.latlng);
     });
   }
 
-  private addMaker(lat: number, lng: number): void {
+  private getMarker() : string {
+    switch (Math.round(Math.random()*5)) {
+      case 0: return this.authority;
+      case 1: return this.event;
+      case 2: return this.health;
+      case 3: return this.social;
+      default: return this.turistic;
+    }
+  }
+
+  private addMarker(lat: number, lng: number): void {
     var myIcon = L.icon({
-      iconUrl: this.authority,
+      iconUrl: this.getMarker(),
       iconSize: [28, 40],
       iconAnchor: [22, 94],
       popupAnchor: [-3, -76]
