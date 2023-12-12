@@ -7,23 +7,23 @@
     <p>
       <mat-toolbar color="primary">
         <mat-toolbar-row>
-          <span style="color: black;">Municipath</span>
+          <span style="color: black; margin: 10px;">Municipath</span>
           <span class="spacer"></span>
-          <a href="#">
-            <button mat-icon-button class="nav-link">
-              <mat-icon style="color: black;">home</mat-icon>
+            <button mat-icon-button [routerLink]="['']" [ngClass]="{'home': isHomePage()}">
+              <mat-icon class="icon" [ngClass]="{'home': isHomePage()}">
+                home
+              </mat-icon>
             </button>
-          </a>
-          <a href="#">
-            <button mat-icon-button class="example-icon favorite-icon">
-              <mat-icon style="color: black;">favorite</mat-icon>
+            <button mat-icon-button (click)="liked()" [ngClass]="{'home': like}">
+              <mat-icon class="icon" [ngClass]="{'home': like}">
+                favorite
+              </mat-icon>
             </button>
-          </a>
-          <a href="#">
-            <button mat-icon-button class="example-icon">
-              <mat-icon style="color: black;">share</mat-icon>
+            <button mat-icon-button (click)="share()" >
+              <mat-icon style="color: black;">
+                share
+              </mat-icon>
             </button>
-          </a>
         </mat-toolbar-row>
       </mat-toolbar>
     </p>

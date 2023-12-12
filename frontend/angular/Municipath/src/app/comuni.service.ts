@@ -14,4 +14,8 @@ export class ComuniService {
   public getComuni() : Observable<Comune[]> {
     return this.HttpClient.get<Comune[]>(environment.baseUrl + "/api/v1/home");
   }
+
+  public getComune(id : number) : Observable<Comune>{
+    return this.HttpClient.get<Comune>(environment.baseUrl + "/api/v1/home/" + id);
+  }
 }

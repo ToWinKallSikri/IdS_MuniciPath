@@ -1,0 +1,1 @@
+code . && ng serve --open

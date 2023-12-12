@@ -13,13 +13,15 @@ import { MapComponent } from './map/map.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from  '@angular/common/http';
+import { ComuneComponent } from './comune/comune.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
     NotFoundComponent,
-    HomeComponent
+    HomeComponent,
+    ComuneComponent
   ],
   imports: [
     BrowserModule,
