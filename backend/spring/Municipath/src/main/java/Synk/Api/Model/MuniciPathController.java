@@ -1,4 +1,4 @@
-package Synk.Api.Controller;
+package Synk.Api.Model;
 
 public class MuniciPathController {
 
