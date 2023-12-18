@@ -2,8 +2,8 @@ package Synk.Api.Model;
 
 public enum PostType {
 	SOCIAL,
-	ISTITUTIONAL,
+	INSTITUTIONAL,
 	HEALTHandWELLNESS,
-	TURISTIC,
+	TOURISTIC,
 	EVENT
 }

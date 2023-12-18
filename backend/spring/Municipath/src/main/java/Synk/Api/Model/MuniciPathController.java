@@ -7,6 +7,4 @@ public class MuniciPathController {
     PointHandler ph = new PointHandler();
     GroupHandler gh = new GroupHandler();
 
-    public MuniciPathController() {
-    }
 }
