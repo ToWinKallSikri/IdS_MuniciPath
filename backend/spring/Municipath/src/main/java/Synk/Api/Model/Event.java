@@ -1,6 +1,7 @@
 package Synk.Api.Model;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Event extends Post {
@@ -10,9 +11,10 @@ public class Event extends Post {
     private boolean persistence;
 
 
-    public Event(String title, PostType type, String text, String author, Position pos, String cityID, String postId,
+    public Event(String title, PostType type, String text, String author, Position pos,
+            	String cityID, String postId, ArrayList<String> data, boolean published,
                  Date start, Date end, boolean persistence) {
-        super(title, type, text, author, pos, cityID, postId);
+        super(title, type, text, author, pos, cityID, postId, data, published);
         this.start = start;
         this.end = end;
         this.persistence = persistence;
@@ -41,5 +43,9 @@ public class Event extends Post {
     public void setPersistence(boolean persistence) {
         this.persistence = persistence;
     }
-
+    
+    @Override
+    public Date getDateTime() {
+        return this.start;
+    }
 }

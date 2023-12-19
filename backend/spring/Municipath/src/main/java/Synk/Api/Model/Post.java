@@ -14,19 +14,20 @@ public class Post {
     private String text;
     private String postId;
     private ArrayList<String> multimediaData;
+    private boolean published;
+    private String meteo;
 
-
-
-	public Post(String title, PostType type, String text, String author, Position pos,
-                String cityID, String postId) {
-        this.title = title;
-        this.type = type;
-        this.author = author;
-        this.pos = pos;
-        this.cityID = cityID;
-        this.postId = postId;
-        this.multimediaData = new ArrayList<>();
-    }
+    public Post(String title, PostType type, String text, String author, Position pos,
+            String cityID, String postId, ArrayList<String> data, boolean published) {
+	    this.title = title;
+	    this.type = type;
+	    this.author = author;
+	    this.pos = pos;
+	    this.cityID = cityID;
+	    this.postId = postId;
+	    this.multimediaData = data;
+	    this.published = published;
+	}
 	
 	public Post() {}
 	
@@ -109,10 +110,51 @@ public class Post {
         return this.author.equals(author);
     }
 
-    public void updateInfo(String title, PostType type, String text) {
+    public void updateInfo(String title, PostType type, String text, ArrayList<String> data) {
         this.title = title;
         this.type = type;
         this.text = text;
+        this.multimediaData.clear();
+        this.multimediaData.addAll(data);
     }
 
+	public boolean isPublished() {
+		return published;
+	}
+
+	public void setPublished(boolean published) {
+		this.published = published;
+	}
+
+	public String getMeteo() {
+		return meteo;
+	}
+
+	public void setMeteo(String meteo) {
+		this.meteo = meteo;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((postId == null) ? 0 : postId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Post))
+			return false;
+		Post other = (Post) obj;
+		if (postId == null) {
+			if (other.postId != null)
+				return false;
+		} else if (!postId.equals(other.postId))
+			return false;
+		return true;
+	}
+    
 }

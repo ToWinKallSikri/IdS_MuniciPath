@@ -1,76 +1,91 @@
 package Synk.Api.Model;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class PointHandler {
 
-    Map<Point, ArrayList<Post>> postMap;
+    List<Point> points;
     private WeatherForecast weather;
-    private CityHandler cityhandler;
+    private CityHandler cityHandler;
     private GroupHandler groupHandler;
 
-    int idCounter = 0;
-
     public PointHandler(CityHandler ch, GroupHandler gh) {
-        postMap = new HashMap<>();
+    	points = new ArrayList<>();
         weather = new WeatherForecast();
-        this.cityhandler = ch;
+        this.cityHandler = ch;
         this.groupHandler = gh;
     }
     
-
+    public void loadData(ArrayList<Point> points, ArrayList<Post> posts) {
+    	this.points = points.stream()
+    			.map(p -> {
+    				p.setPosts(posts.stream()
+    					.filter(po -> po.getPos().equals(p.getPos()))
+    					.toList()); return p; }).toList();
+    }
     
-    public boolean createPost(String title, PostType type, File newFile, String text,
-                              String author, Position pos, String cityID, int postId) {
-            Post p1 = new Post(title, type, newFile, author,text, pos, cityID, idCounter);
-            idCounter++;
-            Point point = new Point(pos);
-            postMap.put(point, p1);
-            System.out.println("Post created");
-            return true;
+    
+    
+    public boolean createPost(String title, PostType type, String text, String author, Position pos,
+            String cityId, ArrayList<String> data, boolean published) {
+    	if(! this.cityHandler.isAuthorized(cityId, author))
+    		return false;
+        Post post = new Post(title, type, text, author, pos, cityId, null, data, published);
+        Point point = getPoint(pos, cityId);
+        post.setPostId(point.getNewPostId());
+        point.getPosts().add(post);
+        return true;
     }
-
+    
+    public boolean editPost(String postId, String title, PostType type, String text,
+    		String author, String cityId, ArrayList<String> data) {
+    	Post post = this.getPost(postId);
+    	if(!(post != null && post.getAuthor().equals(author)))
+    		return false;
+    	post.updateInfo(title, type, text, data);
+        return true;
+    }
+    
+    private Point getPoint(Position pos, String cityId) {
+    	return this.points.stream().filter(p -> p.getPos().equals(pos))
+    			.findFirst().orElse(makeNewPoint(pos, cityId));
+    }
+    
+    private Point makeNewPoint(Position pos, String cityId) {
+    	Point point = new Point(cityId+"."+pos, pos, cityId);
+    	this.points.add(point);
+    	return point;
+    }
+    
     public List<Point> getPoints (String cityID) {
-       List<Point> points = new ArrayList<Point>();
-         for (Point point : postMap.keySet()) {
-              if (postMap.get(point).getId().equals(cityID)) {
-                points.add(point);
-              }
-         }
-       return points;
+          return this.points.stream()
+        		  .filter(p -> p.getCityId().equals(cityID)).toList();
+      
     }
-
+    
+    private Post updateMeteo(Post post) {
+    	return post;
+    }
+    
     public void deleteCityPoints (String cityId) {
-        for (Point point : postMap.keySet()) {
-            if (postMap.get(point).getId().equals(cityId)) {
-                postMap.remove(point);
-                postMap.entrySet().removeIf(entry -> entry.getKey().equals(point));
-            }
-        }
+        List<Point> ps = this.points.stream()
+        		.filter(p -> p.getCityId().equals(cityId)).toList();
+        ps.forEach(p -> p.getPosts().forEach(po -> deletePost(po.getPostId())));
+        this.points.removeAll(ps);
     }
-
-    public List<Post> getPosts (int postId) {
-        List<Post> posts = new ArrayList<Post>();
-        for (Point point : postMap.keySet()) {
-            if (postMap.get(point).getPostId() == postId) {
-                posts.add(postMap.get(point));
-            }
-        }
-        return posts;
+    
+    public List<Post> getPosts (String pointId) {
+        return this.points.stream().filter(p -> p.getPointId().equals(pointId))
+        		.map(p -> p.getPosts()).findFirst().orElse(new ArrayList<>());
     }
-
+    
+    public Post getPost(String postId) {
+    	return null;
+    }
+    
     public void deletePost (String postId) {
-        for (Point point : postMap.keySet()) {
-            if (postMap.get(point).getId().equals(postId)) {
-                postMap.remove(point);
-                postMap.entrySet().removeIf(entry -> entry.getKey().equals(point));
-            }
-        }
+    	
     }
-
-
+    
 }

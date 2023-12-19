@@ -16,7 +16,7 @@ public class CityHandler {
 
     public boolean createCity(String cityName, int cap, String curator, Position pos ) {
     	String id = "" + (cityName+cap).hashCode();
-        City c1 = new City(id,cityName,pos, curator, cap);
+        City c1 = new City(id, cityName,pos, curator, cap, new ArrayList<>());
         if (checkIfAlreadyExists(id)) 
         	return false;
         if(!this.userhandler.matchCurator(curator, id)) 
@@ -73,6 +73,9 @@ public class CityHandler {
     	this.userhandler.discreditCurator(cityId);
     	return true;
     }
-
+    
+    public boolean isAuthorized(String cityId, String username) {
+    	return true;
+    }
 
 }
