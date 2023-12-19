@@ -16,10 +16,10 @@ public class WeatherForecast {
     //API KEY PER OPENWEATHERMAP "f11be85a0ecf5636165e348258c60dec";
     //120 ore (5 giorni) / 3 ore = 40 previsioni
     
-    public String getWeather(City city, Date time) {
+    public String getWeather(Position position, Date time) {
     	int count = getThreeHourIndex(time);
     	if(count > 39) return "?";
-        return callService(count, city.getPos());
+        return callService(count, position);
     }
     
     private int getThreeHourIndex(Date time) {

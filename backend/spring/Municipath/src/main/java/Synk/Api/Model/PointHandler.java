@@ -65,6 +65,7 @@ public class PointHandler {
     }
     
     private Post updateMeteo(Post post) {
+    	post.setMeteo(this.weather.getWeather(post.getPos(), post.getDateTime()));
     	return post;
     }
     
@@ -76,16 +77,47 @@ public class PointHandler {
     }
     
     public List<Post> getPosts (String pointId) {
+        return searchPoint(pointId).getPosts().stream()
+        		.map(p -> updateMeteo(p)).toList();
+    }
+    
+    private Point searchPointFromPost(String postId) {
+    	String[] parts = postId.split(".");
+    	return searchPoint(parts[0]+"."+parts[1]);
+    }
+    
+    private Point searchPoint (String pointId) {
         return this.points.stream().filter(p -> p.getPointId().equals(pointId))
-        		.map(p -> p.getPosts()).findFirst().orElse(new ArrayList<>());
+        		.findFirst().orElse(new Point());
     }
     
     public Post getPost(String postId) {
-    	return null;
+    	Point point = searchPointFromPost(postId);
+    	Post post = point.getPosts().stream()
+    			.filter(p -> p.getId().equals(postId))
+    			.findFirst().orElse(null);
+    	return updateMeteo(post);
     }
     
-    public void deletePost (String postId) {
-    	
+    public boolean deletePost (String postId, String author) {
+    	Post post = getPost(postId);
+    	if(!(post != null && post.getAuthor().equals(author)))
+    		return false;
+    	return deletePost(post);
+    }
+    
+    public boolean deletePost (String postId) {
+    	Post post = getPost(postId);
+    	if(post == null)
+    		return false;
+    	return deletePost(post);
+    }
+    
+    private boolean deletePost(Post post) {
+    	Point point = searchPoint(post.getId());
+    	point.getPosts().remove(post);
+    	this.groupHandler.removeFromAll(post);
+    	return true;
     }
     
 }
