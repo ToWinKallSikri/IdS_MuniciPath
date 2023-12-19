@@ -7,11 +7,13 @@ import java.util.Optional;
 public class CityHandler {
 	
     private ArrayList<City> cities;
-    private UserHandler userhandler;
+    private UserHandler userHandler;
+    private PointHandler pointHandler;
 
-    public CityHandler(UserHandler uh) {
-    	userhandler = uh;
-        cities = new ArrayList<City>();
+    public CityHandler(UserHandler uh, PointHandler ph) {
+    	this.userHandler = uh;
+    	this.pointHandler = ph;
+        this.cities = new ArrayList<City>();
     }
 
     public boolean createCity(String cityName, int cap, String curator, Position pos ) {
@@ -19,7 +21,7 @@ public class CityHandler {
         City c1 = new City(id, cityName,pos, curator, cap, new ArrayList<>());
         if (checkIfAlreadyExists(id)) 
         	return false;
-        if(!this.userhandler.matchCurator(curator, id)) 
+        if(!this.userHandler.matchCurator(curator, id)) 
         	return false;
         cities.add(c1);
         return true;
@@ -55,7 +57,7 @@ public class CityHandler {
     		return false;
     	City city = oCity.get();
     	if(!(city.getCurator().equals(curator) || 
-    		this.userhandler.changeCurator(curator, id)) )
+    		this.userHandler.changeCurator(curator, id)) )
         	return false;
         city.setName(cityName);
         city.setCap(cap);
@@ -70,7 +72,8 @@ public class CityHandler {
     		return false;
     	City city = oCity.get();
     	this.cities.remove(city);
-    	this.userhandler.discreditCurator(cityId);
+    	this.userHandler.discreditCurator(cityId);
+    	this.pointHandler.deleteCityPoints(cityId);
     	return true;
     }
     

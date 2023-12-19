@@ -1,5 +1,6 @@
 package Synk.Api.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MuniciPathController {
@@ -10,7 +11,7 @@ public class MuniciPathController {
     
     public MuniciPathController(){
     	this.uh = new UserHandler();
-        this.ch = new CityHandler(uh);
+        this.ch = new CityHandler(uh, ph);
         this.gh = new GroupHandler();
         this.ph = new PointHandler(ch, gh);
     }
@@ -27,16 +28,39 @@ public class MuniciPathController {
     	return ch.deleteCity(cityId);
     }
     
-    public City getCity(String cityId) {
-    	return ch.getCity(cityId);
-    }
-    
     public List<City> searchCity(String search){
     	return ch.getCities(search);
     }
     
-    public List<City> getAllCity(String search){
+    public List<City> getAllCity(){
     	return ch.getCities();
-    } 
+    }
+    
+    public boolean createPost(String title, PostType type, String text, String author, Position pos,
+            String cityId, ArrayList<String> data, boolean published) {
+    	return this.ph.createPost(title, type, text, author, pos, cityId, data, published);
+    }
+    
+    public boolean editPost(String postId, String title, PostType type, String text,
+    		String author, String cityId, ArrayList<String> data) {
+        return this.ph.editPost(postId, title, type, text, author, cityId, data);
+    }
+    
+    public List<Point> getPoints (String cityID) {
+          return this.ph.getPoints(cityID);
+      
+    }
+    
+    public List<Post> getPosts (String pointId) {
+        return this.ph.getPosts(pointId);
+    }
+    
+    public Post getPost(String postId) {
+        return this.ph.getPost(postId);
+    }
+    
+    public boolean deletePost (String postId, String author) {
+    	return this.ph.deletePost(postId, author);
+    }
     
 }

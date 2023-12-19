@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PointHandler {
 
-    List<Point> points;
+    private List<Point> points;
     private WeatherForecast weather;
     private CityHandler cityHandler;
     private GroupHandler groupHandler;
