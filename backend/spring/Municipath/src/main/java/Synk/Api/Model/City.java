@@ -2,11 +2,11 @@ package Synk.Api.Model;
 
 public class City {
 
-    String Id;
-    String Name;
-    String curator;
-    int cap;
-    Position Pos;
+    private String Id;
+	private String Name;
+    private String curator;
+    private int cap;
+    private Position Pos;
 
     public City(String id, String name, Position pos, String curator, int cap) {
         this.Id = id;
@@ -15,48 +15,49 @@ public class City {
         this.curator = curator;
         this.cap = cap;
     }
-
-
+    
+    public City() {}
+    
     public String getId() {
-        return Id;
-    }
+		return Id;
+	}
 
-    public int getCap() {
-        return cap;
-    }
-    public String getCurator() {
-        return curator;
-    }
+	public void setId(String id) {
+		Id = id;
+	}
 
-    public String getName() {
-        return Name;
-    }
+	public String getName() {
+		return Name;
+	}
 
-    public Position getPos() {
-        return Pos;
-    }
-    
-    public void setId(String id) {
-        Id = id;
-    }
+	public void setName(String name) {
+		Name = name;
+	}
 
-    public void setCap(int cap) {
-        this.cap = cap;
-    }
-    
-    public void setCurator(String curator) {
-        this.curator = curator;
-    }
+	public String getCurator() {
+		return curator;
+	}
 
-    public void setName(String name) {
-        Name = name;
-    }
+	public void setCurator(String curator) {
+		this.curator = curator;
+	}
 
-    public void setPos(Position pos) {
-        Pos = pos;
-    }
+	public int getCap() {
+		return cap;
+	}
 
-    
+	public void setCap(int cap) {
+		this.cap = cap;
+	}
+
+	public Position getPos() {
+		return Pos;
+	}
+
+	public void setPos(Position pos) {
+		Pos = pos;
+	}
+
 
 
 }

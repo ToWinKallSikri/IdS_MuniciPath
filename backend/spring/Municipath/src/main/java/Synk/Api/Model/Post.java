@@ -1,35 +1,45 @@
 package Synk.Api.Model;
 
-import java.io.File;
+
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Post {
 
-    String title;
-    PostType type;
-    File newFile;
-    String author;
-    Position pos;
-    String cityID;
-    String text;
-    int postId;
+    private String title;
+    private PostType type;
+    private String author;
+    private Position pos;
+    private String cityID;
+    private String text;
+    private String postId;
+    private ArrayList<String> multimediaData;
 
 
-    public Post(String title, PostType type, File newFile, String text, String author, Position pos,
-                String cityID, int postId) {
-        if (title == null || type == null || type == PostType.EVENT || newFile == null || author == null || pos == null
-                || cityID == null) {
-            throw new IllegalArgumentException("One of the field is null or invalid");
-        }
+
+	public Post(String title, PostType type, String text, String author, Position pos,
+                String cityID, String postId) {
         this.title = title;
         this.type = type;
-        this.newFile = newFile;
         this.author = author;
         this.pos = pos;
         this.cityID = cityID;
         this.postId = postId;
+        this.multimediaData = new ArrayList<>();
     }
+	
+	public Post() {}
+	
 
+
+    public ArrayList<String> getMultimediaData() {
+		return multimediaData;
+	}
+
+
+	public void setMultimediaData(ArrayList<String> multimediaData) {
+		this.multimediaData = multimediaData;
+	}
 
     public String getTitle() {
         return title;
@@ -45,14 +55,6 @@ public class Post {
 
     public void setType(PostType type) {
         this.type = type;
-    }
-
-    public File getNewFile() {
-        return newFile;
-    }
-
-    public void setNewFile(File newFile) {
-        this.newFile = newFile;
     }
 
     public String getText() {
@@ -87,11 +89,11 @@ public class Post {
         this.cityID = cityID;
     }
 
-    public int getPostId() {
+    public String getPostId() {
         return postId;
     }
 
-    public void setPostId(int postId) {
+    public void setPostId(String postId) {
         this.postId = postId;
     }
 
@@ -100,18 +102,16 @@ public class Post {
     }
 
     public Date getDateTime() {
-        //TODO Implement here
-        return null;
+        return new Date();
     }
 
     public boolean checkAuthor(String author) {
         return this.author.equals(author);
     }
 
-    public void updateInfo(String title, PostType type, File newFile, String text) {
+    public void updateInfo(String title, PostType type, String text) {
         this.title = title;
         this.type = type;
-        this.newFile = newFile;
         this.text = text;
     }
 

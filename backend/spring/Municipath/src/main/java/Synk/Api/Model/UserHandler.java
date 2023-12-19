@@ -1,25 +1,58 @@
 package Synk.Api.Model;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 public class UserHandler {
 
-    List<User> users;
+    private ArrayList<User> users;
 
     public UserHandler() {
         users = new ArrayList<User>();
     }
-
-    public void matchCurator(String curator, String cityId) {
-        // TODO implement here
+    
+    private Optional<User> getOptUser(String username) {
+    	return this.users.stream().parallel()
+    			.filter(u -> u.getUsername().equals(username))
+    			.findFirst();
     }
-    public void changeCurator(String curator, String cityId) {
-        // TODO implement here
-    }
-    public void discreditCurator(String curator, String cityId) {
-        // TODO implement here
+    
+    private Optional<User> findCuratorOf(String cityId) {
+    	return this.users.stream().parallel()
+    			.filter(u -> cityId.equals(u.getCityId()))
+    			.findFirst();
     }
 
+    public boolean matchCurator(String curator, String cityId) {
+    	Optional<User> oUser = getOptUser(curator);
+    	if(oUser.isEmpty() || oUser.get().isCurator())
+    		return false;
+    	oUser.get().setCityId(cityId);
+    	return true;
+    }
+    
+    public boolean changeCurator(String curator, String cityId) {
+    	Optional<User> oOld = findCuratorOf(cityId), oNew = getOptUser(curator);
+    	if(oOld.isEmpty() || oNew.isEmpty() || oNew.get().isCurator())
+    		return false;
+    	oOld.get().setCityId(null);
+    	oNew.get().setCityId(cityId);
+		return true;
+    }
+    
+    public boolean discreditCurator(String cityId) {
+    	Optional<User> oCurator = findCuratorOf(cityId);
+    	if(oCurator.isEmpty()) return false;
+    	oCurator.get().setCityId(null);
+    	return true;
+    }
 
+	public ArrayList<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(ArrayList<User> users) {
+		this.users = users;
+	}
+    
 }

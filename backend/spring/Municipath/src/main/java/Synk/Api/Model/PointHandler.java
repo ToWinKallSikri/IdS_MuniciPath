@@ -8,15 +8,19 @@ import java.util.Map;
 
 public class PointHandler {
 
-    Map<Point, Post> ppstMap;
-    WeatherForecast w1;
+    Map<Point, ArrayList<Post>> postMap;
+    private WeatherForecast weather;
+    private CityHandler cityhandler;
+    private GroupHandler groupHandler;
 
     int idCounter = 0;
 
-    PointHandler() {
-        ppstMap = new HashMap<Point, Post>();
-        w1 = new WeatherForecast();
-        }
+    public PointHandler(CityHandler ch, GroupHandler gh) {
+        postMap = new HashMap<>();
+        weather = new WeatherForecast();
+        this.cityhandler = ch;
+        this.groupHandler = gh;
+    }
     
 
     
@@ -25,15 +29,15 @@ public class PointHandler {
             Post p1 = new Post(title, type, newFile, author,text, pos, cityID, idCounter);
             idCounter++;
             Point point = new Point(pos);
-            ppstMap.put(point, p1);
+            postMap.put(point, p1);
             System.out.println("Post created");
             return true;
     }
 
     public List<Point> getPoints (String cityID) {
        List<Point> points = new ArrayList<Point>();
-         for (Point point : ppstMap.keySet()) {
-              if (ppstMap.get(point).getId().equals(cityID)) {
+         for (Point point : postMap.keySet()) {
+              if (postMap.get(point).getId().equals(cityID)) {
                 points.add(point);
               }
          }
@@ -41,29 +45,29 @@ public class PointHandler {
     }
 
     public void deleteCityPoints (String cityId) {
-        for (Point point : ppstMap.keySet()) {
-            if (ppstMap.get(point).getId().equals(cityId)) {
-                ppstMap.remove(point);
-                ppstMap.entrySet().removeIf(entry -> entry.getKey().equals(point));
+        for (Point point : postMap.keySet()) {
+            if (postMap.get(point).getId().equals(cityId)) {
+                postMap.remove(point);
+                postMap.entrySet().removeIf(entry -> entry.getKey().equals(point));
             }
         }
     }
 
     public List<Post> getPosts (int postId) {
         List<Post> posts = new ArrayList<Post>();
-        for (Point point : ppstMap.keySet()) {
-            if (ppstMap.get(point).getPostId() == postId) {
-                posts.add(ppstMap.get(point));
+        for (Point point : postMap.keySet()) {
+            if (postMap.get(point).getPostId() == postId) {
+                posts.add(postMap.get(point));
             }
         }
         return posts;
     }
 
     public void deletePost (String postId) {
-        for (Point point : ppstMap.keySet()) {
-            if (ppstMap.get(point).getId().equals(postId)) {
-                ppstMap.remove(point);
-                ppstMap.entrySet().removeIf(entry -> entry.getKey().equals(point));
+        for (Point point : postMap.keySet()) {
+            if (postMap.get(point).getId().equals(postId)) {
+                postMap.remove(point);
+                postMap.entrySet().removeIf(entry -> entry.getKey().equals(point));
             }
         }
     }

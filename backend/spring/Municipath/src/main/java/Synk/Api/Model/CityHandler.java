@@ -1,64 +1,77 @@
 package Synk.Api.Model;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public class CityHandler {
-    List<City> cities;
+	
+    private ArrayList<City> cities;
+    private UserHandler userhandler;
 
-    int idCounter = 0;
-
-    public CityHandler() {
+    public CityHandler(UserHandler uh) {
+    	userhandler = uh;
         cities = new ArrayList<City>();
     }
 
-    public void createCity(String cityName, int cap, String curator, Position pos ) {
-
-        City c1 = new City("idCounter",cityName,pos, curator, cap);
-
-        if (!checkIfAlreadyExists(c1.getId())) {
-            cities.add(c1);
-            idCounter++;
-            System.out.println("City created");
-        } else {
-            System.out.println("City already exists");
-        }
+    public boolean createCity(String cityName, int cap, String curator, Position pos ) {
+    	String id = "" + (cityName+cap).hashCode();
+        City c1 = new City(id,cityName,pos, curator, cap);
+        if (checkIfAlreadyExists(id)) 
+        	return false;
+        if(!this.userhandler.matchCurator(curator, id)) 
+        	return false;
+        cities.add(c1);
+        return true;
     }
 
-    public boolean checkIfAlreadyExists (String cityId) {
-        City city = new City(cityId, null, null, null, 0);
-        return cities.contains(city);
+    private boolean checkIfAlreadyExists (String cityId) {
+        return cities.stream().parallel()
+        		.anyMatch(c -> c.getId().equals(cityId));
     }
-
-    public void updateCity(String cityName, int cap, String curator, Position pos ){
-        City c1 = new City("idCounter",cityName,pos, curator, cap);
-        if (checkIfAlreadyExists(c1.getId())) {
-            cities.remove(c1);
-            cities.add(c1);
-            System.out.println("City updated");
-        } else {
-            System.out.println("City does not exist");
-        }
+    
+    private Optional<City> getOptCity (String cityId) {
+        return cities.stream().parallel()
+        		.filter(c -> c.getId().equals(cityId)).findFirst();
     }
-
-    public void deleteCity(String cityId) {
-        City city = new City(cityId, null, null, null, 0);
-        if (checkIfAlreadyExists(cityId)) {
-            cities.remove(city);
-            System.out.println("City deleted");
-        } else {
-            System.out.println("City does not exist");
-        }
-    }
-
+    
     public City getCity(String cityId) {
-        City city = new City(cityId, null, null, null, 0);
-        if (checkIfAlreadyExists(cityId)) {
-            return cities.get(cities.indexOf(city));
-        } else {
-            System.out.println("City does not exist");
-            return null;
-        }
+    	return this.getOptCity(cityId).orElse(null);
+    }
+    
+    public List<City> getCities(){
+    	return this.getCities("");
+    }
+    
+    public List<City> getCities(String search) {
+    	return this.cities.stream()
+    			.filter(c -> (c.getName()+c.getCap()).toLowerCase()
+    					.startsWith(search.toLowerCase())).toList();
+    }
+
+    public boolean updateCity(String id, String cityName, int cap, String curator, Position pos ){
+    	Optional<City> oCity = getOptCity(id);
+    	if(oCity.isEmpty())
+    		return false;
+    	City city = oCity.get();
+    	if(!(city.getCurator().equals(curator) || 
+    		this.userhandler.changeCurator(curator, id)) )
+        	return false;
+        city.setName(cityName);
+        city.setCap(cap);
+        city.setCurator(curator);
+        city.setPos(pos);
+		return true;
+    }
+
+    public boolean deleteCity(String cityId) {
+    	Optional<City> oCity = getOptCity(cityId);
+    	if(oCity.isEmpty())
+    		return false;
+    	City city = oCity.get();
+    	this.cities.remove(city);
+    	this.userhandler.discreditCurator(cityId);
+    	return true;
     }
 
 
