@@ -7,4 +7,9 @@ public class GroupHandler {
 		
 	}
 
+	public void removeAllFromCity(String cityId) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

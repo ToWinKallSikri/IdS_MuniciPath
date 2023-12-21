@@ -19,11 +19,14 @@ public class CityHandler {
     public boolean createCity(String cityName, int cap, String curator, Position pos ) {
     	String id = "" + (cityName+cap).hashCode();
         City c1 = new City(id, cityName,pos, curator, cap, new ArrayList<>());
-        if (checkIfAlreadyExists(id)) 
+        if (checkIfAlreadyExists(id))
         	return false;
         if(!this.userHandler.matchCurator(curator, id)) 
         	return false;
         cities.add(c1);
+        this.pointHandler.addNewCity(id);
+        this.pointHandler.createPost("Comune di "+cityName,
+        		PostType.INSTITUTIONAL, "", curator, pos, id, true);
         return true;
     }
 

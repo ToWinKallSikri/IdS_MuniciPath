@@ -1,17 +1,20 @@
 package Synk.Api.Model;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class PointHandler {
 
-    private List<Point> points;
+    private Map<String, List<Point>> points;
     private WeatherForecast weather;
     private CityHandler cityHandler;
     private GroupHandler groupHandler;
 
     public PointHandler(CityHandler ch, GroupHandler gh) {
-    	points = new ArrayList<>();
+    	points = new HashMap<>();
         weather = new WeatherForecast();
         this.cityHandler = ch;
         this.groupHandler = gh;
@@ -22,7 +25,22 @@ public class PointHandler {
     			.map(p -> {
     				p.setPosts(posts.stream()
     					.filter(po -> po.getPos().equals(p.getPos()))
-    					.toList()); return p; }).toList();
+    					.toList()); return p; })
+    			.collect(Collectors.groupingBy(Point::getCityId));
+    	
+    }
+    
+    public boolean addNewCity(String cityId) {
+    	if(this.points.containsKey(cityId))
+    		return false;
+    	this.points.put(cityId, new ArrayList<Point>());
+    	return true;
+    }
+    
+    
+    public boolean createPost(String title, PostType type, String text, String author,
+    		Position pos, String cityId, boolean published) {
+        return createPost(title, type, text, author, pos, cityId, new ArrayList<String>(), published);
     }
     
     
@@ -48,19 +66,18 @@ public class PointHandler {
     }
     
     private Point getPoint(Position pos, String cityId) {
-    	return this.points.stream().filter(p -> p.getPos().equals(pos))
+    	return this.points.get(cityId).stream().filter(p -> p.getPos().equals(pos))
     			.findFirst().orElse(makeNewPoint(pos, cityId));
     }
     
     private Point makeNewPoint(Position pos, String cityId) {
     	Point point = new Point(cityId+"."+pos, pos, cityId);
-    	this.points.add(point);
+    	this.points.get(cityId).add(point);
     	return point;
     }
     
-    public List<Point> getPoints (String cityID) {
-          return this.points.stream()
-        		  .filter(p -> p.getCityId().equals(cityID)).toList();
+    public List<Point> getPoints (String cityId) {
+          return this.points.get(cityId);
       
     }
     
@@ -70,10 +87,10 @@ public class PointHandler {
     }
     
     public void deleteCityPoints (String cityId) {
-        List<Point> ps = this.points.stream()
-        		.filter(p -> p.getCityId().equals(cityId)).toList();
+        List<Point> ps = this.points.get(cityId);
         ps.forEach(p -> p.getPosts().forEach(po -> deletePost(po.getPostId())));
-        this.points.removeAll(ps);
+        this.points.remove(cityId);
+        this.groupHandler.removeAllFromCity(cityId);
     }
     
     public List<Post> getPosts (String pointId) {
@@ -86,8 +103,19 @@ public class PointHandler {
     	return searchPoint(parts[0]+"."+parts[1]);
     }
     
+    private String searchCityIdFromPoint(String pointId) {
+    	return pointId.split(".")[0];
+    }
+    
     private Point searchPoint (String pointId) {
-        return this.points.stream().filter(p -> p.getPointId().equals(pointId))
+        return this.points.get(searchCityIdFromPoint(pointId))
+        		.stream().filter(p -> p.getPointId().equals(pointId))
+        		.findFirst().orElse(new Point());
+    }
+    
+    private Point searchPoint (String cityId,Position positon) {
+        return this.points.get(cityId).stream()
+        		.filter(p -> p.getPos().equals(positon))
         		.findFirst().orElse(new Point());
     }
     
@@ -114,10 +142,18 @@ public class PointHandler {
     }
     
     private boolean deletePost(Post post) {
+    	if(isPrime(post))
+    		return false;
     	Point point = searchPoint(post.getId());
     	point.getPosts().remove(post);
     	this.groupHandler.removeFromAll(post);
     	return true;
     }
+
+	private boolean isPrime(Post post) {
+		Position posCity = this.cityHandler.getCity(post.getCityID()).getPos();
+		Point point = searchPoint(post.getCityID(), posCity);
+		return post.getPostId().equals(point.getPointId()+".0");
+	}
     
 }
