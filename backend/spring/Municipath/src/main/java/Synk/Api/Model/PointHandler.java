@@ -1,5 +1,6 @@
 package Synk.Api.Model;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,24 @@ public class PointHandler {
     		return false;
     	this.points.put(cityId, new ArrayList<Point>());
     	return true;
+    }
+    
+    public boolean createEvent(String title, String text, String author,
+    		Position pos, String cityId, boolean published, Date start, Date end, boolean persistence) {
+        return createEvent(title, text, author, pos, cityId, new ArrayList<String>(), published, start, end, persistence);
+    }
+    
+    
+    
+    public boolean createEvent(String title, String text, String author, Position pos,
+            String cityId, ArrayList<String> data, boolean published, Date start, Date end, boolean persistence) {
+    	if(! this.cityHandler.isAuthorized(cityId, author))
+    		return false;
+        Post post = new Event(title, text, author, pos, cityId, null, data, published, start, end, persistence);
+        Point point = getPoint(pos, cityId);
+        post.setPostId(point.getNewPostId());
+        point.getPosts().add(post);
+        return true;
     }
     
     

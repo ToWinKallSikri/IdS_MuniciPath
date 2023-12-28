@@ -1,6 +1,7 @@
 package Synk.Api.Model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MuniciPathController {
@@ -34,6 +35,11 @@ public class MuniciPathController {
     
     public List<City> getAllCity(){
     	return ch.getCities();
+    }
+    
+    public boolean createEvent(String title, String text, String author, Position pos, String cityId, 
+    		ArrayList<String> data, boolean published, Date start, Date end, boolean persistence) {
+    	return this.ph.createEvent(title, text, author, pos, cityId, data, published, start, end, persistence);
     }
     
     public boolean createPost(String title, PostType type, String text, String author, Position pos,

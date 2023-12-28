@@ -5,5 +5,6 @@ public enum PostType {
 	INSTITUTIONAL,
 	HEALTHandWELLNESS,
 	TOURISTIC,
-	EVENT
+	EVENT,
+	CONTEST
 }
