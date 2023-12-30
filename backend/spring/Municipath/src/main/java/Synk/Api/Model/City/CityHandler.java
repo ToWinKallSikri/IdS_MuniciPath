@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.PostType;
+import Synk.Api.Model.MuniciPathMediator;
 import Synk.Api.Model.Post.PointHandler;
 import Synk.Api.Model.User.UserHandler;
 
@@ -12,13 +13,11 @@ import Synk.Api.Model.User.UserHandler;
 public class CityHandler {
 	
     private ArrayList<City> cities;
-    private UserHandler userHandler;
-    private PointHandler pointHandler;
+    private MuniciPathMediator mediator;
     private RoleHandler roleHandler;
 
-    public CityHandler(UserHandler uh, PointHandler ph) {
-    	this.userHandler = uh;
-    	this.pointHandler = ph;
+    public CityHandler(MuniciPathMediator mediator) {
+    	this.mediator = mediator;
         this.cities = new ArrayList<City>();
         this.roleHandler = new RoleHandler();
     }
@@ -28,12 +27,10 @@ public class CityHandler {
         City c1 = new City(id, cityName,pos, curator, cap, new ArrayList<>());
         if (checkIfAlreadyExists(id))
         	return false;
-        if(!this.userHandler.matchCurator(curator, id)) 
+        if(!this.mediator.matchCurator(curator, id)) 
         	return false;
         cities.add(c1);
-        this.pointHandler.addNewCity(id);
-        this.pointHandler.createPost("Comune di "+cityName, PostType.INSTITUTIONAL, "",
-        		curator, pos, id, new ArrayList<>(), true, null, null, true);
+        this.mediator.createPostForNewCity(id, cityName, curator, pos);
         return true;
     }
 
@@ -67,7 +64,7 @@ public class CityHandler {
     		return false;
     	City city = oCity.get();
     	if(!(city.getCurator().equals(curator) || 
-    		this.userHandler.changeCurator(curator, id)) )
+    		this.mediator.changeCurator(curator, id)) )
         	return false;
         city.setName(cityName);
         city.setCap(cap);
@@ -82,13 +79,52 @@ public class CityHandler {
     		return false;
     	City city = oCity.get();
     	this.cities.remove(city);
-    	this.userHandler.discreditCurator(cityId);
-    	this.pointHandler.deleteCityPoints(cityId);
+    	this.mediator.deleteCity(cityId);
     	return true;
     }
     
     public boolean isAuthorized(String cityId, String username) {
     	return true;
+    	//TODO
     }
+
+	public boolean canPublish(String cityId, String author) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	
+	public Licence requestAuthorization(String username, String cityId) {
+		return this.roleHandler.requestAuthorization(username, cityId);
+	}
+	
+	public List<Licence> requestAuthorizations(String cityId) {
+		return this.roleHandler.requestAuthorizations(cityId);
+	}
+	
+	public boolean addRequest(String username, String cityId) {
+		if(!this.mediator.usernameExists(username))
+			return false;
+		if(!this.cities.stream().anyMatch(c -> c.getId().equals(cityId)))
+			return false;
+		return this.roleHandler.addRequest(username, cityId);
+	}
+	
+	public boolean judge(String requestId, boolean outcome) {
+		return this.roleHandler.judge(requestId, outcome);
+	}
+	
+	public boolean setRole(String username, String cityId, Role role) {
+		if(!this.mediator.usernameExists(username))
+			return false;
+		City city = getCity(cityId);
+		if(city == null || city.getCurator().equals(username))
+			return false;
+		return this.roleHandler.setRole(username, cityId, role);
+	}
+
+	public Role getRole(String username, String cityId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

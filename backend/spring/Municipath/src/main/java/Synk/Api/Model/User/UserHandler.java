@@ -3,14 +3,18 @@ package Synk.Api.Model.User;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import Synk.Api.Model.MuniciPathMediator;
+
 public class UserHandler {
 
     private ArrayList<User> users;
     private NotificationHandler notifications;
+    private MuniciPathMediator mediator;
 
-    public UserHandler() {
+    public UserHandler(MuniciPathMediator mediator) {
         users = new ArrayList<User>();
         this.notifications = new NotificationHandler();
+        this.mediator = mediator;
     }
     
     private Optional<User> getOptUser(String username) {
@@ -55,6 +59,10 @@ public class UserHandler {
 
 	public void setUsers(ArrayList<User> users) {
 		this.users = users;
+	}
+
+	public boolean usernameExists(String username) {
+		return this.users.stream().anyMatch(u -> u.getUsername().equals(username));
 	}
     
 }

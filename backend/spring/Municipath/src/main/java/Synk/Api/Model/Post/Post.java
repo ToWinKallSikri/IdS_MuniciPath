@@ -136,12 +136,16 @@ public class Post {
         return this.author.equals(author);
     }
 
-    public void updateInfo(String title, PostType type, String text, ArrayList<String> data) {
+    public void updateInfo(String title, PostType type, String text,
+    		ArrayList<String> data, Date start, Date end, boolean persistence) {
         this.title = title;
         this.type = type;
         this.text = text;
         this.multimediaData.clear();
         this.multimediaData.addAll(data);
+        this.start = start;
+        this.end = end;
+        this.persistence = persistence;
     }
 
 	public boolean isPublished() {
@@ -186,5 +190,7 @@ public class Post {
 	public Date getMeteoDate() {
 		return this.start == null ? new Date() : this.start;
 	}
+	
+	
     
 }

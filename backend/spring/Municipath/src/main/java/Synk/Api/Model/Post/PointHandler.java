@@ -6,24 +6,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import Synk.Api.Model.City.CityHandler;
-import Synk.Api.Model.Group.GroupHandler;
+import Synk.Api.Model.MuniciPathMediator;
+import Synk.Api.Model.Pending.PendingRequest;
 
 
 public class PointHandler {
 
     private Map<String, List<Point>> points;
     private WeatherForecast weather;
-    private CityHandler cityHandler;
-    private GroupHandler groupHandler;
-    private ContestHandler contributes;
+    private ContributeHandler contributes;
+    private MuniciPathMediator mediator;
 
-    public PointHandler(CityHandler ch, GroupHandler gh) {
+    public PointHandler(MuniciPathMediator mediator) {
     	points = new HashMap<>();
         weather = new WeatherForecast();
-        this.cityHandler = ch;
-        this.groupHandler = gh;
-        this.contributes = new ContestHandler();
+        this.mediator = mediator;
+        this.contributes = new ContributeHandler();
     }
     
     public void loadData(ArrayList<Point> points, ArrayList<Post> posts) {
@@ -45,23 +43,33 @@ public class PointHandler {
     
     
     public boolean createPost(String title, PostType type, String text, String author, Position pos,
-            String cityId, ArrayList<String> data, boolean published, Date start, Date end, boolean persistence) {
-    	if(! this.cityHandler.isAuthorized(cityId, author))
+            String cityId, ArrayList<String> data, Date start, Date end, boolean persistence) {
+    	if(!this.mediator.isAuthorizedToPost(cityId, author))
     		return false;
+    	boolean published = this.mediator.canPublish(cityId, author);
         Post post = new Post(title, type, text, author, pos, cityId, null, data, published, start, end, persistence);
         Point point = getPoint(pos, cityId);
         post.setPostId(point.getNewPostId());
         point.getPosts().add(post);
+        if(!published)
+        	this.mediator.addPostPending(post.getId(), cityId);
         return true;
     }
     
     public boolean editPost(String postId, String title, PostType type, String text,
-    		String author, String cityId, ArrayList<String> data) {
+    		String author, String cityId, ArrayList<String> data, Date start, Date end, boolean persistence) {
     	Post post = this.getPost(postId);
     	if(!(post != null && post.getAuthor().equals(author)))
     		return false;
-    	post.updateInfo(title, type, text, data);
+    	boolean published = this.mediator.canPublish(cityId, author);
+    	if(published)post.updateInfo(title, type, text, data, start, end, persistence);
+    	else this.mediator.addPostPending(postId, title, type, text, data, start, end, persistence, cityId);
         return true;
+    }
+    
+    public boolean editPost(PendingRequest request) {
+    	return false;
+    	//TODO
     }
     
     private Point getPoint(Position pos, String cityId) {
@@ -89,7 +97,7 @@ public class PointHandler {
         List<Point> ps = this.points.get(cityId);
         ps.forEach(p -> p.getPosts().forEach(po -> deletePost(po.getPostId())));
         this.points.remove(cityId);
-        this.groupHandler.removeAllFromCity(cityId);
+        this.mediator.removeAllCityGroups(cityId);
     }
     
     public List<Post> getPosts (String pointId) {
@@ -145,14 +153,41 @@ public class PointHandler {
     		return false;
     	Point point = searchPoint(post.getId());
     	point.getPosts().remove(post);
-    	this.groupHandler.removeFromAll(post);
+    	this.mediator.removeFromAllGroups(post);
     	return true;
     }
 
 	private boolean isPrime(Post post) {
-		Position posCity = this.cityHandler.getCity(post.getCityID()).getPos();
+		Position posCity = this.mediator.getCity(post.getCityID()).getPos();
 		Point point = searchPoint(post.getCityID(), posCity);
 		return post.getPostId().equals(point.getPointId()+".0");
+	}
+	
+	public List<Post> getPosts(List<String> postIds){
+		return null;
+		//TODO
+	}
+	
+	public boolean approvePost(String postId) {
+		return false;
+		//TODO
+	}
+	
+	
+	public boolean addContestToContest(String author, String contestId, List<String> content) {
+		//TODO
+		return this.contributes.addContestToContest(author, contestId, content);
+	}
+	
+	
+	public boolean declareWinner(String author, String contestId, String winnerId) {
+		//TODO
+		return this.contributes.declareWinner(contestId, winnerId);
+	}
+	
+	
+	public void checkEndingPosts() {
+		//TODO
 	}
     
 }
