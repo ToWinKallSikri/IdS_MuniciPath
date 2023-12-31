@@ -2,6 +2,9 @@ package Synk.Api.Model.Post;
 
 import java.util.Objects;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class Position {
 
 	private double lat;

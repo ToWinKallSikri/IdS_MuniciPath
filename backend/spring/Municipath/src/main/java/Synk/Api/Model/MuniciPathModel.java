@@ -1,7 +1,7 @@
 package Synk.Api.Model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import Synk.Api.Model.City.City;
@@ -33,7 +33,8 @@ public class MuniciPathModel {
     	this.uh = new UserHandler(mediator);
         this.ch = new CityHandler(mediator);
         this.gh = new GroupHandler(mediator);
-        this.poh = new PointHandler(mediator);
+        this.poh = new PointHandler();
+        this.poh.setMediator(mediator);
         this.peh = new PendingHandler(mediator);
         mediator.setUser(uh);
         mediator.setCity(ch);
@@ -41,6 +42,9 @@ public class MuniciPathModel {
         mediator.setPoint(poh);
         mediator.setPending(peh);
     }
+    
+    
+    
     
     public boolean createCity(String cityName, int cap, String curator, Position pos ) {
         return ch.createCity(cityName, cap, curator, pos);
@@ -104,12 +108,12 @@ public class MuniciPathModel {
 	
 	
 	public boolean createGroup(String title, String author, boolean sorted, String cityId,
-			List<String> postIds, Date start, Date end, boolean persistence) {
+			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
 		return this.gh.createGroup(title, author, sorted, cityId, postIds, start, end, persistence);
 	}
 
 	public boolean editGroup(String groupId, String title, String author, boolean sorted,
-			List<String> postIds, Date start, Date end, boolean persistence) {
+			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
 		return this.gh.editGroup(groupId, title, author, sorted, postIds, start, end, persistence);
 	}
 	
@@ -135,12 +139,12 @@ public class MuniciPathModel {
 	
     
     public boolean createPost(String title, PostType type, String text, String author, Position pos,
-            String cityId, ArrayList<String> data, Date start, Date end, boolean persistence) {
+            String cityId, ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
     	return this.poh.createPost(title, type, text, author, pos, cityId, data, start, end, persistence);
     }
     
     public boolean editPost(String postId, String title, PostType type, String text,
-    		String author, String cityId, ArrayList<String> data, Date start, Date end, boolean persistence) {
+    		String author, String cityId, ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
         return this.poh.editPost(postId, title, type, text, author, cityId, data, start, end, persistence);
     }
     

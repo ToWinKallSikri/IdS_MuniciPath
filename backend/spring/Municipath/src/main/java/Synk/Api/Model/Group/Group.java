@@ -1,17 +1,16 @@
 package Synk.Api.Model.Group;
 
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import Synk.Api.Model.Post.Post;
 
 public class Group {
 	
 
 	private String id, title, cityId, author;
     private boolean sorted, published, persistence;
-    private Date start, end;
+    private LocalDateTime startTime, endTime;
     private List<String> posts;
     
     public Group() {}
@@ -19,7 +18,7 @@ public class Group {
     
 	
     public Group(String id, String title, String cityId, String author, boolean sorted,
-    		boolean published, boolean persistence, Date start, Date end, List<String> posts) {
+    		boolean published, boolean persistence, LocalDateTime start, LocalDateTime end, List<String> posts) {
 		this.id = id;
 		this.title = title;
 		this.author = author;
@@ -27,8 +26,8 @@ public class Group {
 		this.sorted = sorted;
 		this.published = published;
 		this.persistence = persistence;
-		this.start = start;
-		this.end = end;
+		this.startTime = start;
+		this.endTime = end;
 		this.posts = posts;
 	}
 
@@ -81,20 +80,20 @@ public class Group {
 		this.persistence = persistence;
 	}
 
-	public Date getStart() {
-		return start;
+	public LocalDateTime getStartTime() {
+		return startTime;
 	}
 
-	public void setStart(Date start) {
-		this.start = start;
+	public void setStartTime(LocalDateTime start) {
+		this.startTime = start;
 	}
 
-	public Date getEnd() {
-		return end;
+	public LocalDateTime getEndTime() {
+		return endTime;
 	}
 
-	public void setEnd(Date end) {
-		this.end = end;
+	public void setEndTime(LocalDateTime end) {
+		this.endTime = end;
 	}
 	
 
@@ -123,12 +122,12 @@ public class Group {
 		return this.posts.size() > 1;
 	}
 
-	public void edit(String title, boolean sorted, List<String> posts, Date start, Date end, boolean persistence) {
+	public void edit(String title, boolean sorted, List<String> posts, LocalDateTime start, LocalDateTime end, boolean persistence) {
 		this.title = title;
 		this.sorted = sorted;
 		this.posts = posts;
-		this.start = start;
-		this.end = end;
+		this.startTime = start;
+		this.endTime = end;
 		this.persistence = persistence;
 	}
 }

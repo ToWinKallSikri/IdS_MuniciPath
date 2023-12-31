@@ -1,7 +1,7 @@
 package Synk.Api.Model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import Synk.Api.Model.City.City;
@@ -56,7 +56,7 @@ public class MuniciPathMediator {
 	}
 
 	public void addPostPending(String postId, String title, PostType type, String text,
-			List<String> data, Date start, Date end, boolean persistence, String cityId) {
+			List<String> data, LocalDateTime start, LocalDateTime end, boolean persistence, String cityId) {
 		this.pending.addPostRequest(postId, title, type, text, data, start, end, persistence, cityId);
 	}
 
@@ -124,8 +124,8 @@ public class MuniciPathMediator {
 
 	public void addPost(Post post) {
 		this.point.createPost(post.getTitle(), post.getType(), post.getText(), post.getAuthor(),
-				post.getPos(), post.getCityID(), (ArrayList<String>) post.getMultimediaData(), post.getStart(),
-				post.getEnd(), post.isPersistence());
+				post.getPos(), post.getCityID(), (ArrayList<String>) post.getMultimediaData(), post.getStartTime(),
+				post.getEndTime(), post.isPersistence());
 	}
 
 	public void removePending(String pendingId) {
@@ -134,6 +134,6 @@ public class MuniciPathMediator {
 
 	public void addGroup(Group group) {
 		this.group.createGroup(group.getTitle(), group.getAuthor(), group.isSorted(), group.getCityId(),
-				group.getPosts(), group.getStart(), group.getEnd(), group.isPersistence());
+				group.getPosts(), group.getStartTime(), group.getEndTime(), group.isPersistence());
 	}
 }

@@ -1,15 +1,20 @@
 package Synk.Api.Model.Post;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RestController;
+
 import Synk.Api.Model.MuniciPathMediator;
 import Synk.Api.Model.Pending.PendingRequest;
+import jakarta.annotation.PostConstruct;
 
-
+@Repository
 public class PointHandler {
 
     private Map<String, List<Point>> points;
@@ -18,12 +23,29 @@ public class PointHandler {
     private MuniciPathMediator mediator;
     
     
-    public PointHandler(MuniciPathMediator mediator) {
+    @Autowired
+	private PostRepository postRepository;
+	@Autowired
+	private PointRepository pointRepository;
+    
+    public PointHandler() {
     	points = new HashMap<>();
         weather = new WeatherForecast();
-        this.mediator = mediator;
         this.contributes = new ContributeHandler();
     }
+    
+    @PostConstruct
+    public void init() {
+        this.pointRepository.save(new Point("123.456", new Position(10, 20), "123"));
+        this.postRepository.save(new Post("ciao", PostType.SOCIAL, "blablabla", "marvin", 
+        		new Position(1, 2), "1", "1.2.3", new ArrayList<>(), true, null, null, true));
+    }
+    
+    
+    public void setMediator(MuniciPathMediator mediator) {
+        this.mediator = mediator;
+    }
+    
     
     public void loadData(ArrayList<Point> points, ArrayList<Post> posts) {
     	this.points = points.stream()
@@ -42,7 +64,7 @@ public class PointHandler {
     }
     
     public boolean createPost(String title, PostType type, String text, String author, Position pos,
-            String cityId, ArrayList<String> data, Date start, Date end, boolean persistence) {
+            String cityId, ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
     	if(!(this.mediator.isAuthorizedToPost(cityId, author) && checkTiming(type, start, end, persistence)))
     		return false;
     	boolean published = this.mediator.canPublish(cityId, author);
@@ -58,7 +80,7 @@ public class PointHandler {
     }
 
 	public boolean editPost(String postId, String title, PostType type, String text,
-    		String author, String cityId, List<String> data, Date start, Date end, boolean persistence) {
+    		String author, String cityId, List<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
     	Post post = this.getPost(postId);
     	if(post == null|| (!post.getAuthor().equals(author)) || (!checkTiming(type, start, end, persistence)) || isPrime(post))
     		return false;
@@ -91,10 +113,10 @@ public class PointHandler {
 		return true;
 	}
 
-	private boolean checkTiming(PostType type, Date start, Date end, boolean persistence) {
+	private boolean checkTiming(PostType type, LocalDateTime start, LocalDateTime end, boolean persistence) {
 		if(isNotTemp(type) && persistence && start == null && end == null)
 			return true;
-		if(type == PostType.EVENT && start != null && end != null && start.before(end))
+		if(type == PostType.EVENT && start != null && end != null && start.isBefore(end))
 			return true;
 		if(type == PostType.CONTEST && start == null && end != null && persistence)
 			return true;
@@ -148,7 +170,7 @@ public class PointHandler {
     private boolean toShow(Post post, String username) {
     	if(post.getType() != PostType.EVENT)
     		return true;
-    	return post.getAuthor().equals(username) || post.getEnd().after(new Date());
+    	return post.getAuthor().equals(username) || post.getEndTime().isAfter((LocalDateTime.now()));
     	
     }
     
@@ -262,13 +284,13 @@ public class PointHandler {
 	
 	
 	public void checkEndingPosts() {
-		Date date = new Date();
+		LocalDateTime date = LocalDateTime.now();
 		this.points.values().forEach(l -> l.forEach( p -> p.getPosts()
 				.stream()
 				.filter(po -> ! po.isPersistence())
 				.filter(po -> po.getType() == PostType.EVENT)
 				.forEach(po -> {
-					if(po.getEnd().before(date))
+					if(po.getEndTime().isBefore(date))
 						p.getPosts().remove(po); })
 		));
 	}

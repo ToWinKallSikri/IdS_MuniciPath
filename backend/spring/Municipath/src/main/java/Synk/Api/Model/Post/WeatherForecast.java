@@ -1,8 +1,9 @@
 package Synk.Api.Model.Post;
 
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +17,17 @@ public class WeatherForecast {
     //API KEY PER OPENWEATHERMAP "f11be85a0ecf5636165e348258c60dec";
     //120 ore (5 giorni) / 3 ore = 40 previsioni
     
-    public String getWeather(Position position, Date time) {
+    public String getWeather(Position position, LocalDateTime time) {
     	int count = getThreeHourIndex(time);
     	if(count > 39) return "?";
         return callService(count, position);
     }
     
-    private int getThreeHourIndex(Date time) {
-    	long now = new Date().getTime();
+    private int getThreeHourIndex(LocalDateTime time) {
+    	LocalDateTime now = LocalDateTime.now();
     	for(int count = 0; count < 40; count++) {
-    		now += 360000;
-    		if(time.getTime() < now)
+    		now = now.plusHours(1);
+    		if(time.isBefore(now))
     			return count;
     	}
     	return 40;

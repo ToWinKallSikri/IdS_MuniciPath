@@ -1,5 +1,4 @@
-package Synk.Api.Controller;
-
+package Synk.Api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

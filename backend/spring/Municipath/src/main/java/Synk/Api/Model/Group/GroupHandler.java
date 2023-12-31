@@ -1,7 +1,7 @@
 package Synk.Api.Model.Group;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +48,7 @@ public class GroupHandler {
 	}
 	
 	public boolean createGroup(String title, String author, boolean sorted, String cityId,
-			List<String> postIds, Date start, Date end, boolean persistence) {
+			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
 		if(!this.mediator.isAuthorizedToPost(cityId, author))
 			return false;
 		List<Post> posts = this.mediator.getPostsIfAllExists(postIds);
@@ -63,7 +63,7 @@ public class GroupHandler {
 	}
 
 	public boolean editGroup(String groupId, String title, String author, boolean sorted,
-			List<String> postIds, Date start, Date end, boolean persistence) {
+			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
 		Group group = viewGroup(groupId);
 		if(group == null || !(group.getAuthor().equals(author) || checkTiming(start, end, persistence)))
 			return false;
@@ -79,7 +79,7 @@ public class GroupHandler {
 	public boolean editGroup(PendingRequest request) {
 		Group group = viewGroup(request.getId());
 		return editGroup(request.getId(), request.getTitle(), group.getAuthor(), request.isSorted(), 
-				request.getData(), request.getStart(), request.getEnd(), request.isPersistence());
+				request.getData(), request.getStartTime(), request.getEndTime(), request.isPersistence());
 	}
 	
 	public boolean removeGroup(String author, String groupId) {
@@ -110,10 +110,10 @@ public class GroupHandler {
 		return cityId+".g."+ this.count;
 	}
 	
-	private boolean checkTiming(Date start, Date end, boolean persistence) {
+	private boolean checkTiming(LocalDateTime start, LocalDateTime end, boolean persistence) {
 		if(persistence && start == null && end == null)
 			return true;
-		if(start != null && end != null && start.before(end))
+		if(start != null && end != null && start.isBefore(end))
 			return true;
 		return false;
 	}
@@ -152,10 +152,10 @@ public class GroupHandler {
 	}
 	
 	public void checkEndingGroups() {
-		Date date = new Date();
+		LocalDateTime date = LocalDateTime.now();
 		this.groups.values().forEach(l -> l.stream()
 				.filter(g -> ! g.isPersistence()).forEach(g -> {
-			if(g.getEnd().before(date))
+			if(g.getEndTime().isBefore(date))
 				l.remove(g);
 		}));
 	}

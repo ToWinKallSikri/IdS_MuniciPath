@@ -4,11 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
+
+@Entity
 public class Point {
 	
+	@Id
 	private String pointId;
+	@Embedded
     private Position pos;
     private String cityId;
+    @Transient
 	private List<Post> posts;
 	private int idCount;
     

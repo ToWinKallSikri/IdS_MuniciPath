@@ -1,43 +1,57 @@
 package Synk.Api.Model.Post;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Pending.PendingRequest;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
+@Entity
 public class Post {
-
+	
+	@Id
     private String title;
+	@Enumerated(EnumType.STRING)
     private PostType type;
     private String author;
+    @Embedded
     private Position pos;
     private String cityID;
     private String text;
     private String postId;
+    @ElementCollection
     private List<String> multimediaData;
+    @Transient
     private List<String> groups;
     private boolean published;
+    @Transient
     private String meteo;
-    private Date start;
-    private Date end;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private boolean persistence;
 
     public Post(String title, PostType type, String text, String author, Position pos,
-            String cityID, String postId, ArrayList<String> data, boolean published,
-            Date start, Date end, boolean persistence) {
+            String cityID, String postId, List<String> data, boolean published,
+            LocalDateTime start, LocalDateTime end, boolean persistence) {
 	    this.title = title;
 	    this.type = type;
 	    this.author = author;
+	    this.text = text;
 	    this.pos = pos;
 	    this.cityID = cityID;
 	    this.postId = postId;
 	    this.multimediaData = data;
 	    this.published = published;
-	    this.start = start;
-	    this.end = end;
+	    this.startTime = start;
+	    this.endTime = end;
 	    this.persistence = persistence;
 	    this.groups = new ArrayList<>();
 	}
@@ -114,20 +128,20 @@ public class Post {
         return cityID;
     }
 
-    public Date getStart() {
-		return start;
+    public LocalDateTime getStartTime() {
+		return startTime;
 	}
 
-	public void setStart(Date start) {
-		this.start = start;
+	public void setStartTime(LocalDateTime start) {
+		this.startTime = start;
 	}
 
-	public Date getEnd() {
-		return end;
+	public LocalDateTime getEndTime() {
+		return endTime;
 	}
 
-	public void setEnd(Date end) {
-		this.end = end;
+	public void setEndTime(LocalDateTime end) {
+		this.endTime = end;
 	}
 
 	public boolean isPersistence() {
@@ -191,21 +205,21 @@ public class Post {
 		return true;
 	}
 
-	public Date getMeteoDate() {
-		return this.start == null ? new Date() : this.start;
+	public LocalDateTime getMeteoDate() {
+		return this.startTime == null ? LocalDateTime.now() : this.startTime;
 	}
 	
 
 
     public void updateInfo(String title, PostType type, String text,
-    		List<String> data, Date start, Date end, boolean persistence) {
+    		List<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
         this.title = title;
         this.type = type;
         this.text = text;
         this.multimediaData.clear();
         this.multimediaData.addAll(data);
-        this.start = start;
-        this.end = end;
+        this.startTime = start;
+        this.endTime = end;
         this.persistence = persistence;
     }
     
@@ -215,8 +229,8 @@ public class Post {
 		this.text = request.getText();
 		this.multimediaData.clear();
 		this.multimediaData.addAll(request.getData());
-		this.start = request.getStart();
-		this.end = request.getEnd();
+		this.startTime = request.getStartTime();
+		this.endTime = request.getEndTime();
 		this.persistence = request.isPersistence();
 	}
     

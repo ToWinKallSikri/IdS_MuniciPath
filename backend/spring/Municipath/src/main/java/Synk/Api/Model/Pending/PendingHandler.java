@@ -1,8 +1,7 @@
 package Synk.Api.Model.Pending;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Stack;
 
 import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.MuniciPathMediator;
@@ -28,12 +27,12 @@ public class PendingHandler {
 			return;
 		}
 		pr.add(new PendingRequest(id, p1.getTitle(), p1.getText(), true, p1.isPersistence(),
-				p1.getType(), p1.getMultimediaData(), p1.getStart(), p1.getEnd()));
+				p1.getType(), p1.getMultimediaData(), p1.getStartTime(), p1.getEndTime()));
 	}
 
 	
 	public void addPostRequest(String postId, String title, PostType type, String text,
-			List<String> data, Date start, Date end, boolean persistence, String cityId) {
+			List<String> data, LocalDateTime start, LocalDateTime end, boolean persistence, String cityId) {
 		if(!this.mediator.postExist(postId)) {
 			return;
 		}
@@ -48,13 +47,15 @@ public class PendingHandler {
 		if (g1 == null || !this.mediator.checkCityId(cityId)) {
 			return;
 		} else {
+			/*
 			pr.add(new PendingRequest(id, g1.getTitle(), true, g1.isSorted(), g1.isPersistence(),
 					g1.getPosts(), g1.getStart(), g1.getEnd()));
+					*/
 		}
 	}
 
 	public void addGroupRequest(String groupId, String title, boolean sorted, List<String> postIds, 
-			Date start, Date end, boolean persistence, String cityId) {
+			LocalDateTime start, LocalDateTime end, boolean persistence, String cityId) {
 		Group g1 = this.mediator.getGroup(groupId);
 		if (g1 == null || !this.mediator.checkCityId(cityId)) {
 			return;

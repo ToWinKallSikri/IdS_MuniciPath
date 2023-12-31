@@ -1,6 +1,6 @@
 package Synk.Api.Model.Pending;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import Synk.Api.Model.Post.PostType;
@@ -11,22 +11,22 @@ public class PendingRequest {
 	private boolean isNew, sorted, persistence;
 	private PostType type;
 	private List<String> data;
-	private Date start, end;
+	private LocalDateTime startTime, endTime;
 	
 	public PendingRequest(String id, String title, boolean isNew, boolean sorted,
-			boolean persistence, List<String> data, Date start, Date end) {
+			boolean persistence, List<String> data, LocalDateTime start, LocalDateTime end) {
 		this.id = id;
 		this.title = title;
 		this.isNew = isNew;
 		this.sorted = sorted;
 		this.persistence = persistence;
 		this.data = data;
-		this.start = start;
-		this.end = end;
+		this.startTime = start;
+		this.endTime = end;
 	}
 
 	public PendingRequest(String id, String title, String text, boolean isNew, boolean persistence,
-			PostType type, List<String> data, Date start, Date end) {
+			PostType type, List<String> data, LocalDateTime start, LocalDateTime end) {
 		this.id = id;
 		this.title = title;
 		this.text = text;
@@ -34,8 +34,8 @@ public class PendingRequest {
 		this.persistence = persistence;
 		this.type = type;
 		this.data = data;
-		this.start = start;
-		this.end = end;
+		this.startTime = start;
+		this.endTime = end;
 	}
 	
 	public PendingRequest() {}
@@ -104,20 +104,20 @@ public class PendingRequest {
 		this.data = data;
 	}
 
-	public Date getStart() {
-		return start;
+	public LocalDateTime getStartTime() {
+		return startTime;
 	}
 
-	public void setStart(Date start) {
-		this.start = start;
+	public void setStartTime(LocalDateTime start) {
+		this.startTime = start;
 	}
 
-	public Date getEnd() {
-		return end;
+	public LocalDateTime getEndTime() {
+		return endTime;
 	}
 
-	public void setEnd(Date end) {
-		this.end = end;
+	public void setEndTime(LocalDateTime end) {
+		this.endTime = end;
 	}
 	
 	
