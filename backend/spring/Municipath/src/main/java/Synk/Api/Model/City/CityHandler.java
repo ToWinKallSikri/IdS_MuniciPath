@@ -84,27 +84,13 @@ public class CityHandler {
     }
     
     public boolean isAuthorized(String cityId, String username) {
-    	switch(this.roleHandler.getAuthorization(username, cityId).getRole()) {
-			case CURATOR:
-				return true;
-			case CONTR_AUTH:
-				return true;
-			case CONTR_NOT_AUTH:
-				return true;
-			case LIMITED:
-				return false;
-			case MODERATOR:
-				return true;
-			case TOURIST:
-				return false;
-			default:
-				return false;
-			}
+    	Role role = requestAuthorization(username, cityId).getRole();
+    	return role != Role.LIMITED && role != Role.TOURIST;
 	}
 
 
 	public boolean canPublish(String cityId, String author) {
-		Role role = this.roleHandler.getAuthorization(author, cityId).getRole();
+		Role role = requestAuthorization(author, cityId).getRole();
 		return role == Role.CURATOR || role == Role.CONTR_AUTH || role == Role.MODERATOR;
 	}
 	

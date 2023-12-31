@@ -18,7 +18,7 @@ public class Post {
     private String text;
     private String postId;
     private List<String> multimediaData;
-    private List<Group> groups;
+    private List<String> groups;
     private boolean published;
     private String meteo;
     private Date start;
@@ -160,11 +160,11 @@ public class Post {
 	
 	
 
-	public List<Group> getGroups() {
+	public List<String> getGroups() {
 		return groups;
 	}
 
-	public void setGroups(List<Group> groups) {
+	public void setGroups(List<String> groups) {
 		this.groups = groups;
 	}
 

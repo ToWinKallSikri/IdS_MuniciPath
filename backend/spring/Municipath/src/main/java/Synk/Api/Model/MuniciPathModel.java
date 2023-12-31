@@ -114,6 +114,9 @@ public class MuniciPathModel {
 		return this.gh.viewGroup(groupId);
 	}
 	
+	public List<Group> viewGroups(List<String> groupIds) {
+		return this.gh.viewGroups(groupIds);
+	}
 	
 	
 	
@@ -130,21 +133,21 @@ public class MuniciPathModel {
         return this.poh.editPost(postId, title, type, text, author, cityId, data, start, end, persistence);
     }
     
-    public List<Point> getPoints (String cityID) {
-          return this.poh.getPoints(cityID);
+    public List<Point> getPoints (String cityID, String username) {
+          return this.poh.getPoints(cityID, username);
       
     }
     
-    public List<Post> viewPosts (String pointId) {
-        return this.poh.viewPosts(pointId);
+    public List<Post> viewPosts (String pointId, String username) {
+        return this.poh.viewPosts(pointId, username);
     }
     
-    public List<Post> getPosts (List<String> postIds) {
+    public List<Post> viewPosts (List<String> postIds) {
         return this.poh.getPosts(postIds);
     }
     
     public Post viewPost(String postId) {
-        return this.poh.viewPost(postId);
+        return this.poh.getPost(postId);
     }
     
     public boolean deletePost (String postId, String author) {

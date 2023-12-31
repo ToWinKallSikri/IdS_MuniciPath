@@ -27,8 +27,8 @@ public class GroupHandler {
 				.collect(Collectors.groupingBy(Group::getCityId));
 	}
 
-	public void removeFromAll(Post post) {
-		String cityId = post.getCityID();
+	public void removeFromAll(String post) {
+		String cityId = this.getCityId(post);
 		groups.get(cityId).forEach(g -> g.removePost(post));
 		checkCompositionOfGroups(groups.get(cityId));
 	}
@@ -57,7 +57,7 @@ public class GroupHandler {
 		boolean publish = this.mediator.canPublish(cityId, author);
 		String id = getId(cityId);
 		Group group = new Group(id, title, author, cityId,
-				sorted, publish, persistence, start, end, posts);
+				sorted, publish, persistence, start, end, postIds);
 		this.groups.get(cityId).add(group);
 		return true;
 	}
@@ -70,7 +70,7 @@ public class GroupHandler {
 		List<Post> posts = this.mediator.getPostsIfAllExists(postIds);
 		if(posts == null || posts.size() < 1)
 			return false;
-		group.edit(title, sorted, posts, start, end, persistence);
+		group.edit(title, sorted, postIds, start, end, persistence);
 		return true;
 	}
 	
@@ -118,6 +118,13 @@ public class GroupHandler {
 		return false;
 	}
 	
+	public List<Group> viewGroups(List<String> groupIds) {
+		String cityId = getCityId(groupIds.get(0));
+		return this.groups.get(cityId).stream()
+				.filter(g -> groupIds.contains(g.getId()))
+				.toList();
+	}
+	
 	public Group viewGroup(String groupId) {
 		String cityId = getCityId(groupId);
 		return this.groups.get(cityId).stream()
@@ -125,18 +132,11 @@ public class GroupHandler {
 				.findFirst().orElse(null);
 	}
 	
-	public List<Group> viewGroupFrom(String postId) {
+	public List<String> viewGroupFrom(String postId) {
 		String cityId = getCityId(postId);
-		Post post = new Post();
-		post.setPostId(postId);
 		return this.groups.get(cityId).stream().filter(Group::isPublished)
-				.filter(g -> g.getPosts().contains(post))
-				.map(g -> {
-					Group group = new Group();
-					group.setTitle(g.getTitle());
-					group.setId(g.getId());
-					return group;
-				}).toList();
+				.filter(g -> g.getPosts().contains(postId))
+				.map(g -> g.getId()).toList();
 	}
 	
 	private String getCityId(String id) {

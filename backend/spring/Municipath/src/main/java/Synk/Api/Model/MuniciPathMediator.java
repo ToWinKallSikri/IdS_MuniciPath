@@ -6,7 +6,6 @@ import java.util.List;
 
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.CityHandler;
-import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Group.GroupHandler;
 import Synk.Api.Model.Pending.PendingHandler;
 import Synk.Api.Model.Post.PointHandler;
@@ -65,7 +64,7 @@ public class MuniciPathMediator {
 		
 	}
 
-	public void removeFromAllGroups(Post post) {
+	public void removeFromAllGroups(String post) {
 		this.group.removeFromAll(post);
 	}
 
@@ -104,7 +103,7 @@ public class MuniciPathMediator {
 		return this.point.getPostsIfAllExists(postIds);
 	}
 
-	public List<Group> viewGroupFrom(Post post) {
+	public List<String> viewGroupFrom(Post post) {
 		return this.group.viewGroupFrom(post.getPostId());
 	}
 	

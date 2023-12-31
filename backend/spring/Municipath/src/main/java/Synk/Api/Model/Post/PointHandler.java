@@ -122,9 +122,9 @@ public class PointHandler {
     	return point;
     }
     
-    public List<Point> getPoints (String cityId) {
-          return this.points.get(cityId);
-      
+    public List<Point> getPoints (String cityId, String username) {
+          return this.points.get(cityId).stream()
+        		  .filter( p -> p.getPosts().stream().anyMatch(po -> toShow(po, username))).toList();
     }
     
     private Post updatePost(Post post) {
@@ -140,17 +140,16 @@ public class PointHandler {
         this.mediator.removeAllCityGroups(cityId);
     }
     
-    public List<Post> viewPosts (String pointId) {
+    public List<Post> viewPosts (String pointId, String username) {
         return searchPoint(pointId).getPosts().stream()
-        		.map(p -> updatePost(p)).toList();
+        		.filter(p -> toShow(p, username)).toList();
     }
     
-    public Post viewPost(String postId) {
-    	Point point = searchPointFromPost(postId);
-    	Post post = point.getPosts().stream()
-    			.filter(p -> p.getId().equals(postId))
-    			.findFirst().orElse(null);
-    	return post == null ? null : updatePost(post);
+    private boolean toShow(Post post, String username) {
+    	if(post.getType() != PostType.EVENT)
+    		return true;
+    	return post.getAuthor().equals(username) || post.getEnd().after(new Date());
+    	
     }
     
     public Post getPost(String postId) {
@@ -203,7 +202,7 @@ public class PointHandler {
     	point.getPosts().remove(post);
     	if(point.getPosts().isEmpty())
     		this.points.get(point.getCityId()).remove(point);
-    	this.mediator.removeFromAllGroups(post);
+    	this.mediator.removeFromAllGroups(post.getPostId());
     	return true;
     }
 

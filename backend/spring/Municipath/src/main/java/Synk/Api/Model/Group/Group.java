@@ -12,14 +12,14 @@ public class Group {
 	private String id, title, cityId, author;
     private boolean sorted, published, persistence;
     private Date start, end;
-    private List<Post> posts;
+    private List<String> posts;
     
     public Group() {}
     
     
 	
     public Group(String id, String title, String cityId, String author, boolean sorted,
-    		boolean published, boolean persistence, Date start, Date end, List<Post> posts) {
+    		boolean published, boolean persistence, Date start, Date end, List<String> posts) {
 		this.id = id;
 		this.title = title;
 		this.author = author;
@@ -108,14 +108,14 @@ public class Group {
 	
 
 
-	public void setPosts(List<Post> posts) {
+	public void setPosts(List<String> posts) {
 		this.posts = posts;
 	}
 
-	public List<Post> getPosts() {
+	public List<String> getPosts() {
 		return posts;
 	}
-	public void removePost(Post post) {
+	public void removePost(String post) {
 		this.posts.remove(post);
 	}
 
@@ -123,7 +123,7 @@ public class Group {
 		return this.posts.size() > 1;
 	}
 
-	public void edit(String title, boolean sorted, List<Post> posts, Date start, Date end, boolean persistence) {
+	public void edit(String title, boolean sorted, List<String> posts, Date start, Date end, boolean persistence) {
 		this.title = title;
 		this.sorted = sorted;
 		this.posts = posts;
