@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import Synk.Api.Model.Group.Group;
+import Synk.Api.Model.Pending.PendingRequest;
 
 public class Post {
 
@@ -141,18 +142,6 @@ public class Post {
         return this.author.equals(author);
     }
 
-    public void updateInfo(String title, PostType type, String text,
-    		ArrayList<String> data, Date start, Date end, boolean persistence) {
-        this.title = title;
-        this.type = type;
-        this.text = text;
-        this.multimediaData.clear();
-        this.multimediaData.addAll(data);
-        this.start = start;
-        this.end = end;
-        this.persistence = persistence;
-    }
-
 	public boolean isPublished() {
 		return published;
 	}
@@ -206,6 +195,29 @@ public class Post {
 		return this.start == null ? new Date() : this.start;
 	}
 	
-	
+
+
+    public void updateInfo(String title, PostType type, String text,
+    		List<String> data, Date start, Date end, boolean persistence) {
+        this.title = title;
+        this.type = type;
+        this.text = text;
+        this.multimediaData.clear();
+        this.multimediaData.addAll(data);
+        this.start = start;
+        this.end = end;
+        this.persistence = persistence;
+    }
+    
+    public void updateInfo(PendingRequest request) {
+		this.title = request.getTitle();
+		this.type = request.getType();
+		this.text = request.getText();
+		this.multimediaData.clear();
+		this.multimediaData.addAll(request.getData());
+		this.start = request.getStart();
+		this.end = request.getEnd();
+		this.persistence = request.isPersistence();
+	}
     
 }

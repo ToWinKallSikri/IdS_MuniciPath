@@ -8,17 +8,20 @@ import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.CityHandler;
 import Synk.Api.Model.City.Licence;
 import Synk.Api.Model.City.Role;
+import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Group.GroupHandler;
 import Synk.Api.Model.Pending.PendingHandler;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
+import Synk.Api.Model.Post.Contribute;
 import Synk.Api.Model.Post.Point;
 import Synk.Api.Model.Post.PointHandler;
 import Synk.Api.Model.User.UserHandler;
 
 public class MuniciPathModel {
+	
     private PointHandler poh;
 	private UserHandler uh;
     private CityHandler ch;
@@ -82,6 +85,40 @@ public class MuniciPathModel {
 	public Role getRole(String username, String cityId) {
 		return this.ch.getRole(username, cityId);
 	}
+	
+	
+	
+	
+	
+	
+	
+	public boolean createGroup(String title, String author, boolean sorted, String cityId,
+			List<String> postIds, Date start, Date end, boolean persistence) {
+		return this.gh.createGroup(title, author, sorted, cityId, postIds, start, end, persistence);
+	}
+
+	public boolean editGroup(String groupId, String title, String author, boolean sorted,
+			List<String> postIds, Date start, Date end, boolean persistence) {
+		return this.gh.editGroup(groupId, title, author, sorted, postIds, start, end, persistence);
+	}
+	
+	public boolean removeGroup(String author, String groupId) {
+		return this.gh.removeGroup(author, groupId);
+	}
+	
+	public boolean removeGroup(String groupId) {
+		return this.gh.removeGroup(groupId);
+	}
+	
+	public Group viewGroup(String groupId) {
+		return this.gh.viewGroup(groupId);
+	}
+	
+	
+	
+	
+	
+	
     
     public boolean createPost(String title, PostType type, String text, String author, Position pos,
             String cityId, ArrayList<String> data, Date start, Date end, boolean persistence) {
@@ -98,21 +135,34 @@ public class MuniciPathModel {
       
     }
     
-    public List<Post> getPosts (String pointId) {
-        return this.poh.getPosts(pointId);
+    public List<Post> viewPosts (String pointId) {
+        return this.poh.viewPosts(pointId);
     }
     
     public List<Post> getPosts (List<String> postIds) {
         return this.poh.getPosts(postIds);
     }
     
-    public Post getPost(String postId) {
-        return this.poh.getPost(postId);
+    public Post viewPost(String postId) {
+        return this.poh.viewPost(postId);
     }
     
     public boolean deletePost (String postId, String author) {
     	return this.poh.deletePost(postId, author);
     }
+    
+    public boolean deletePost (String postId) {
+    	return this.poh.deletePost(postId);
+    }
+    
+    public List<Contribute> getContributes(String username, String postId){
+		return this.poh.getContributes(username, postId);
+	}
+    
+    
+    
+    
+    
     
     public boolean judge(String pendingId, boolean outcome, String motivation) {
 		return this.peh.judge(pendingId, outcome, motivation);
@@ -125,6 +175,12 @@ public class MuniciPathModel {
 	public PendingRequest getRequest(String requestId) {
 		return this.peh.getRequest(requestId);
 	}
+	
+	
+	
+	
+	
+	
 	
 	public void checkEnding() {
 		this.poh.checkEndingPosts();

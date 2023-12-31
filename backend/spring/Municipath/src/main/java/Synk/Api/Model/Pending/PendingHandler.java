@@ -1,6 +1,5 @@
 package Synk.Api.Model.Pending;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,19 +8,23 @@ import Synk.Api.Model.Post.PostType;
 
 public class PendingHandler {
 	
+	
 	private MuniciPathMediator mediator;
-
+	
+	
 	public PendingHandler(MuniciPathMediator mediator) {
 		this.mediator = mediator;
 	}
 
+	
 	public void addPostRequest(String id, String cityId) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	
 	public void addPostRequest(String postId, String title, PostType type, String text,
-			ArrayList<String> data, Date start, Date end, boolean persistence, String cityId) {
+			List<String> data, Date start, Date end, boolean persistence, String cityId) {
 		// TODO Auto-generated method stub
 		
 	}
