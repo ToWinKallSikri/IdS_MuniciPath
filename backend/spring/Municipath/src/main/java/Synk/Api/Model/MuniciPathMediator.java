@@ -6,6 +6,7 @@ import java.util.List;
 
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.CityHandler;
+import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Group.GroupHandler;
 import Synk.Api.Model.Pending.PendingHandler;
 import Synk.Api.Model.Post.PointHandler;
@@ -103,13 +104,36 @@ public class MuniciPathMediator {
 		return this.point.getPostsIfAllExists(postIds);
 	}
 
+
+
 	public List<String> viewGroupFrom(Post post) {
 		return this.group.viewGroupFrom(post.getPostId());
 	}
-	
-	
-	
-	
-	
-	
+
+	public boolean checkCityId(String cityId) {
+		return this.city.getCity(cityId) != null;
+	}
+
+	public Group getGroup(String groupId) {
+		return this.group.viewGroup(groupId);
+	}
+
+	public Post getPost(String id) {
+		return this.point.getPost(id);
+	}
+
+	public void addPost(Post post) {
+		this.point.createPost(post.getTitle(), post.getType(), post.getText(), post.getAuthor(),
+				post.getPos(), post.getCityID(), (ArrayList<String>) post.getMultimediaData(), post.getStart(),
+				post.getEnd(), post.isPersistence());
+	}
+
+	public void removePending(String pendingId) {
+		this.pending.removePendingRequest(pendingId);
+	}
+
+	public void addGroup(Group group) {
+		this.group.createGroup(group.getTitle(), group.getAuthor(), group.isSorted(), group.getCityId(),
+				group.getPosts(), group.getStart(), group.getEnd(), group.isPersistence());
+	}
 }
