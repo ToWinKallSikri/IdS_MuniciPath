@@ -100,6 +100,10 @@ public class MuniciPathMediator {
 		return this.point.getPostsIfAllExists(postIds);
 	}
 
+	public Post getPost(String postId) {
+		return this.point.getPost(postId);
+	}
+
 	public List<Group> viewGroupFrom(Post post) {
 		return this.group.viewGroupFrom(post.getPostId());
 	}

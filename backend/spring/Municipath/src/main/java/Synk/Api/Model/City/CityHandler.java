@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import Synk.Api.Model.Post.Position;
-import Synk.Api.Model.Post.PostType;
 import Synk.Api.Model.MuniciPathMediator;
-import Synk.Api.Model.Post.PointHandler;
-import Synk.Api.Model.User.UserHandler;
+
 
 
 public class CityHandler {
@@ -84,24 +82,11 @@ public class CityHandler {
     }
     
     public boolean isAuthorized(String cityId, String username) {
-    	switch(this.roleHandler.getAuthorization(username, cityId).getRole()) {
-			case CURATOR:
-				return true;
-			case CONTR_AUTH:
-				return true;
-			case CONTR_NOT_AUTH:
-				return true;
-			case LIMITED:
-				return false;
-			case MODERATOR:
-				return true;
-			case TOURIST:
-				return false;
-			default:
-				return false;
-			}
+        return switch (this.roleHandler.getAuthorization(username, cityId).getRole()) {
+            case CURATOR, CONTR_AUTH, CONTR_NOT_AUTH -> true;
+            default -> false;
+        };
 	}
-
 
 	public boolean canPublish(String cityId, String author) {
 		Role role = this.roleHandler.getAuthorization(author, cityId).getRole();
