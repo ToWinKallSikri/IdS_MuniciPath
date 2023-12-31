@@ -94,19 +94,19 @@ public class CityHandler {
 	}
 	
 	public Licence requestAuthorization(String username, String cityId) {
-		return this.roleHandler.requestAuthorization(username, cityId);
+		return this.roleHandler.getAuthorization(username, cityId);
 	}
 	
-	public List<Licence> requestAuthorizations(String cityId) {
-		return this.roleHandler.requestAuthorizations(cityId);
+	public List<Licence> getAuthorizations(String cityId) {
+		return this.roleHandler.getAuthorizations(cityId);
 	}
 	
-	public boolean addRequest(String username, String cityId) {
+	public boolean addRequest(String username, String cityId, String requestId) {
 		if(!this.mediator.usernameExists(username))
 			return false;
 		if(!this.cities.stream().anyMatch(c -> c.getId().equals(cityId)))
 			return false;
-		return this.roleHandler.addRequest(username, cityId);
+		return this.roleHandler.addRequest(username, cityId, requestId);
 	}
 	
 	public boolean judge(String requestId, boolean outcome) {

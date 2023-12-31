@@ -5,6 +5,6 @@ public enum Role {
 	MODERATOR,
 	CONTR_AUTH,
 	CONTR_NOT_AUTH,
-	TURIST,
+	TOURIST,
 	LIMITED
 }

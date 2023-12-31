@@ -63,8 +63,8 @@ public class MuniciPathModel {
 		return this.ch.requestAuthorization(username, cityId);
 	}
 	
-	public List<Licence> requestAuthorizations(String cityId) {
-		return this.ch.requestAuthorizations(cityId);
+	public List<Licence> getAuthorizations(String cityId) {
+		return this.ch.getAuthorizations(cityId);
 	}
 	
 	public boolean addRequest(String username, String cityId) {
