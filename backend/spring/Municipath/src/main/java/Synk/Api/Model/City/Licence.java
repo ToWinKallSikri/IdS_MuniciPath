@@ -1,9 +1,9 @@
 package Synk.Api.Model.City;
 
 public class Licence {
-    String cityId;
-    String username;
-    Role role;
+    private String cityId;
+    private String username;
+    private Role role;
 
     public Licence() {}
     public Licence(String cityId, String username, Role role) {

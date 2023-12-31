@@ -88,8 +88,9 @@ public class PointHandler {
       
     }
     
-    private Post updateMeteo(Post post) {
+    private Post updatePost(Post post) {
     	post.setMeteo(this.weather.getWeather(post.getPos(), post.getMeteoDate()));
+    	post.setGroups(this.mediator.viewGroupFrom(post));
     	return post;
     }
     
@@ -102,7 +103,7 @@ public class PointHandler {
     
     public List<Post> getPosts (String pointId) {
         return searchPoint(pointId).getPosts().stream()
-        		.map(p -> updateMeteo(p)).toList();
+        		.map(p -> updatePost(p)).toList();
     }
     
     private Point searchPointFromPost(String postId) {
@@ -131,7 +132,7 @@ public class PointHandler {
     	Post post = point.getPosts().stream()
     			.filter(p -> p.getId().equals(postId))
     			.findFirst().orElse(null);
-    	return updateMeteo(post);
+    	return post == null ? null : updatePost(post);
     }
     
     public boolean deletePost (String postId, String author) {
@@ -164,8 +165,16 @@ public class PointHandler {
 	}
 	
 	public List<Post> getPosts(List<String> postIds){
-		return null;
-		//TODO
+		String cityId = postIds.get(0).split(".")[0];
+		return this.points.get(cityId).stream()
+				.map(p -> p.getPosts()).flatMap(List::stream).
+				filter(post -> postIds.contains(post.getId()))
+			    .collect(Collectors.toList());
+	}
+	
+	public List<Post> getPostsIfAllExists(List<String> postIds) {
+		List<Post> posts = getPosts(postIds);
+		return posts.size() == postIds.size() ? posts : null;
 	}
 	
 	public boolean approvePost(String postId) {

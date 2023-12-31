@@ -32,26 +32,29 @@ public class RoleHandler {
 	}
 
 	public boolean judge(String requestId, boolean outcome) {
-		if(!checkRequest(requestId)) {
+		Optional<RoleRequest> oRequest = getRequest(requestId);
+		if(oRequest.isEmpty())
 			return false;
-		} if (outcome){
-			requests.stream().parallel()
-					.filter(r -> r.getRequestId().equals(requestId))
-					.findFirst().ifPresent(r -> authorizations.add(new Licence(r.getUsername(),r.getCityId(), ->
-					switch (getAuthorization().getRole()) {
+		if (outcome){
+			String user = oRequest.get().getUsername();
+			String city = oRequest.get().getCityId();
+			Role role = getAuthorization(user, city).getRole();
+			role = switch (role) {
 						case CONTR_NOT_AUTH -> Role.CONTR_AUTH;
 						case TOURIST -> Role.CONTR_NOT_AUTH;
-						default -> Role.TOURIST;
-					}));
+						default -> role;
+			};
+			setRole(user, city, role);
 		}
 		removeRequest(requestId);
 		return true;
 
 	}
 
-	private Optional<RoleRequest> checkRequest (String requestId) {
+	private Optional<RoleRequest> getRequest (String requestId) {
 		return requests.stream().parallel()
-				.anyMatch(r -> r.getRequestId().equals(requestId));
+				.filter(r -> r.getRequestId().equals(requestId))
+				.findFirst();
 	}
 
 	private void removeRequest (String requestId) {
@@ -65,7 +68,7 @@ public class RoleHandler {
 		if(!m1.usernameExists(username)) {
 			return false;
 		} else {
-			String requestId = "" + (cityId+username).hashCode();
+			String requestId = cityId.hashCode() + "." + username.hashCode();
 			RoleRequest request = new RoleRequest(cityId, username, requestId);
 			requests.add(request);
 			return true;

@@ -101,12 +101,12 @@ public class CityHandler {
 		return this.roleHandler.getAuthorizations(cityId);
 	}
 	
-	public boolean addRequest(String username, String cityId, String requestId) {
+	public boolean addRequest(String username, String cityId) {
 		if(!this.mediator.usernameExists(username))
 			return false;
 		if(!this.cities.stream().anyMatch(c -> c.getId().equals(cityId)))
 			return false;
-		return this.roleHandler.addRequest(username, cityId, requestId);
+		return this.roleHandler.addRequest(username, cityId);
 	}
 	
 	public boolean judge(String requestId, boolean outcome) {

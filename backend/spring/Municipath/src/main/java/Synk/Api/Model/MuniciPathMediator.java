@@ -2,9 +2,11 @@ package Synk.Api.Model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.CityHandler;
+import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Group.GroupHandler;
 import Synk.Api.Model.Pending.PendingHandler;
 import Synk.Api.Model.Post.PointHandler;
@@ -92,6 +94,14 @@ public class MuniciPathMediator {
 
 	public boolean usernameExists(String username) {
 		return this.user.usernameExists(username);
+	}
+
+	public List<Post> getPostsIfAllExists(List<String> postIds) {
+		return this.point.getPostsIfAllExists(postIds);
+	}
+
+	public List<Group> viewGroupFrom(Post post) {
+		return this.group.viewGroupFrom(post.getPostId());
 	}
 	
 	

@@ -3,6 +3,9 @@ package Synk.Api.Model.Post;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import Synk.Api.Model.Group.Group;
 
 public class Post {
 
@@ -13,7 +16,8 @@ public class Post {
     private String cityID;
     private String text;
     private String postId;
-    private ArrayList<String> multimediaData;
+    private List<String> multimediaData;
+    private List<Group> groups;
     private boolean published;
     private String meteo;
     private Date start;
@@ -34,12 +38,13 @@ public class Post {
 	    this.start = start;
 	    this.end = end;
 	    this.persistence = persistence;
+	    this.groups = new ArrayList<>();
 	}
 	
 	public Post() {}
 
 
-    public ArrayList<String> getMultimediaData() {
+    public List<String> getMultimediaData() {
 		return multimediaData;
 	}
 
@@ -162,6 +167,16 @@ public class Post {
 
 	public void setMeteo(String meteo) {
 		this.meteo = meteo;
+	}
+	
+	
+
+	public List<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Group> groups) {
+		this.groups = groups;
 	}
 
 	@Override
