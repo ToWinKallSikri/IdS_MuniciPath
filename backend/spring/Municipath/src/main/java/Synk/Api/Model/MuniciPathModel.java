@@ -86,6 +86,17 @@ public class MuniciPathModel {
 		return this.ch.getRole(username, cityId);
 	}
 	
+	public boolean addModerator(String username, String cityId) {
+		return this.ch.addModerator(username, cityId);
+	}
+	
+	public boolean removeModerator(String username, String cityId) {
+		return this.ch.removeModerator(username, cityId);
+	}
+	
+	
+	
+	
 	
 	
 	

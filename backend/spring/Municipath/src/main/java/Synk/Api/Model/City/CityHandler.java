@@ -4,10 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import Synk.Api.Model.Post.Position;
-import Synk.Api.Model.Post.PostType;
 import Synk.Api.Model.MuniciPathMediator;
-import Synk.Api.Model.Post.PointHandler;
-import Synk.Api.Model.User.UserHandler;
 
 
 public class CityHandler {
@@ -95,24 +92,19 @@ public class CityHandler {
 	}
 	
 	public Licence requestAuthorization(String username, String cityId) {
-		if (!this.mediator.usernameExists(username)) {
+		if (!this.mediator.usernameExists(username)) 
 			return null;
-		}
-		return cities.stream()
-				.filter(c -> c.getId().equals(cityId) && c.getCurator().equals(username))
-				.map(c -> new Licence(username, cityId, Role.CURATOR))
-				.findFirst()
-				.orElseGet(() -> this.roleHandler.getAuthorization(username, cityId));
+		City city = getCity(cityId);
+		return this.roleHandler.getAuthorization(username, city);
 	}
 	
 	public List<Licence> getAuthorizations(String cityId) {
-		return this.roleHandler.getAuthorizations(cityId);
+		City city = getCity(cityId);
+		return this.roleHandler.getAuthorizations(city);
 	}
 	
 	public boolean addRequest(String username, String cityId) {
-		if(!this.mediator.usernameExists(username))
-			return false;
-		if(!this.cities.stream().anyMatch(c -> c.getId().equals(cityId)))
+		if(getCity(cityId) == null || !this.mediator.usernameExists(username))
 			return false;
 		return this.roleHandler.addRequest(username, cityId);
 	}
@@ -129,12 +121,27 @@ public class CityHandler {
 			return false;
 		return this.roleHandler.setRole(username, cityId, role);
 	}
+	
+	public boolean addModerator(String username, String cityId) {
+		if(!this.mediator.usernameExists(username))
+			return false;
+		City city = getCity(cityId);
+		if(city == null || city.getCurator().equals(username))
+			return false;
+		return this.roleHandler.addModerator(username, cityId);
+	}
+	
+	public boolean removeModerator(String username, String cityId) {
+		if(!this.mediator.usernameExists(username))
+			return false;
+		City city = getCity(cityId);
+		if(city == null || city.getCurator().equals(username))
+			return false;
+		return this.roleHandler.removeModerator(username, cityId);
+	}
 
 	public Role getRole(String username, String cityId) {
-		if(!this.mediator.usernameExists(username)) {
-			return null;
-		}
-		return this.roleHandler.getAuthorization(username, cityId).getRole();
+		return this.requestAuthorization(username, cityId).getRole();
 	}
 
 }
