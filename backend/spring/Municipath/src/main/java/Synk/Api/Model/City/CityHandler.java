@@ -84,17 +84,39 @@ public class CityHandler {
     }
     
     public boolean isAuthorized(String cityId, String username) {
-    	return true;
-    	//TODO
-    }
+    	switch(this.roleHandler.getAuthorization(username, cityId).getRole()) {
+			case CURATOR:
+				return true;
+			case CONTR_AUTH:
+				return true;
+			case CONTR_NOT_AUTH:
+				return true;
+			case LIMITED:
+				return false;
+			case MODERATOR:
+				return true;
+			case TOURIST:
+				return false;
+			default:
+				return false;
+			}
+	}
+
 
 	public boolean canPublish(String cityId, String author) {
-		// TODO Auto-generated method stub
-		return true;
+		Role role = this.roleHandler.getAuthorization(author, cityId).getRole();
+		return role == Role.CURATOR || role == Role.CONTR_AUTH || role == Role.MODERATOR;
 	}
 	
 	public Licence requestAuthorization(String username, String cityId) {
-		return this.roleHandler.getAuthorization(username, cityId);
+		if (!this.mediator.usernameExists(username)) {
+			return null;
+		}
+		return cities.stream()
+				.filter(c -> c.getId().equals(cityId) && c.getCurator().equals(username))
+				.map(c -> new Licence(username, cityId, Role.CURATOR))
+				.findFirst()
+				.orElseGet(() -> this.roleHandler.getAuthorization(username, cityId));
 	}
 	
 	public List<Licence> getAuthorizations(String cityId) {
@@ -123,8 +145,10 @@ public class CityHandler {
 	}
 
 	public Role getRole(String username, String cityId) {
-		// TODO Auto-generated method stub
-		return null;
+		if(!this.mediator.usernameExists(username)) {
+			return null;
+		}
+		return this.roleHandler.getAuthorization(username, cityId).getRole();
 	}
 
 }
