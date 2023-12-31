@@ -61,15 +61,6 @@ public class GroupHandler {
 		this.groups.get(cityId).add(group);
 		return true;
 	}
-	
-	private String getId(String cityId) {
-		this.count = 0;
-		this.groups.get(cityId).forEach(g -> {
-			int v = Integer.parseInt(g.getId().split(".")[2]);
-		    this.count = count > v ? count : v + 1;
-		});
-		return cityId+".g."+ this.count;
-	}
 
 	public boolean editGroup(String groupId, String title, String author, boolean sorted,
 			List<String> postIds, Date start, Date end, boolean persistence) {
@@ -83,18 +74,48 @@ public class GroupHandler {
 		return true;
 	}
 	
+
+	
+	public boolean editGroup(PendingRequest request) {
+		Group group = viewGroup(request.getId());
+		return editGroup(request.getId(), request.getTitle(), group.getAuthor(), request.isSorted(), 
+				request.getData(), request.getStart(), request.getEnd(), request.isPersistence());
+	}
+	
+	public boolean removeGroup(String author, String groupId) {
+		Group group = viewGroup(groupId);
+		if(group == null)
+			return false;
+		if(!group.getAuthor().equals(author))
+			return false;
+		this.groups.get(group.getCityId()).remove(group);
+		return true;
+	}
+	
+	public boolean removeGroup(String groupId) {
+		Group group = viewGroup(groupId);
+		if(group == null)
+			return false;
+		this.groups.get(group.getCityId()).remove(group);
+		return true;
+	}
+
+	
+	private String getId(String cityId) {
+		this.count = 0;
+		this.groups.get(cityId).forEach(g -> {
+			int v = Integer.parseInt(g.getId().split(".")[2]);
+		    this.count = count > v ? count : v + 1;
+		});
+		return cityId+".g."+ this.count;
+	}
+	
 	private boolean checkTiming(Date start, Date end, boolean persistence) {
 		if(persistence && start == null && end == null)
 			return true;
 		if(start != null && end != null && start.before(end))
 			return true;
 		return false;
-	}
-	
-	public boolean editGroup(PendingRequest request) {
-		Group group = viewGroup(request.getId());
-		return editGroup(request.getId(), request.getTitle(), group.getAuthor(), request.isSorted(), 
-				request.getData(), request.getStart(), request.getEnd(), request.isPersistence());
 	}
 	
 	public Group viewGroup(String groupId) {
@@ -109,7 +130,13 @@ public class GroupHandler {
 		Post post = new Post();
 		post.setPostId(postId);
 		return this.groups.get(cityId).stream().filter(Group::isPublished)
-				.filter(g -> g.getPosts().contains(post)).toList();
+				.filter(g -> g.getPosts().contains(post))
+				.map(g -> {
+					Group group = new Group();
+					group.setTitle(g.getTitle());
+					group.setId(g.getId());
+					return group;
+				}).toList();
 	}
 	
 	private String getCityId(String id) {

@@ -56,7 +56,7 @@ public class MuniciPathMediator {
 	}
 
 	public void addPostPending(String postId, String title, PostType type, String text,
-			ArrayList<String> data, Date start, Date end, boolean persistence, String cityId) {
+			List<String> data, Date start, Date end, boolean persistence, String cityId) {
 		this.pending.addPostRequest(postId, title, type, text, data, start, end, persistence, cityId);
 	}
 
@@ -94,6 +94,10 @@ public class MuniciPathMediator {
 
 	public boolean usernameExists(String username) {
 		return this.user.usernameExists(username);
+	}
+	
+	public boolean postExist(String postId) {
+		return this.point.getPost(postId) != null;
 	}
 
 	public List<Post> getPostsIfAllExists(List<String> postIds) {
