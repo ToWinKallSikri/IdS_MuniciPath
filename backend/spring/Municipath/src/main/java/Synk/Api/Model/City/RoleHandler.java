@@ -1,6 +1,6 @@
 package Synk.Api.Model.City;
 
-import Synk.Api.Model.MuniciPathMediator;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,17 +16,29 @@ public class RoleHandler {
 		requests = new ArrayList<RoleRequest>();
 	}
 
-	public Licence getAuthorization(String username, String cityId) {
+	public Licence getAuthorization(String username, City city) {
+		if(city == null)
+			return null;
+		if(city.getCurator().equals(username))
+			return new Licence(username, city.getId(), Role.CURATOR);
 		return authorizations.stream().parallel()
-				.filter(l -> l.getCityId().equals(cityId) && l.getUsername().equals(username))
-				.findFirst().orElse(new Licence(username, cityId, Role.TOURIST));
+				.filter(l -> l.getCityId().equals(city.getId()) && l.getUsername().equals(username))
+				.findFirst().orElse(new Licence(username, city.getId(), Role.TOURIST));
 
 	}
-
-	public List<Licence> getAuthorizations(String cityId) {
+	
+	private Licence getAuthorization(String username, String city) {
 		return authorizations.stream().parallel()
-				.filter(l -> l.getCityId().equals(cityId))
+				.filter(l -> l.getCityId().equals(city) && l.getUsername().equals(username))
+				.findFirst().orElse(new Licence(username, city, Role.TOURIST));
+	}
+
+	public List<Licence> getAuthorizations(City city) {
+		List<Licence> list = authorizations.stream().parallel()
+				.filter(l -> l.getCityId().equals(city.getId()))
 				.collect(Collectors.toList());
+		list.add(new Licence( city.getCurator(), city.getId(), Role.CURATOR ));
+		return list;
 	}
 
 	public boolean judge(String requestId, boolean outcome) {
@@ -64,21 +76,40 @@ public class RoleHandler {
 	public boolean addRequest(String cityId, String username) {
 		String requestId = cityId.hashCode() + "." + username.hashCode();
 		RoleRequest request = new RoleRequest(cityId, username, requestId);
+		if(requests.contains(request))
+			return false;
 		requests.add(request);
 		return true;
 
 	}
 
 	public boolean setRole(String username, String cityId, Role role) {
-		MuniciPathMediator m1 = new MuniciPathMediator();
-		if (!m1.usernameExists(username)) {
+		if(role == Role.CURATOR || role == Role.MODERATOR)
 			return false;
-		} else {
-			authorizations.stream().parallel()
-					.filter(l -> l.getCityId().equals(cityId) && l.getUsername().equals(username))
-					.findFirst().ifPresent(l -> l.setRole(role));
-			return true;
-		}
+		Licence licence = getAuthorization(username, cityId);
+		if(licence.getRole() == Role.MODERATOR)
+			return false;
+		if(role == Role.TOURIST)
+			this.authorizations.remove(licence);
+		else licence.setRole(role);
+		return true;
 	}
+	
+	public boolean addModerator(String username, String cityId) {
+		Licence licence = getAuthorization(username, cityId);
+		if(licence.getRole() == Role.MODERATOR)
+			return false;
+		licence.setRole(Role.MODERATOR);
+		return true;
+	}
+	
+	public boolean removeModerator(String username, String cityId) {
+		Licence licence = getAuthorization(username, cityId);
+		if(licence.getRole() != Role.MODERATOR)
+			return false;
+		this.authorizations.remove(licence);
+		return true;
+	}
+	
 }
 

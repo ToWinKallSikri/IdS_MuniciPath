@@ -1,5 +1,7 @@
 package Synk.Api.Model.City;
 
+import java.util.Objects;
+
 public class RoleRequest {
     private String requestId;
     private String cityId;
@@ -38,4 +40,23 @@ public class RoleRequest {
         this.requestId = requestId;
     }
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(requestId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RoleRequest other = (RoleRequest) obj;
+		return Objects.equals(requestId, other.requestId);
+	}
+    
+    
+    
 }
