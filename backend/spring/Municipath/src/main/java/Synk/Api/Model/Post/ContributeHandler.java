@@ -5,26 +5,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import jakarta.annotation.PostConstruct;
+
+@Repository
 public class ContributeHandler {
 	
 	private Map<String, List<Contribute>> contributes;
+	@Autowired
+	private ContributeRepository contributesRepository;
 	
 	public ContributeHandler() {
 		this.contributes = new HashMap<>();
 	}
 	
-	public void loadContributes(List<Contribute> contributes) {
-		this.contributes = contributes.stream()
+	@PostConstruct
+	public void loadContributes() {
+		this.contributes = StreamSupport.stream(contributesRepository.findAll().spliterator(), false)
 			.collect(Collectors.groupingBy(c -> c.getContestId()));
 	}
 
-	public boolean addContestToContest(String author, String contestId, List<String> content) {
+	public boolean addContributeToContest(String author, String contestId, List<String> content) {
 		if(!this.contributes.containsKey(contestId))
 			return false;
 		if(!canPartecipate(author, contestId))
 			return false;
-		this.contributes.get(contestId).add(new Contribute(author, contestId, content));
+		Contribute contribute = new Contribute(contestId+"."+author, author, contestId, content);
+		this.contributes.get(contestId).add(contribute);
+		this.contributesRepository.save(contribute);
 		return true;
 	}
 	
@@ -52,6 +64,7 @@ public class ContributeHandler {
 	public boolean removeContest(String contestId) {
 		if(!this.contributes.containsKey(contestId))
 			return false;
+		this.contributesRepository.deleteAll(this.contributes.get(contestId));
 		this.contributes.remove(contestId);
 		return true;
 	}

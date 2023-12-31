@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RestController;
 
 import Synk.Api.Model.MuniciPathMediator;
 import Synk.Api.Model.Pending.PendingRequest;
@@ -34,23 +34,15 @@ public class PointHandler {
         this.contributes = new ContributeHandler();
     }
     
-    @PostConstruct
-    public void init() {
-        this.pointRepository.save(new Point("123.456", new Position(10, 20), "123"));
-        this.postRepository.save(new Post("ciao", PostType.SOCIAL, "blablabla", "marvin", 
-        		new Position(1, 2), "1", "1.2.3", new ArrayList<>(), true, null, null, true));
-    }
-    
-    
     public void setMediator(MuniciPathMediator mediator) {
         this.mediator = mediator;
     }
     
-    
-    public void loadData(ArrayList<Point> points, ArrayList<Post> posts) {
-    	this.points = points.stream()
+    @PostConstruct
+    public void loadData() {
+    	this.points = StreamSupport.stream(pointRepository.findAll().spliterator(), false)
     			.map(p -> {
-    				p.setPosts(posts.stream()
+    				p.setPosts(StreamSupport.stream(postRepository.findAll().spliterator(), false)
     					.filter(po -> po.getPos().equals(p.getPos()))
     					.toList()); return p; })
     			.collect(Collectors.groupingBy(Point::getCityId));
@@ -71,9 +63,10 @@ public class PointHandler {
         Post post = new Post(title, type, text, author, pos, cityId, null, data, published, start, end, persistence);
         Point point = getPoint(pos, cityId);
         post.setPostId(point.getNewPostId());
-        point.getPosts().add(post);
         if(!checkContest(post.getId(), type, published))
         	return false;
+        this.postRepository.save(post);
+        point.getPosts().add(post);
         if(!published)
         	this.mediator.addPostPending(post.getId(), cityId);
         return true;
@@ -87,7 +80,10 @@ public class PointHandler {
     	boolean published = this.mediator.canPublish(cityId, author);
         if(!checkContest(post.getId(), post.getType(), type, published))
         	return false;
-    	if(published)post.updateInfo(title, type, text, data, start, end, persistence);
+    	if(published) {
+    		post.updateInfo(title, type, text, data, start, end, persistence);
+            this.postRepository.save(post);
+    	}
     	else this.mediator.addPostPending(postId, title, type, text, data, start, end, persistence, cityId);
         return true;
     }
@@ -130,6 +126,7 @@ public class PointHandler {
     public boolean editPost(PendingRequest request) {
     	Post post = getPost(request.getId());
     	post.updateInfo(request);
+        this.postRepository.save(post);
         return true;
     }
     
@@ -157,7 +154,11 @@ public class PointHandler {
     
     public void deleteCityPoints (String cityId) {
         List<Point> ps = this.points.get(cityId);
-        ps.forEach(p -> p.getPosts().forEach(po -> deletePost(po.getPostId())));
+        ps.forEach(p -> {
+        	p.getPosts().forEach( po -> deletePost(po.getPostId()));
+        	this.postRepository.deleteAll(p.getPosts());
+        });
+        this.pointRepository.deleteAll(ps);
         this.points.remove(cityId);
         this.mediator.removeAllCityGroups(cityId);
     }
@@ -222,6 +223,7 @@ public class PointHandler {
     		return false;
     	Point point = searchPoint(post.getId());
     	point.getPosts().remove(post);
+    	this.postRepository.delete(post);
     	if(point.getPosts().isEmpty())
     		this.points.get(point.getCityId()).remove(point);
     	this.mediator.removeFromAllGroups(post.getPostId());
@@ -264,7 +266,7 @@ public class PointHandler {
 	public boolean addContestToContest(String contestAuthor, String contestId, List<String> content) {
 		if(!this.mediator.usernameExists(contestAuthor))
 			return false;
-		return this.contributes.addContestToContest(contestAuthor, contestId, content);
+		return this.contributes.addContributeToContest(contestAuthor, contestId, content);
 	}
 	
 	

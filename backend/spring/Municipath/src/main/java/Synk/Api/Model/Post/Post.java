@@ -17,7 +17,7 @@ import jakarta.persistence.Transient;
 @Entity
 public class Post {
 	
-	@Id
+	
     private String title;
 	@Enumerated(EnumType.STRING)
     private PostType type;
@@ -26,6 +26,7 @@ public class Post {
     private Position pos;
     private String cityID;
     private String text;
+    @Id
     private String postId;
     @ElementCollection
     private List<String> multimediaData;
