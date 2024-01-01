@@ -1,33 +1,33 @@
 package Synk.Api.Model.City;
 
-import java.util.ArrayList;
-import java.util.List;
+
+
 
 import Synk.Api.Model.Post.Position;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
+@Entity
 public class City {
-
+	
+	@Id
     private String Id;
 	private String Name;
     private String curator;
     private int cap;
+    @Embedded
     private Position Pos;
-    private List<String> auth;
 
-    public City(String id, String name, Position pos, String curator, int cap, List<String> auth) {
+    public City(String id, String name, Position pos, String curator, int cap) {
         this.Id = id;
         this.Name = name;
         this.Pos = pos;
         this.curator = curator;
         this.cap = cap;
-        this.auth = auth;
     }
     
-    public City() {this.auth = new ArrayList<>();}
-    
-    public boolean isAuthorized(String user) {
-    	return this.curator.equals(user) || this.auth.contains(user);
-    }
+    public City() {}
     
     public String getId() {
 		return Id;
@@ -67,14 +67,6 @@ public class City {
 
 	public void setPos(Position pos) {
 		Pos = pos;
-	}
-
-	public List<String> getAuth() {
-		return auth;
-	}
-
-	public void setAuth(List<String> auth) {
-		this.auth = auth;
 	}
 
 }

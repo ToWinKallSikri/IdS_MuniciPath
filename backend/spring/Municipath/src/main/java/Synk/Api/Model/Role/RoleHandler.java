@@ -1,4 +1,4 @@
-package Synk.Api.Model.City;
+package Synk.Api.Model.Role;
 
 
 
@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import Synk.Api.Model.City.City;
 
 public class RoleHandler {
 	private List<Licence> authorizations;

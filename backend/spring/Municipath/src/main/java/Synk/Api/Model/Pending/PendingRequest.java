@@ -13,6 +13,11 @@ public class PendingRequest {
 	private List<String> data;
 	private LocalDateTime startTime, endTime;
 	
+	public PendingRequest(String id, boolean isNew) {
+		this.id = id;
+		this.isNew = isNew;
+	}
+	
 	public PendingRequest(String id, String title, boolean isNew, boolean sorted,
 			boolean persistence, List<String> data, LocalDateTime start, LocalDateTime end) {
 		this.id = id;

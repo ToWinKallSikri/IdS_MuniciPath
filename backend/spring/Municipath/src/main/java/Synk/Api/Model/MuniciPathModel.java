@@ -6,8 +6,7 @@ import java.util.List;
 
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.CityHandler;
-import Synk.Api.Model.City.Licence;
-import Synk.Api.Model.City.Role;
+import Synk.Api.Model.Contribute.Contribute;
 import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Group.GroupHandler;
 import Synk.Api.Model.Pending.PendingHandler;
@@ -15,7 +14,8 @@ import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
-import Synk.Api.Model.Post.Contribute;
+import Synk.Api.Model.Role.Licence;
+import Synk.Api.Model.Role.Role;
 import Synk.Api.Model.Post.Point;
 import Synk.Api.Model.Post.PointHandler;
 import Synk.Api.Model.User.UserHandler;
@@ -31,8 +31,10 @@ public class MuniciPathModel {
     public MuniciPathModel(){
     	MuniciPathMediator mediator = new MuniciPathMediator();
     	this.uh = new UserHandler(mediator);
-        this.ch = new CityHandler(mediator);
-        this.gh = new GroupHandler(mediator);
+        this.ch = new CityHandler();
+        this.ch.setMediator(mediator);
+        this.gh = new GroupHandler();
+        this.gh.setMediator(mediator);
         this.poh = new PointHandler();
         this.poh.setMediator(mediator);
         this.peh = new PendingHandler(mediator);
@@ -42,8 +44,6 @@ public class MuniciPathModel {
         mediator.setPoint(poh);
         mediator.setPending(peh);
     }
-    
-    
     
     
     public boolean createCity(String cityName, int cap, String curator, Position pos ) {
@@ -101,12 +101,6 @@ public class MuniciPathModel {
 	
 	
 	
-	
-	
-	
-	
-	
-	
 	public boolean createGroup(String title, String author, boolean sorted, String cityId,
 			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
 		return this.gh.createGroup(title, author, sorted, cityId, postIds, start, end, persistence);
@@ -132,10 +126,6 @@ public class MuniciPathModel {
 	public List<Group> viewGroups(List<String> groupIds) {
 		return this.gh.viewGroups(groupIds);
 	}
-	
-	
-	
-	
 	
     
     public boolean createPost(String title, PostType type, String text, String author, Position pos,
@@ -180,8 +170,6 @@ public class MuniciPathModel {
     
     
     
-    
-    
     public boolean judge(String pendingId, boolean outcome, String motivation) {
 		return this.peh.judge(pendingId, outcome, motivation);
 	}
@@ -193,10 +181,6 @@ public class MuniciPathModel {
 	public PendingRequest getRequest(String requestId) {
 		return this.peh.getRequest(requestId);
 	}
-	
-	
-	
-	
 	
 	
 	

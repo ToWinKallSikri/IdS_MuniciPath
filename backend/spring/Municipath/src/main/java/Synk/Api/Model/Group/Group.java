@@ -5,12 +5,26 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "groups")
 public class Group {
 	
-
-	private String id, title, cityId, author;
-    private boolean sorted, published, persistence;
-    private LocalDateTime startTime, endTime;
+	@Id
+	private String id;
+	private String title;
+	private String cityId;
+	private String author;
+	private boolean sorted; 
+	private boolean published; 
+	private boolean persistence;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    @ElementCollection
     private List<String> posts;
     
     public Group() {}

@@ -1,50 +1,54 @@
 package Synk.Api.Model.Group;
 
-import java.util.ArrayList;
+
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import Synk.Api.Model.MuniciPathMediator;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Post;
 
+@Repository
 public class GroupHandler {
 	
 	private MuniciPathMediator mediator;
-	private Map<String, List<Group>> groups;
 	private int count;
 	
-	public GroupHandler(MuniciPathMediator mediator) {
-		this.mediator = mediator;
-		this.groups = new HashMap<String, List<Group>>();
-	}
+	@Autowired
+	private GroupRepository groupRepository;
 	
-	public void loadGroups(List<Group> groups) {
-		this.groups = groups.stream()
-				.collect(Collectors.groupingBy(Group::getCityId));
-	}
+	public void setMediator(MuniciPathMediator mediator) {
+        this.mediator = mediator;
+    }
 
 	public void removeFromAll(String post) {
 		String cityId = this.getCityId(post);
-		groups.get(cityId).forEach(g -> g.removePost(post));
-		checkCompositionOfGroups(groups.get(cityId));
+		groupRepository.findAll().forEach(g -> g.removePost(post));
+		checkCompositionOfGroups(cityId);
 	}
 
-	private void checkCompositionOfGroups(List<Group> list) {
-		ArrayList<Group> toDelete = new ArrayList<>();
-		for(Group group : list) {
-			if(!group.isGroup()) {
-				toDelete.add(group);
-			}
-		}
-		list.removeAll(toDelete);
+	private void checkCompositionOfGroups(String cityId) {
+		List<Group> toDelete = getAllFromCity(cityId)
+				.filter(g -> !g.isGroup()).toList();
+		this.groupRepository.deleteAll(toDelete);
 	}
 
 	public void removeAllFromCity(String cityId) {
-		this.groups.remove(cityId);
+		this.groupRepository.deleteAll(getAllFromCity(cityId).toList());
+	}
+	
+	private Stream<Group> getAllFromCity(String cityId){
+		return getStreamOfAll()
+				.filter(g -> g.getCityId().equals(cityId));
+	}
+	
+	private Stream<Group> getStreamOfAll(){
+		return StreamSupport.stream(groupRepository.findAll().spliterator(), false);
 	}
 	
 	public boolean createGroup(String title, String author, boolean sorted, String cityId,
@@ -58,7 +62,9 @@ public class GroupHandler {
 		String id = getId(cityId);
 		Group group = new Group(id, title, author, cityId,
 				sorted, publish, persistence, start, end, postIds);
-		this.groups.get(cityId).add(group);
+		if(!publish)
+			this.mediator.addPending(id);
+		this.groupRepository.save(group);
 		return true;
 	}
 
@@ -70,7 +76,11 @@ public class GroupHandler {
 		List<Post> posts = this.mediator.getPostsIfAllExists(postIds);
 		if(posts == null || posts.size() < 1)
 			return false;
-		group.edit(title, sorted, postIds, start, end, persistence);
+		if(mediator.canPublish(getCityId(groupId), author)) {
+			group.edit(title, sorted, postIds, start, end, persistence);
+			groupRepository.save(group);
+		}
+		else mediator.addGroupPending(groupId, title, sorted, postIds, start, end, persistence);
 		return true;
 	}
 	
@@ -88,7 +98,7 @@ public class GroupHandler {
 			return false;
 		if(!group.getAuthor().equals(author))
 			return false;
-		this.groups.get(group.getCityId()).remove(group);
+		this.groupRepository.delete(group);
 		return true;
 	}
 	
@@ -96,14 +106,14 @@ public class GroupHandler {
 		Group group = viewGroup(groupId);
 		if(group == null)
 			return false;
-		this.groups.get(group.getCityId()).remove(group);
+		this.groupRepository.delete(group);
 		return true;
 	}
 
 	
 	private String getId(String cityId) {
 		this.count = 0;
-		this.groups.get(cityId).forEach(g -> {
+		getAllFromCity(cityId).forEach(g -> {
 			int v = Integer.parseInt(g.getId().split(".")[2]);
 		    this.count = count > v ? count : v + 1;
 		});
@@ -119,22 +129,19 @@ public class GroupHandler {
 	}
 	
 	public List<Group> viewGroups(List<String> groupIds) {
-		String cityId = getCityId(groupIds.get(0));
-		return this.groups.get(cityId).stream()
+		return getStreamOfAll()
 				.filter(g -> groupIds.contains(g.getId()))
 				.toList();
 	}
 	
 	public Group viewGroup(String groupId) {
-		String cityId = getCityId(groupId);
-		return this.groups.get(cityId).stream()
+		return getStreamOfAll()
 				.filter(g -> g.getId().equals(groupId))
 				.findFirst().orElse(null);
 	}
 	
 	public List<String> viewGroupFrom(String postId) {
-		String cityId = getCityId(postId);
-		return this.groups.get(cityId).stream().filter(Group::isPublished)
+		return getStreamOfAll().filter(Group::isPublished)
 				.filter(g -> g.getPosts().contains(postId))
 				.map(g -> g.getId()).toList();
 	}
@@ -153,11 +160,15 @@ public class GroupHandler {
 	
 	public void checkEndingGroups() {
 		LocalDateTime date = LocalDateTime.now();
-		this.groups.values().forEach(l -> l.stream()
-				.filter(g -> ! g.isPersistence()).forEach(g -> {
-			if(g.getEndTime().isBefore(date))
-				l.remove(g);
-		}));
+		getStreamOfAll()
+			.filter(g -> ! g.isPersistence()).forEach(g -> {
+				if(g.getEndTime().isBefore(date))
+					groupRepository.delete(g);
+			});
+	}
+
+	public String getAuthor(String pendingId) {
+		return this.viewGroup(pendingId).getAuthor();
 	}
 	
 }

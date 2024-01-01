@@ -64,5 +64,10 @@ public class UserHandler {
 	public boolean usernameExists(String username) {
 		return this.users.stream().anyMatch(u -> u.getUsername().equals(username));
 	}
+
+	public void send(String username, String message) {
+		if(usernameExists(username))
+			this.notifications.send(username, message);
+	}
     
 }

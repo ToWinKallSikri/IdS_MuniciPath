@@ -349,3 +349,37 @@ MULTIMEDIA_DATA CHARACTER VARYING(255) PRIMARY KEY,
 POST_POST_ID CHARACTER VARYING(255) 
 
 ) [42000-224]
+2024-01-01 03:07:50.279246+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE GROUP_POSTS(\000d\000aGROUP_ID CHARACTER VARYING(255) PRIMARY KEY [*]NON UNIQUE,\000d\000aPOSTS  CHARACTER VARYING(255) \000d\000a\000d\000a)"; expected "HASH, CONSTRAINT, COMMENT, UNIQUE, NOT NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+CREATE TABLE GROUP_POSTS(
+GROUP_ID CHARACTER VARYING(255) PRIMARY KEY NON UNIQUE,
+POSTS  CHARACTER VARYING(255) 
+
+) [42001-224]
+2024-01-01 03:08:03.162866+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE GROUP_POSTS(\000d\000aGROUP_ID CHARACTER VARYING(255) [*]KEY NON UNIQUE,\000d\000aPOSTS  CHARACTER VARYING(255) \000d\000a\000d\000a)"; expected "ARRAY, INVISIBLE, VISIBLE, NOT NULL, DEFAULT, GENERATED, ON UPDATE, NOT NULL, DEFAULT ON NULL, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, COMMENT, PRIMARY KEY, UNIQUE, NOT NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+CREATE TABLE GROUP_POSTS(
+GROUP_ID CHARACTER VARYING(255) KEY NON UNIQUE,
+POSTS  CHARACTER VARYING(255) 
+
+) [42001-224]
+2024-01-01 03:41:05.673452+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Index "IDX_POST_MULTIMEDIA_DATA" already exists; SQL statement:
+CREATE INDEX IDX_POST_MULTIMEDIA_DATA
+ON CONTRIBUTE_CONTRIBUTE ( CONTRIBUTE_ID ) [42111-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.command.ddl.CreateIndex.update(CreateIndex.java:76)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:169)
+	at org.h2.command.Command.executeUpdate(Command.java:256)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:262)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1345)
+	at org.h2.server.web.WebApp.query(WebApp.java:1143)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1109)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1096)
+	at org.h2.server.web.WebThread.process(WebThread.java:190)
+	at org.h2.server.web.WebThread.run(WebThread.java:103)
+	at java.base/java.lang.Thread.run(Thread.java:1583)

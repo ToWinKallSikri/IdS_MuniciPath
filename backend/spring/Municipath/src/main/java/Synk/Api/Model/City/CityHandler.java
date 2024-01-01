@@ -1,43 +1,60 @@
 package Synk.Api.Model.City;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import Synk.Api.Model.Post.Position;
+import Synk.Api.Model.Role.Licence;
+import Synk.Api.Model.Role.Role;
+import Synk.Api.Model.Role.RoleHandler;
+import jakarta.annotation.PostConstruct;
 import Synk.Api.Model.MuniciPathMediator;
 
 
+@Repository
 public class CityHandler {
 	
-    private ArrayList<City> cities;
     private MuniciPathMediator mediator;
     private RoleHandler roleHandler;
+    
+    @Autowired
+	private CityRepository cityRepository;
 
-    public CityHandler(MuniciPathMediator mediator) {
-    	this.mediator = mediator;
-        this.cities = new ArrayList<City>();
+    public CityHandler() {
         this.roleHandler = new RoleHandler();
+    }
+    
+    public void setMediator(MuniciPathMediator mediator) {
+        this.mediator = mediator;
     }
 
     public boolean createCity(String cityName, int cap, String curator, Position pos ) {
     	String id = "" + (cityName+cap).hashCode();
-        City c1 = new City(id, cityName,pos, curator, cap, new ArrayList<>());
+        City c1 = new City(id, cityName,pos, curator, cap);
         if (checkIfAlreadyExists(id))
         	return false;
         if(!this.mediator.matchCurator(curator, id)) 
         	return false;
-        cities.add(c1);
+        cityRepository.save(c1);
         this.mediator.createPostForNewCity(id, cityName, curator, pos);
         return true;
     }
+    
+    private Stream<City> getStreamOfAll(){
+		return StreamSupport.stream(cityRepository.findAll().spliterator(), false);
+	}
 
     private boolean checkIfAlreadyExists (String cityId) {
-        return cities.stream().parallel()
+        return getStreamOfAll().parallel()
         		.anyMatch(c -> c.getId().equals(cityId));
     }
     
     private Optional<City> getOptCity (String cityId) {
-        return cities.stream().parallel()
+        return getStreamOfAll().parallel()
         		.filter(c -> c.getId().equals(cityId)).findFirst();
     }
     
@@ -50,7 +67,7 @@ public class CityHandler {
     }
     
     public List<City> getCities(String search) {
-    	return this.cities.stream()
+    	return getStreamOfAll()
     			.filter(c -> (c.getName()+c.getCap()).toLowerCase()
     					.startsWith(search.toLowerCase())).toList();
     }
@@ -67,6 +84,7 @@ public class CityHandler {
         city.setCap(cap);
         city.setCurator(curator);
         city.setPos(pos);
+        this.cityRepository.save(city);
 		return true;
     }
 
@@ -75,7 +93,7 @@ public class CityHandler {
     	if(oCity.isEmpty())
     		return false;
     	City city = oCity.get();
-    	this.cities.remove(city);
+    	this.cityRepository.delete(city);
     	this.mediator.deleteCity(cityId);
     	return true;
     }

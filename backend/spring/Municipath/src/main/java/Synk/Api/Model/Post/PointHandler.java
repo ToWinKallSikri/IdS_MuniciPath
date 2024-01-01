@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import Synk.Api.Model.MuniciPathMediator;
+import Synk.Api.Model.Contribute.Contribute;
+import Synk.Api.Model.Contribute.ContributeHandler;
+import Synk.Api.Model.Meteo.WeatherForecast;
 import Synk.Api.Model.Pending.PendingRequest;
 import jakarta.annotation.PostConstruct;
 
@@ -65,10 +68,11 @@ public class PointHandler {
         post.setPostId(point.getNewPostId());
         if(!checkContest(post.getId(), type, published))
         	return false;
+    	this.pointRepository.save(point);
         this.postRepository.save(post);
         point.getPosts().add(post);
         if(!published)
-        	this.mediator.addPostPending(post.getId(), cityId);
+        	this.mediator.addPending(post.getId());
         return true;
     }
 
@@ -84,7 +88,14 @@ public class PointHandler {
     		post.updateInfo(title, type, text, data, start, end, persistence);
             this.postRepository.save(post);
     	}
-    	else this.mediator.addPostPending(postId, title, type, text, data, start, end, persistence, cityId);
+    	else this.mediator.addPostPending(postId, title, type, text, data, start, end, persistence);
+        return true;
+    }
+    
+    public boolean editPost(PendingRequest request) {
+    	Post post = getPost(request.getId());
+    	post.updateInfo(request);
+        this.postRepository.save(post);
         return true;
     }
 
@@ -123,13 +134,6 @@ public class PointHandler {
     	return type != PostType.EVENT && type != PostType.CONTEST;
     }
     
-    public boolean editPost(PendingRequest request) {
-    	Post post = getPost(request.getId());
-    	post.updateInfo(request);
-        this.postRepository.save(post);
-        return true;
-    }
-    
     private Point getPoint(Position pos, String cityId) {
     	return this.points.get(cityId).stream().filter(p -> p.getPos().equals(pos))
     			.findFirst().orElse(makeNewPoint(pos, cityId));
@@ -138,6 +142,7 @@ public class PointHandler {
     private Point makeNewPoint(Position pos, String cityId) {
     	Point point = new Point(cityId+"."+pos, pos, cityId);
     	this.points.get(cityId).add(point);
+    	this.pointRepository.save(point);
     	return point;
     }
     
@@ -224,8 +229,10 @@ public class PointHandler {
     	Point point = searchPoint(post.getId());
     	point.getPosts().remove(post);
     	this.postRepository.delete(post);
-    	if(point.getPosts().isEmpty())
+    	if(point.getPosts().isEmpty()) {
     		this.points.get(point.getCityId()).remove(point);
+        	this.pointRepository.delete(point);
+    	}
     	this.mediator.removeFromAllGroups(post.getPostId());
     	return true;
     }
@@ -295,6 +302,10 @@ public class PointHandler {
 					if(po.getEndTime().isBefore(date))
 						p.getPosts().remove(po); })
 		));
+	}
+
+	public String getAuthor(String pendingId) {
+		return this.getPost(pendingId).getAuthor();
 	}
     
 }

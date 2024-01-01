@@ -1,4 +1,4 @@
-package Synk.Api.Model.City;
+package Synk.Api.Model.Role;
 
 public enum Role {
 	CURATOR,

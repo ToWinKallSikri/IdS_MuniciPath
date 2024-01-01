@@ -9,6 +9,7 @@ import Synk.Api.Model.City.CityHandler;
 import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Group.GroupHandler;
 import Synk.Api.Model.Pending.PendingHandler;
+import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.PointHandler;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
@@ -51,13 +52,18 @@ public class MuniciPathMediator {
 		return this.city.canPublish(cityId, author);
 	}
 
-	public void addPostPending(String id, String cityId) {
-		this.pending.addPostRequest(id, cityId);
+	public void addPending(String id) {
+		this.pending.addRequest(id);
 	}
 
 	public void addPostPending(String postId, String title, PostType type, String text,
-			List<String> data, LocalDateTime start, LocalDateTime end, boolean persistence, String cityId) {
-		this.pending.addPostRequest(postId, title, type, text, data, start, end, persistence, cityId);
+			List<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
+		this.pending.addPostRequest(postId, title, type, text, data, start, end, persistence);
+	}
+	
+	public void addGroupPending(String groupId, String title, boolean sorted, List<String> postIds, 
+			LocalDateTime start, LocalDateTime end, boolean persistence) {
+		this.pending.addGroupRequest(groupId, title, sorted, postIds, start, end, persistence);
 	}
 
 	public void removeAllCityGroups(String cityId) {
@@ -103,9 +109,8 @@ public class MuniciPathMediator {
 	public List<Post> getPostsIfAllExists(List<String> postIds) {
 		return this.point.getPostsIfAllExists(postIds);
 	}
-
-
-
+	
+	
 	public List<String> viewGroupFrom(Post post) {
 		return this.group.viewGroupFrom(post.getPostId());
 	}
@@ -128,12 +133,28 @@ public class MuniciPathMediator {
 				post.getEndTime(), post.isPersistence());
 	}
 
-	public void removePending(String pendingId) {
-		this.pending.removePendingRequest(pendingId);
-	}
-
 	public void addGroup(Group group) {
 		this.group.createGroup(group.getTitle(), group.getAuthor(), group.isSorted(), group.getCityId(),
 				group.getPosts(), group.getStartTime(), group.getEndTime(), group.isPersistence());
+	}
+
+	public String getAuthor(String pendingId) {
+		return pendingId.split(".")[1].equals("g") ? point.getAuthor(pendingId) : group.getAuthor(pendingId);
+	}
+
+	public void send(String username, String message) {
+		this.user.send(username, message);
+	}
+
+	public void manageGroupRequest(PendingRequest request) {
+		if(request.isNew())
+			this.group.approveGroup(request.getId());
+		else this.group.editGroup(request);
+	}
+
+	public void managePostRequest(PendingRequest request) {
+		if(request.isNew())
+			this.point.approvePost(request.getId());
+		else this.point.editPost(request);
 	}
 }
