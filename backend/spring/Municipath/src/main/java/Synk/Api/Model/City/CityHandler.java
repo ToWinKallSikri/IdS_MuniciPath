@@ -1,7 +1,6 @@
 package Synk.Api.Model.City;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Role.Licence;
 import Synk.Api.Model.Role.Role;
 import Synk.Api.Model.Role.RoleHandler;
-import jakarta.annotation.PostConstruct;
+import Synk.Api.Model.Role.RoleRequest;
 import Synk.Api.Model.MuniciPathMediator;
 
 
@@ -41,21 +40,16 @@ public class CityHandler {
         	return false;
         cityRepository.save(c1);
         this.mediator.createPostForNewCity(id, cityName, curator, pos);
+        this.roleHandler.addCity(id, curator);
         return true;
     }
-    
-    private Stream<City> getStreamOfAll(){
-		return StreamSupport.stream(cityRepository.findAll().spliterator(), false);
-	}
 
     private boolean checkIfAlreadyExists (String cityId) {
-        return getStreamOfAll().parallel()
-        		.anyMatch(c -> c.getId().equals(cityId));
+    	return this.cityRepository.existsById(cityId);
     }
     
     private Optional<City> getOptCity (String cityId) {
-        return getStreamOfAll().parallel()
-        		.filter(c -> c.getId().equals(cityId)).findFirst();
+    	return this.cityRepository.findById(cityId);
     }
     
     public City getCity(String cityId) {
@@ -67,7 +61,7 @@ public class CityHandler {
     }
     
     public List<City> getCities(String search) {
-    	return getStreamOfAll()
+    	return StreamSupport.stream(cityRepository.findAll().spliterator(), false)
     			.filter(c -> (c.getName()+c.getCap()).toLowerCase()
     					.startsWith(search.toLowerCase())).toList();
     }
@@ -95,40 +89,29 @@ public class CityHandler {
     	City city = oCity.get();
     	this.cityRepository.delete(city);
     	this.mediator.deleteCity(cityId);
+    	this.roleHandler.removeCity(cityId);
     	return true;
     }
     
     public boolean isAuthorized(String cityId, String username) {
-    	Role role = requestAuthorization(username, cityId).getRole();
+    	Role role = getAuthorization(username, cityId).getRole();
     	return role != Role.LIMITED && role != Role.TOURIST;
 	}
 
 
 	public boolean canPublish(String cityId, String author) {
-		Role role = requestAuthorization(author, cityId).getRole();
+		Role role = getAuthorization(author, cityId).getRole();
 		return role == Role.CURATOR || role == Role.CONTR_AUTH || role == Role.MODERATOR;
 	}
 	
-	public Licence requestAuthorization(String username, String cityId) {
+	public Licence getAuthorization(String username, String cityId) {
 		if (!this.mediator.usernameExists(username)) 
 			return null;
-		City city = getCity(cityId);
-		return this.roleHandler.getAuthorization(username, city);
+		return this.roleHandler.getAuthorization(username, cityId);
 	}
 	
 	public List<Licence> getAuthorizations(String cityId) {
-		City city = getCity(cityId);
-		return this.roleHandler.getAuthorizations(city);
-	}
-	
-	public boolean addRequest(String username, String cityId) {
-		if(getCity(cityId) == null || !this.mediator.usernameExists(username))
-			return false;
-		return this.roleHandler.addRequest(username, cityId);
-	}
-	
-	public boolean judge(String requestId, boolean outcome) {
-		return this.roleHandler.judge(requestId, outcome);
+		return this.roleHandler.getAuthorizations(cityId);
 	}
 	
 	public boolean setRole(String username, String cityId, Role role) {
@@ -159,7 +142,23 @@ public class CityHandler {
 	}
 
 	public Role getRole(String username, String cityId) {
-		return this.requestAuthorization(username, cityId).getRole();
+		return this.getAuthorization(username, cityId).getRole();
+	}
+	
+	public boolean addRequest(String username, String cityId) {
+		if(getCity(cityId) == null || !this.mediator.usernameExists(username))
+			return false;
+		return this.roleHandler.addRequest(username, cityId);
+	}
+	
+	public List<RoleRequest> getRequests(String cityId) {
+		if(this.checkIfAlreadyExists(cityId))
+			return null;
+		return this.roleHandler.getRequests(cityId);
+	}
+	
+	public boolean judge(String requestId, boolean outcome) {
+		return this.roleHandler.judge(requestId, outcome);
 	}
 
 }

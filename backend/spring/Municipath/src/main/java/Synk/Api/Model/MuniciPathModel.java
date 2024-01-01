@@ -16,6 +16,7 @@ import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
 import Synk.Api.Model.Role.Licence;
 import Synk.Api.Model.Role.Role;
+import Synk.Api.Model.Role.RoleRequest;
 import Synk.Api.Model.Post.Point;
 import Synk.Api.Model.Post.PointHandler;
 import Synk.Api.Model.User.UserHandler;
@@ -66,20 +67,12 @@ public class MuniciPathModel {
     	return ch.getCities();
     }
     
-    public Licence requestAuthorization(String username, String cityId) {
-		return this.ch.requestAuthorization(username, cityId);
+    public Licence getAuthorization(String username, String cityId) {
+		return this.ch.getAuthorization(username, cityId);
 	}
 	
 	public List<Licence> getAuthorizations(String cityId) {
 		return this.ch.getAuthorizations(cityId);
-	}
-	
-	public boolean addRequest(String username, String cityId) {
-		return this.ch.addRequest(username, cityId);
-	}
-	
-	public boolean judge(String requestId, boolean outcome) {
-		return this.ch.judge(requestId, outcome);
 	}
 	
 	public boolean setRole(String username, String cityId, Role role) {
@@ -96,6 +89,18 @@ public class MuniciPathModel {
 	
 	public boolean removeModerator(String username, String cityId) {
 		return this.ch.removeModerator(username, cityId);
+	}
+	
+	public boolean addRequest(String username, String cityId) {
+		return this.ch.addRequest(username, cityId);
+	}
+	
+	public List<RoleRequest> getRequests(String cityId){
+		return this.ch.getRequests(cityId);
+	}
+	
+	public boolean judge(String requestId, boolean outcome) {
+		return this.ch.judge(requestId, outcome);
 	}
 	
 	

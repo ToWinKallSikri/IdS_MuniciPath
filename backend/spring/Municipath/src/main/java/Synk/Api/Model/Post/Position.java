@@ -46,8 +46,20 @@ public class Position {
 		if (getClass() != obj.getClass())
 			return false;
 		Position other = (Position) obj;
-		return Double.doubleToLongBits(lat) == Double.doubleToLongBits(other.lat)
-				&& Double.doubleToLongBits(lng) == Double.doubleToLongBits(other.lng);
+		return Double.doubleToLongBits(this.lat) == Double.doubleToLongBits(other.lat)
+				&& Double.doubleToLongBits(this.lng) == Double.doubleToLongBits(other.lng);
+	}
+	
+	public boolean almostEquals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Position other = (Position) obj;
+		return Math.round(this.lat * 1000) == Math.round(other.lat * 1000)
+				&& Math.round(this.lng * 1000) == Math.round(other.lng * 1000);
 	}
 	
 	@Override

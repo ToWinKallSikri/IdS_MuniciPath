@@ -13,7 +13,8 @@ import org.springframework.stereotype.Repository;
 import Synk.Api.Model.MuniciPathMediator;
 import Synk.Api.Model.Contribute.Contribute;
 import Synk.Api.Model.Contribute.ContributeHandler;
-import Synk.Api.Model.Meteo.WeatherForecast;
+import Synk.Api.Model.Meteo.WeatherForecastProxy;
+import Synk.Api.Model.Meteo.WeatherService;
 import Synk.Api.Model.Pending.PendingRequest;
 import jakarta.annotation.PostConstruct;
 
@@ -21,7 +22,7 @@ import jakarta.annotation.PostConstruct;
 public class PointHandler {
 
     private Map<String, List<Point>> points;
-    private WeatherForecast weather;
+    private WeatherService weather;
     private ContributeHandler contributes;
     private MuniciPathMediator mediator;
     
@@ -33,7 +34,7 @@ public class PointHandler {
     
     public PointHandler() {
     	points = new HashMap<>();
-        weather = new WeatherForecast();
+        weather = new WeatherForecastProxy();
         this.contributes = new ContributeHandler();
     }
     
@@ -174,9 +175,11 @@ public class PointHandler {
     }
     
     private boolean toShow(Post post, String username) {
-    	if(post.getType() != PostType.EVENT)
+    	if(post.getAuthor().equals(username))
     		return true;
-    	return post.getAuthor().equals(username) || post.getEndTime().isAfter((LocalDateTime.now()));
+    	if(!post.isPublished())
+    		return false;
+    	return post.getType() != PostType.EVENT || post.getEndTime().isAfter((LocalDateTime.now()));
     	
     }
     
