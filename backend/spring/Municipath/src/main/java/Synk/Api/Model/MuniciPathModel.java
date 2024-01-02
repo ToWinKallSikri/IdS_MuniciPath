@@ -31,7 +31,8 @@ public class MuniciPathModel {
     
     public MuniciPathModel(){
     	MuniciPathMediator mediator = new MuniciPathMediator();
-    	this.uh = new UserHandler(mediator);
+    	this.uh = new UserHandler();
+		this.uh.setMediator(mediator);
         this.ch = new CityHandler();
         this.ch.setMediator(mediator);
         this.gh = new GroupHandler();
