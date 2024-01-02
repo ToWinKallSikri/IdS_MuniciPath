@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import Synk.Api.Model.Post.Position;
-import Synk.Api.Model.Role.Licence;
-import Synk.Api.Model.Role.Role;
-import Synk.Api.Model.Role.RoleHandler;
-import Synk.Api.Model.Role.RoleRequest;
 import Synk.Api.Model.MuniciPathMediator;
+import Synk.Api.Model.City.Role.Licence;
+import Synk.Api.Model.City.Role.Role;
+import Synk.Api.Model.City.Role.RoleHandler;
+import Synk.Api.Model.City.Role.RoleRequest;
 
 
 @Repository

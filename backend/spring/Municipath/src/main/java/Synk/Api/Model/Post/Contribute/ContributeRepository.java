@@ -1,4 +1,4 @@
-package Synk.Api.Model.Contribute;
+package Synk.Api.Model.Post.Contribute;
 
 import org.springframework.data.repository.CrudRepository;
 

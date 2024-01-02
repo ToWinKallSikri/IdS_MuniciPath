@@ -1,4 +1,4 @@
-package Synk.Api.Model.Contribute;
+package Synk.Api.Model.Post.Contribute;
 
 import java.util.ArrayList;
 import java.util.HashMap;

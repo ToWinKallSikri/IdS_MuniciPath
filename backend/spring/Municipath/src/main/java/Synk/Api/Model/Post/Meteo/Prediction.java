@@ -1,4 +1,4 @@
-package Synk.Api.Model.Meteo;
+package Synk.Api.Model.Post.Meteo;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

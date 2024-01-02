@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import Synk.Api.Model.MuniciPathMediator;
-import Synk.Api.Model.Contribute.Contribute;
-import Synk.Api.Model.Contribute.ContributeHandler;
-import Synk.Api.Model.Meteo.WeatherForecastProxy;
-import Synk.Api.Model.Meteo.WeatherService;
 import Synk.Api.Model.Pending.PendingRequest;
+import Synk.Api.Model.Post.Contribute.Contribute;
+import Synk.Api.Model.Post.Contribute.ContributeHandler;
+import Synk.Api.Model.Post.Meteo.WeatherForecastProxy;
+import Synk.Api.Model.Post.Meteo.WeatherService;
 import jakarta.annotation.PostConstruct;
 
 @Repository

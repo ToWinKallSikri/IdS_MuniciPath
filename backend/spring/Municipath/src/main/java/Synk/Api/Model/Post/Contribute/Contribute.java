@@ -1,4 +1,4 @@
-package Synk.Api.Model.Contribute;
+package Synk.Api.Model.Post.Contribute;
 
 import java.util.List;
 import java.util.Objects;

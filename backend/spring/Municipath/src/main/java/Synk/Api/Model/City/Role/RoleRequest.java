@@ -1,4 +1,4 @@
-package Synk.Api.Model.Role;
+package Synk.Api.Model.City.Role;
 
 import java.util.Objects;
 
