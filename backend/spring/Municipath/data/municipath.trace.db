@@ -383,3 +383,6 @@ ON CONTRIBUTE_CONTRIBUTE ( CONTRIBUTE_ID ) [42111-224]
 	at org.h2.server.web.WebThread.process(WebThread.java:190)
 	at org.h2.server.web.WebThread.run(WebThread.java:103)
 	at java.base/java.lang.Thread.run(Thread.java:1583)
+2024-01-02 15:10:06.935931+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "LICENCE" not found; SQL statement:
+select l1_0.id,l1_0.city_id,l1_0.role,l1_0.username from licence l1_0 where l1_0.id=? [42102-224]

@@ -4,26 +4,37 @@ package Synk.Api.Model.City.Role;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import jakarta.annotation.PostConstruct;
+
+@Repository
 public class RoleHandler {
-	private List<Licence> authorizations;
+	
 	private List<RoleRequest> requests;
+	@Autowired
+	private LicenceRepository licenceRepository;
 
 	public RoleHandler() {
-		authorizations = new ArrayList<Licence>();
 		requests = new ArrayList<RoleRequest>();
+	}
+	
+	@PostConstruct
+	public void init() {
+		this.licenceRepository.save(new Licence("123", "twinkal", Role.CURATOR));
 	}
 
 	public List<Licence> getAuthorizations(String cityId) {
-		return authorizations.stream().parallel()
+		return StreamSupport.stream(licenceRepository.findAll().spliterator(), true)
 				.filter(l -> l.getCityId().equals(cityId)).toList();
 	}
 
 	public Licence getAuthorization(String username, String cityId) {
-		return authorizations.stream().parallel()
-				.filter(l -> l.getCityId().equals(cityId))
-				.filter(l -> l.getUsername().equals(username))
-				.findFirst().orElse(new Licence(username, cityId, Role.TOURIST));
+		return this.licenceRepository.findById(cityId+"."+username)
+				.orElse(new Licence(username, cityId, Role.TOURIST));
 	}
 	
 
@@ -34,12 +45,12 @@ public class RoleHandler {
 		if(licence.getRole() == Role.MODERATOR || licence.getRole() == Role.CURATOR)
 			return false;
 		if(role == Role.TOURIST)
-			this.authorizations.remove(licence);
+			this.licenceRepository.delete(licence);
 		else {
 			Role oldRole = licence.getRole();
 			licence.setRole(role);
 			if(oldRole.equals(Role.TOURIST))
-				this.authorizations.add(licence);
+				this.licenceRepository.save(licence);
 		}
 		return true;
 	}
@@ -56,16 +67,16 @@ public class RoleHandler {
 		Licence licence = getAuthorization(username, cityId);
 		if(licence.getRole() != Role.MODERATOR)
 			return false;
-		this.authorizations.remove(licence);
+		this.licenceRepository.delete(licence);
 		return true;
 	}
 	
 	public void addCity(String cityId, String curator) {
-		this.authorizations.add(new Licence(cityId, curator, Role.CURATOR));
+		this.licenceRepository.save(new Licence(cityId, curator, Role.CURATOR));
 	}
 	
 	public void removeCity(String cityId) {
-		this.authorizations.removeAll(getAuthorizations(cityId));
+		this.licenceRepository.deleteAll(getAuthorizations(cityId));
 	}
 
 	public boolean addRequest(String cityId, String username) {
