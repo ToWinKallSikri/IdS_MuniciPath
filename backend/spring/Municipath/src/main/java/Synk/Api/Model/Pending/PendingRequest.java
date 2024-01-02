@@ -4,25 +4,39 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import Synk.Api.Model.Post.PostType;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
 
+@Entity
 public class PendingRequest {
 	
-	private String id, title, text;
-	private boolean isNew, sorted, persistence;
+	@Id
+	private String id;
+	private String title;
+	private String text;
+	private boolean isNew;
+	private boolean sorted;
+	private boolean persistence;
+	@Enumerated(EnumType.STRING)
 	private PostType type;
+    @ElementCollection
 	private List<String> data;
-	private LocalDateTime startTime, endTime;
+	private LocalDateTime startTime;
+	private LocalDateTime endTime;
 	
-	public PendingRequest(String id, boolean isNew) {
+	public PendingRequest(String id) {
 		this.id = id;
-		this.isNew = isNew;
+		this.isNew = true;
 	}
 	
-	public PendingRequest(String id, String title, boolean isNew, boolean sorted,
+	public PendingRequest(String id, String title, boolean sorted,
 			boolean persistence, List<String> data, LocalDateTime start, LocalDateTime end) {
 		this.id = id;
 		this.title = title;
-		this.isNew = isNew;
+		this.isNew = false;
 		this.sorted = sorted;
 		this.persistence = persistence;
 		this.data = data;
@@ -30,12 +44,12 @@ public class PendingRequest {
 		this.endTime = end;
 	}
 
-	public PendingRequest(String id, String title, String text, boolean isNew, boolean persistence,
+	public PendingRequest(String id, String title, String text, boolean persistence,
 			PostType type, List<String> data, LocalDateTime start, LocalDateTime end) {
 		this.id = id;
 		this.title = title;
 		this.text = text;
-		this.isNew = isNew;
+		this.isNew = false;
 		this.persistence = persistence;
 		this.type = type;
 		this.data = data;

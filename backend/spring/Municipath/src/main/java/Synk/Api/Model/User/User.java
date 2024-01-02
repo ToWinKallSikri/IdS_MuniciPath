@@ -7,7 +7,6 @@ public class User {
     private String cityId;
     
 	public User(String username, String password, boolean isManager) {
-		super();
 		this.username = username;
 		this.password = password;
 		this.isManager = isManager;

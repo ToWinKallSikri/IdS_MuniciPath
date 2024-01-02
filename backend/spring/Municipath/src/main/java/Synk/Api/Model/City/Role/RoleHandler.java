@@ -1,7 +1,6 @@
 package Synk.Api.Model.City.Role;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -9,7 +8,6 @@ import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import jakarta.annotation.PostConstruct;
 
 @Repository
 public class RoleHandler {
@@ -71,7 +69,7 @@ public class RoleHandler {
 	}
 
 	public boolean addRequest(String cityId, String username) {
-		String requestId = cityId.hashCode() + "." + username.hashCode();
+		String requestId = cityId + "." + username;
 		RoleRequest request = new RoleRequest(cityId, username, requestId);
 		if (requestRepository.existsById(requestId))
 			return false;
@@ -107,15 +105,11 @@ public class RoleHandler {
 	}
 
 	private Optional<RoleRequest> getRequest(String requestId) {
-		return StreamSupport.stream(requestRepository.findAll().spliterator(), true)
-				.filter(r -> r.getRequestId().equals(requestId))
-				.findFirst();
+		return requestRepository.findById(requestId);
 	}
 
 	private void removeRequest(String requestId) {
-		StreamSupport.stream(requestRepository.findAll().spliterator(), true)
-				.filter(l -> l.getCityId().equals(requestId)).findFirst().
-				ifPresent(r -> requestRepository.delete(r));
+		requestRepository.deleteById(requestId);
 	}
 	
 }

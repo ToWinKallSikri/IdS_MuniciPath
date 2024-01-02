@@ -288,7 +288,7 @@ public class PointHandler {
 		if(winnercontent == null)
 			return false;
 		PendingRequest edit = new PendingRequest(post.getId(), post.getTitle(), "", 
-				false, true, PostType.SOCIAL, winnercontent, null, null);
+				true, PostType.SOCIAL, winnercontent, null, null);
 		editPost(edit);
 		post.setAuthor(winnerId);
 		return true;

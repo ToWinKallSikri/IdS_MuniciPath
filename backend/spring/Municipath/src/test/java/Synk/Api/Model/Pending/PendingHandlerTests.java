@@ -8,7 +8,7 @@ public class PendingHandlerTests {
 	
 	@Test
 	void testInitialization() {
-		assertDoesNotThrow(() -> new PendingHandler(null));
+		assertDoesNotThrow(() -> new PendingHandler());
 	}
 	
 }

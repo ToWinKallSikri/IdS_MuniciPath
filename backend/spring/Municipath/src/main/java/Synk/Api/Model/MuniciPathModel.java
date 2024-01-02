@@ -38,7 +38,8 @@ public class MuniciPathModel {
         this.gh.setMediator(mediator);
         this.poh = new PointHandler();
         this.poh.setMediator(mediator);
-        this.peh = new PendingHandler(mediator);
+        this.peh = new PendingHandler();
+        this.peh.setMediator(mediator);
         mediator.setUser(uh);
         mediator.setCity(ch);
         mediator.setGroup(gh);
