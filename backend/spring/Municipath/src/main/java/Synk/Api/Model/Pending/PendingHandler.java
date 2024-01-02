@@ -12,11 +12,24 @@ import Synk.Api.Model.Post.PostType;
 
 @Repository
 public class PendingHandler {
+<<<<<<< Updated upstream
 	
+=======
+
+	private List<PendingRequest> requests;
+>>>>>>> Stashed changes
 	private MuniciPathMediator mediator;
+
 	@Autowired
 	private PendingRepository pendingRepository;
 
+<<<<<<< Updated upstream
+=======
+	public PendingHandler() {
+		this.requests = new ArrayList<>();
+	}
+
+>>>>>>> Stashed changes
 	public void setMediator(MuniciPathMediator mediator) {
         this.mediator = mediator;
     }

@@ -3,15 +3,18 @@ package Synk.Api.Model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 import Synk.Api.Model.MuniciPathMediator;
+import Synk.Api.Model.Pending.PendingRequest;
+import Synk.Api.Model.Post.PostType;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserHandler {
 
-    private ArrayList<User> users;
     private NotificationHandler notifications;
     private MuniciPathMediator mediator;
 
@@ -19,24 +22,25 @@ public class UserHandler {
 	private UserRepository userRepository;
 
     public UserHandler() {
-        users = new ArrayList<User>();
         this.notifications = new NotificationHandler();
     }
+
+	@PostConstruct
+	public void init() {
+		this.userRepository.save(new User("nibba","niggaruto", false));
+	}
 
 	public void setMediator(MuniciPathMediator mediator) {
 		this.mediator = mediator;
 	}
     
     private Optional<User> getOptUser(String username) {
-    	return this.users.stream().parallel()
-    			.filter(u -> u.getUsername().equals(username))
-    			.findFirst();
+    	return this.userRepository.findById(username);
     }
     
     private Optional<User> findCuratorOf(String cityId) {
-    	return this.users.stream().parallel()
-    			.filter(u -> cityId.equals(u.getCityId()))
-    			.findFirst();
+    	return StreamSupport.stream(userRepository.findAll().spliterator(), true)
+				.filter(u -> u.getCityId().equals(cityId) && u.isCurator()).findFirst();
     }
 
     public boolean matchCurator(String curator, String cityId) {
@@ -56,23 +60,31 @@ public class UserHandler {
 		return true;
     }
     
-    public boolean discreditCurator(String cityId) {
+    public void discreditCurator(String cityId) {
     	Optional<User> oCurator = findCuratorOf(cityId);
-    	if(oCurator.isEmpty()) return false;
+    	if(oCurator.isEmpty()) return;
     	oCurator.get().setCityId(null);
+<<<<<<< Updated upstream
     	return true;
     }
 
 	public List<User> getUsers() {
 		return users;
+=======
+>>>>>>> Stashed changes
 	}
 
-	public void setUsers(ArrayList<User> users) {
-		this.users = users;
+	public List<User> getUsers() {
+		return StreamSupport.stream(userRepository.findAll().spliterator(), true)
+				.toList();
+	}
+
+	public void setUsers(List<User> users) {
+		this.userRepository.saveAll(users);
 	}
 
 	public boolean usernameExists(String username) {
-		return this.users.stream().anyMatch(u -> u.getUsername().equals(username));
+		return this.userRepository.existsById(username);
 	}
 
 	public void send(String username, String message) {

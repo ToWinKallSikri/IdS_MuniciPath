@@ -2,8 +2,10 @@ package Synk.Api.Model.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "Tourist")
 public class User {
 	@Id
     private String username;
