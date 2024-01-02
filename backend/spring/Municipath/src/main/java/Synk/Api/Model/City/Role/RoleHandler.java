@@ -13,19 +13,10 @@ import jakarta.annotation.PostConstruct;
 
 @Repository
 public class RoleHandler {
-	
-	private List<RoleRequest> requests;
+	@Autowired
+	private RequestRepository requestRepository;
 	@Autowired
 	private LicenceRepository licenceRepository;
-
-	public RoleHandler() {
-		requests = new ArrayList<RoleRequest>();
-	}
-	
-	@PostConstruct
-	public void init() {
-		this.licenceRepository.save(new Licence("123", "twinkal", Role.CURATOR));
-	}
 
 	public List<Licence> getAuthorizations(String cityId) {
 		return StreamSupport.stream(licenceRepository.findAll().spliterator(), true)
@@ -82,16 +73,16 @@ public class RoleHandler {
 	public boolean addRequest(String cityId, String username) {
 		String requestId = cityId.hashCode() + "." + username.hashCode();
 		RoleRequest request = new RoleRequest(cityId, username, requestId);
-		if(requests.contains(request))
+		if (requestRepository.existsById(requestId))
 			return false;
-		requests.add(request);
+		requestRepository.save(request);
 		return true;
 
 	}
 
 	public List<RoleRequest> getRequests(String cityId) {
-		return this.requests.stream()
-				.filter(r -> r.getCityId().equals(cityId)).toList();
+		return StreamSupport.stream(requestRepository.findAll().spliterator(), true)
+				.filter(l -> l.getCityId().equals(cityId)).toList();
 	}
 	
 
@@ -116,15 +107,15 @@ public class RoleHandler {
 	}
 
 	private Optional<RoleRequest> getRequest(String requestId) {
-		return requests.stream().parallel()
+		return StreamSupport.stream(requestRepository.findAll().spliterator(), true)
 				.filter(r -> r.getRequestId().equals(requestId))
 				.findFirst();
 	}
 
 	private void removeRequest(String requestId) {
-		requests.stream().parallel()
-				.filter(r -> r.getRequestId().equals(requestId))
-				.findFirst().ifPresent(r -> requests.remove(r));
+		StreamSupport.stream(requestRepository.findAll().spliterator(), true)
+				.filter(l -> l.getCityId().equals(requestId)).findFirst().
+				ifPresent(r -> requestRepository.delete(r));
 	}
 	
 }

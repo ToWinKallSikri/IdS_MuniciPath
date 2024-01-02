@@ -1,8 +1,12 @@
 package Synk.Api.Model.City.Role;
 
-import java.util.Objects;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
+import java.util.Objects;
+@Entity
 public class RoleRequest {
+    @Id
     private String requestId;
     private String cityId;
     private String username;
@@ -13,7 +17,7 @@ public class RoleRequest {
         super();
         this.cityId = cityId;
         this.username = username;
-        this.requestId = requestId;
+        this.requestId =cityId + "." + username;
     }
 
     public String getCityId() {
