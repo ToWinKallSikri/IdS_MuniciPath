@@ -12,7 +12,7 @@ public class UserHandlerTests {
 	
 	@Test
 	void testInitialization() {
-		assertDoesNotThrow(() -> new UserHandler(null));
+		assertDoesNotThrow(() -> new UserHandler());
 	}
 	
 }

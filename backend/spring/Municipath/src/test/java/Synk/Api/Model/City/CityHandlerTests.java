@@ -23,7 +23,8 @@ public class CityHandlerTests {
 		ch.setMediator(mediator);
 		PointHandler ph = new PointHandler();
 		ph.setMediator(mediator);
-		UserHandler uh = new UserHandler(mediator);
+		UserHandler uh = new UserHandler();
+		uh.setMediator(mediator);
 		mediator.setCity(ch);
 		mediator.setPoint(ph);
 		mediator.setUser(uh);

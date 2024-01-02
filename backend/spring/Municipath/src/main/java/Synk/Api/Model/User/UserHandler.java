@@ -1,13 +1,11 @@
 package Synk.Api.Model.User;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import Synk.Api.Model.MuniciPathMediator;
-import Synk.Api.Model.Pending.PendingRequest;
-import Synk.Api.Model.Post.PostType;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -64,15 +62,8 @@ public class UserHandler {
     	Optional<User> oCurator = findCuratorOf(cityId);
     	if(oCurator.isEmpty()) return;
     	oCurator.get().setCityId(null);
-<<<<<<< Updated upstream
-    	return true;
-    }
 
-	public List<User> getUsers() {
-		return users;
-=======
->>>>>>> Stashed changes
-	}
+    }
 
 	public List<User> getUsers() {
 		return StreamSupport.stream(userRepository.findAll().spliterator(), true)
