@@ -1,6 +1,7 @@
 package Synk.Api.Model.User;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import Synk.Api.Model.MuniciPathMediator;
@@ -53,7 +54,7 @@ public class UserHandler {
     	return true;
     }
 
-	public ArrayList<User> getUsers() {
+	public List<User> getUsers() {
 		return users;
 	}
 

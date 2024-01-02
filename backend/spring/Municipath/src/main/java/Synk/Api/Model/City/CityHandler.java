@@ -61,7 +61,7 @@ public class CityHandler {
     }
     
     public List<City> getCities(String search) {
-    	return StreamSupport.stream(cityRepository.findAll().spliterator(), false)
+    	return StreamSupport.stream(cityRepository.findAll().spliterator(), true)
     			.filter(c -> (c.getName()+c.getCap()).toLowerCase()
     					.startsWith(search.toLowerCase())).toList();
     }
