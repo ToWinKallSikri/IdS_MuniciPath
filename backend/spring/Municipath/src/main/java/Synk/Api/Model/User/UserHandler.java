@@ -4,18 +4,27 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import Synk.Api.Model.MuniciPathMediator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class UserHandler {
 
     private ArrayList<User> users;
     private NotificationHandler notifications;
     private MuniciPathMediator mediator;
 
-    public UserHandler(MuniciPathMediator mediator) {
+	@Autowired
+	private UserRepository userRepository;
+
+    public UserHandler() {
         users = new ArrayList<User>();
         this.notifications = new NotificationHandler();
-        this.mediator = mediator;
     }
+
+	public void setMediator(MuniciPathMediator mediator) {
+		this.mediator = mediator;
+	}
     
     private Optional<User> getOptUser(String username) {
     	return this.users.stream().parallel()
