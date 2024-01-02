@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import jakarta.annotation.PostConstruct;
@@ -16,10 +15,11 @@ import jakarta.annotation.PostConstruct;
 public class ContributeHandler {
 	
 	private Map<String, List<Contribute>> contributes;
-	@Autowired
+	
 	private ContributeRepository contributesRepository;
 	
-	public ContributeHandler() {
+	public ContributeHandler(ContributeRepository contributesRepository) {
+		this.contributesRepository = contributesRepository;
 		this.contributes = new HashMap<>();
 	}
 	

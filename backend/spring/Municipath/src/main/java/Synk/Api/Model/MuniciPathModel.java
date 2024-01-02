@@ -19,6 +19,7 @@ import Synk.Api.Model.Post.PostType;
 import Synk.Api.Model.Post.Contribute.Contribute;
 import Synk.Api.Model.Post.Point;
 import Synk.Api.Model.Post.PointHandler;
+import Synk.Api.Model.User.User;
 import Synk.Api.Model.User.UserHandler;
 
 public class MuniciPathModel {
@@ -188,6 +189,40 @@ public class MuniciPathModel {
 	public PendingRequest getRequest(String requestId) {
 		return this.peh.getRequest(requestId);
 	}
+	
+	
+	
+	public boolean addUser(String username, String password) {
+		return this.uh.addUser(username, password);
+	}
+	
+	public boolean removeUser(String username) {
+		return this.uh.removeUser(username);
+	}
+	
+	public boolean changePassowrd(String username, String password) {
+		return this.uh.changePassowrd(username, password);
+	}
+	
+	public boolean userValidation(String username) {
+		return this.uh.userValidation(username);
+	}
+	
+	public boolean manageManager(String username, boolean auth) {
+		return this.uh.manageManager(username, auth);
+	}
+    
+    public User getUser(String username) {
+    	return this.uh.getUser(username);
+    }
+    
+    public User getUserConvalidated(String username) {
+    	return this.uh.getUserConvalidated(username);
+    }
+    
+    public List<User> getUsersNotConvalidated(){
+    	return this.uh.getUsersNotConvalidated();
+    }
 	
 	
 	

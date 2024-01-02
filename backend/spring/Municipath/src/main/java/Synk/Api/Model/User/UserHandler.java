@@ -2,11 +2,9 @@ package Synk.Api.Model.User;
 
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import Synk.Api.Model.MuniciPathMediator;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,56 +21,93 @@ public class UserHandler {
         this.notifications = new NotificationHandler();
     }
 
-	@PostConstruct
-	public void init() {
-		this.userRepository.save(new User("nibba","niggaruto", false));
-	}
-
 	public void setMediator(MuniciPathMediator mediator) {
 		this.mediator = mediator;
 	}
+	
+	public boolean addUser(String username, String password) {
+		if(usernameExists(username))
+			return false;
+		this.userRepository.save(new User(username, password, false, false));
+		return true;
+	}
+	
+	public boolean removeUser(String username) {
+		if(!this.usernameExists(username)) 
+			return false;
+		this.userRepository.deleteById(username);
+		return true;
+	}
+	
+	public boolean changePassowrd(String username, String password) {
+		User user = getUserConvalidated(username);
+		if(user == null) 
+			return false;
+		user.setPassword(password);
+		this.userRepository.save(user);
+		return true;
+	}
+	
+	public boolean userValidation(String username) {
+		User user = getUser(username);
+		if(user == null || user.isConvalidated()) 
+			return false;
+		user.setConvalidated(true);
+		this.userRepository.save(user);
+		return true;
+	}
+	
+	public boolean manageManager(String username, boolean auth) {
+		User user = getUserConvalidated(username);
+		if(user == null || user.isManager() == auth) 
+			return false;
+		user.setManager(auth);
+		this.userRepository.save(user);
+		return true;
+	}
     
-    private Optional<User> getOptUser(String username) {
-    	return this.userRepository.findById(username);
+    public User getUser(String username) {
+    	return this.userRepository.findById(username).orElse(null);
     }
     
-    private Optional<User> findCuratorOf(String cityId) {
+    public User getUserConvalidated(String username) {
+    	User user = this.getUser(username);
+    	return user != null && user.isConvalidated() ? user : null;
+    }
+    
+    public List<User> getUsersNotConvalidated(){
     	return StreamSupport.stream(userRepository.findAll().spliterator(), true)
-				.filter(u -> u.getCityId().equals(cityId) && u.isCurator()).findFirst();
+		.filter(u -> !u.isConvalidated()).toList();
+    }
+    
+    private User findCuratorOf(String cityId) {
+    	return StreamSupport.stream(userRepository.findAll().spliterator(), true)
+				.filter(u -> cityId.equals(u.getCityId())).findFirst().orElse(null);
     }
 
     public boolean matchCurator(String curator, String cityId) {
-    	Optional<User> oUser = getOptUser(curator);
-    	if(oUser.isEmpty() || oUser.get().isCurator())
+    	User user = getUserConvalidated(curator);
+    	if(user == null || user.isCurator())
     		return false;
-    	oUser.get().setCityId(cityId);
+    	user.setCityId(cityId);
     	return true;
     }
     
     public boolean changeCurator(String curator, String cityId) {
-    	Optional<User> oOld = findCuratorOf(cityId), oNew = getOptUser(curator);
-    	if(oOld.isEmpty() || oNew.isEmpty() || oNew.get().isCurator())
+    	User _old = findCuratorOf(cityId), _new = getUserConvalidated(curator);
+    	if(_old == null || _new == null || _new.isCurator())
     		return false;
-    	oOld.get().setCityId(null);
-    	oNew.get().setCityId(cityId);
+    	_old.setCityId(null);
+    	_new.setCityId(cityId);
 		return true;
     }
     
     public void discreditCurator(String cityId) {
-    	Optional<User> oCurator = findCuratorOf(cityId);
-    	if(oCurator.isEmpty()) return;
-    	oCurator.get().setCityId(null);
+    	User curator = findCuratorOf(cityId);
+    	if(curator != null)
+    		curator.setCityId(null);
 
     }
-
-	public List<User> getUsers() {
-		return StreamSupport.stream(userRepository.findAll().spliterator(), true)
-				.toList();
-	}
-
-	public void setUsers(List<User> users) {
-		this.userRepository.saveAll(users);
-	}
 
 	public boolean usernameExists(String username) {
 		return this.userRepository.existsById(username);

@@ -18,19 +18,16 @@ import Synk.Api.Model.City.Role.RoleRequest;
 public class CityHandler {
 	
     private MuniciPathMediator mediator;
-    private RoleHandler roleHandler;
-    
+    @Autowired
+    private  RoleHandler roleHandler;
     @Autowired
 	private CityRepository cityRepository;
-
-    public CityHandler() {
-        this.roleHandler = new RoleHandler();
-    }
     
     public void setMediator(MuniciPathMediator mediator) {
         this.mediator = mediator;
     }
-
+    
+    
     public boolean createCity(String cityName, int cap, String curator, Position pos ) {
     	String id = "" + (cityName+cap).hashCode();
         City c1 = new City(id, cityName,pos, curator, cap);

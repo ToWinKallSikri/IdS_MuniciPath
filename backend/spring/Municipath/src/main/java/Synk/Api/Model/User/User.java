@@ -5,18 +5,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Tourist")
+@Table(name = "tourist")
 public class User {
 	@Id
     private String username;
     private String password;
     private boolean isManager;
     private String cityId;
+    private boolean convalidated;
     
-	public User(String username, String password, boolean isManager) {
+	public User(String username, String password, boolean isManager, boolean convalidated) {
 		this.username = username;
 		this.password = password;
 		this.isManager = isManager;
+		this.convalidated = convalidated;
 	}
 	
 	public User() {}
@@ -48,4 +50,13 @@ public class User {
 	public boolean isCurator() {
 		return this.cityId != null;
 	}
+
+	public boolean isConvalidated() {
+		return convalidated;
+	}
+
+	public void setConvalidated(boolean convalidated) {
+		this.convalidated = convalidated;
+	}
+	
 }

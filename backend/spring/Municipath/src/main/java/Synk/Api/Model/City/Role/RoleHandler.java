@@ -5,16 +5,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 
 @Repository
 public class RoleHandler {
-	@Autowired
+	
 	private RequestRepository requestRepository;
-	@Autowired
 	private LicenceRepository licenceRepository;
+	
+
+	public RoleHandler(RequestRepository requestRepository, LicenceRepository licenceRepository) {
+		this.licenceRepository = licenceRepository;
+		this.requestRepository = requestRepository;
+	}
 
 	public List<Licence> getAuthorizations(String cityId) {
 		return StreamSupport.stream(licenceRepository.findAll().spliterator(), true)

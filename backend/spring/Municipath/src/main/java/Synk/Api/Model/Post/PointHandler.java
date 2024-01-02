@@ -23,7 +23,6 @@ public class PointHandler {
 
     private Map<String, List<Point>> points;
     private WeatherService weather;
-    private ContributeHandler contributes;
     private MuniciPathMediator mediator;
     
     
@@ -31,11 +30,12 @@ public class PointHandler {
 	private PostRepository postRepository;
 	@Autowired
 	private PointRepository pointRepository;
+	@Autowired
+    private ContributeHandler contributes;
     
     public PointHandler() {
     	points = new HashMap<>();
         weather = new WeatherForecastProxy();
-        this.contributes = new ContributeHandler();
     }
     
     public void setMediator(MuniciPathMediator mediator) {
