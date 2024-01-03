@@ -4,12 +4,16 @@ import org.junit.runner.RunWith;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 
 import Synk.Api.Model.MuniciPathMediator;
+import Synk.Api.Model.City.Role.Role;
+import Synk.Api.Model.City.Role.RoleRequest;
 import Synk.Api.Model.Group.GroupHandler;
 import Synk.Api.Model.Post.PointHandler;
 import Synk.Api.Model.Post.Position;
@@ -94,7 +98,6 @@ public class CityHandlerTests {
 		assertEquals(city.getCap(), 12345);
 		assertEquals(city.getName(), "tokyo");
 		assertEquals(city.getCurator(), "naruto");
-		//ch.deleteCity(id);
 		assertTrue(ch.updateCity(id, "berlino", 54321, "sasuke", p2));
 		city = ch.getCity(id);
 		assertEquals(city.getPos(), p2);
@@ -105,5 +108,77 @@ public class CityHandlerTests {
 		uh.removeUser("naruto");
 		uh.removeUser("sasuke");
 	}
+	
+	@Test
+	void testRoles() {
+		uh.addUser("naruto", "password");
+		uh.userValidation("naruto");
+		uh.addUser("sasuke", "password");
+		uh.userValidation("sasuke");
+		uh.addUser("sakura", "password");
+		uh.userValidation("sakura");
+		uh.addUser("jiraya", "password");
+		uh.userValidation("jiraya");
+		String id = "" + ("tokyo"+12345).hashCode();
+		Position pos = new Position(1, 2);
+		ch.createCity("tokyo", 12345, "naruto", pos);
+		assertTrue(ch.getAuthorizations(id).size() == 1);
+		assertFalse(ch.getAuthorization("naruto", id) == null);
+		assertEquals(ch.getAuthorization("naruto", id).getRole(), Role.CURATOR);
+		assertEquals(ch.getRole("naruto", id), Role.CURATOR);
+		assertFalse(ch.setRole("sakura", id, Role.CURATOR));
+		assertFalse(ch.setRole("sakura", id, Role.MODERATOR));
+		assertTrue(ch.setRole("sakura", id, Role.CONTR_NOT_AUTH));
+		assertTrue(ch.setRole("jiraya", id, Role.CONTR_AUTH));
+		assertTrue(ch.isAuthorized(id, "naruto"));
+		assertEquals(ch.getAuthorization("sakura", id).getRole(), Role.CONTR_NOT_AUTH);
+		assertTrue(ch.isAuthorized(id, "sakura"));
+		assertFalse(ch.isAuthorized(id, "sasuke"));
+		assertTrue(ch.canPublish(id, "jiraya"));
+		assertFalse(ch.canPublish(id, "sakura"));
+		assertFalse(ch.addModerator("naruto", id));
+		assertTrue(ch.addModerator("sasuke", id));
+		assertTrue(ch.removeModerator("sasuke", id));
+		assertFalse(ch.removeModerator("sasuke", id));
+		ch.deleteCity(id);
+		uh.removeUser("naruto");
+		uh.removeUser("sasuke");
+		uh.removeUser("jiraya");
+		uh.removeUser("sakura");
+	}
+	
+	@Test
+	void testRequests() {
+		uh.addUser("naruto", "password");
+		uh.userValidation("naruto");
+		uh.addUser("sasuke", "password");
+		uh.userValidation("sasuke");
+		uh.addUser("sakura", "password");
+		uh.userValidation("sakura");
+		String id = "" + ("tokyo"+12345).hashCode();
+		Position pos = new Position(1, 2);
+		ch.createCity("tokyo", 12345, "naruto", pos);
+		ch.setRole("sasuke", id, Role.CONTR_NOT_AUTH);
+		assertEquals(ch.getRole("sasuke", id), Role.CONTR_NOT_AUTH);
+		assertEquals(ch.getRole("sakura", id), Role.TOURIST);
+		assertFalse(ch.addRequest("sasuke", "konoa"));
+		assertFalse(ch.addRequest("obito", id));
+		assertTrue(ch.addRequest("sasuke", id));
+		assertTrue(ch.addRequest("sakura", id));
+		List<RoleRequest> list = ch.getRequests(id);
+		assertEquals(list.size(), 2);
+		assertFalse(ch.judge("uicfbwquicwqo", true));
+		assertTrue(ch.judge(list.get(0).getRequestId(), true));
+		assertTrue(ch.judge(list.get(1).getRequestId(), false));
+		list = ch.getRequests(id);
+		assertTrue(list.isEmpty());
+		assertEquals(ch.getRole("sasuke", id), Role.CONTR_AUTH);
+		assertEquals(ch.getRole("sakura", id), Role.TOURIST);
+		ch.deleteCity(id);
+		uh.removeUser("naruto");
+		uh.removeUser("sasuke");
+		uh.removeUser("sakura");
+	}
+	
 	
 }

@@ -107,8 +107,7 @@ public class CityHandler {
 	public boolean setRole(String username, String cityId, Role role) {
 		if(!this.mediator.usernameExists(username))
 			return false;
-		City city = getCity(cityId);
-		if(city == null || city.getCurator().equals(username))
+		if(getCity(cityId) == null)
 			return false;
 		return this.roleHandler.setRole(username, cityId, role);
 	}
@@ -116,8 +115,7 @@ public class CityHandler {
 	public boolean addModerator(String username, String cityId) {
 		if(!this.mediator.usernameExists(username))
 			return false;
-		City city = getCity(cityId);
-		if(city == null || city.getCurator().equals(username))
+		if(getCity(cityId) == null)
 			return false;
 		return this.roleHandler.addModerator(username, cityId);
 	}
@@ -125,8 +123,7 @@ public class CityHandler {
 	public boolean removeModerator(String username, String cityId) {
 		if(!this.mediator.usernameExists(username))
 			return false;
-		City city = getCity(cityId);
-		if(city == null || city.getCurator().equals(username))
+		if(getCity(cityId) == null)
 			return false;
 		return this.roleHandler.removeModerator(username, cityId);
 	}
@@ -136,13 +133,13 @@ public class CityHandler {
 	}
 	
 	public boolean addRequest(String username, String cityId) {
-		if(getCity(cityId) == null || !this.mediator.usernameExists(username))
+		if(getCity(cityId) == null || (!this.mediator.usernameExists(username)))
 			return false;
-		return this.roleHandler.addRequest(username, cityId);
+		return this.roleHandler.addRequest(cityId, username);
 	}
 	
 	public List<RoleRequest> getRequests(String cityId) {
-		if(this.checkIfAlreadyExists(cityId))
+		if(!this.checkIfAlreadyExists(cityId))
 			return null;
 		return this.roleHandler.getRequests(cityId);
 	}

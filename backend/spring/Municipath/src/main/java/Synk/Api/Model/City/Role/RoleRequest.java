@@ -13,8 +13,7 @@ public class RoleRequest {
 
     public RoleRequest() {}
 
-    public RoleRequest(String cityId, String username, String requestId) {
-        super();
+    public RoleRequest(String cityId, String username) {
         this.cityId = cityId;
         this.username = username;
         this.requestId =cityId + "." + username;

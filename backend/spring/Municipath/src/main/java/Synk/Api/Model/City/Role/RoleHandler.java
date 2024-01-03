@@ -27,7 +27,7 @@ public class RoleHandler {
 
 	public Licence getAuthorization(String username, String cityId) {
 		return this.licenceRepository.findById(cityId+"."+username)
-				.orElse(new Licence(username, cityId, Role.TOURIST));
+				.orElse(new Licence(cityId, username, Role.TOURIST));
 	}
 	
 
@@ -40,10 +40,8 @@ public class RoleHandler {
 		if(role == Role.TOURIST)
 			this.licenceRepository.delete(licence);
 		else {
-			Role oldRole = licence.getRole();
 			licence.setRole(role);
-			if(oldRole.equals(Role.TOURIST))
-				this.licenceRepository.save(licence);
+			this.licenceRepository.save(licence);
 		}
 		return true;
 	}
@@ -53,6 +51,7 @@ public class RoleHandler {
 		if(licence.getRole() == Role.MODERATOR || licence.getRole() == Role.CURATOR)
 			return false;
 		licence.setRole(Role.MODERATOR);
+		this.licenceRepository.save(licence);
 		return true;
 	}
 	
@@ -73,9 +72,8 @@ public class RoleHandler {
 	}
 
 	public boolean addRequest(String cityId, String username) {
-		String requestId = cityId + "." + username;
-		RoleRequest request = new RoleRequest(cityId, username, requestId);
-		if (requestRepository.existsById(requestId))
+		RoleRequest request = new RoleRequest(cityId, username);
+		if (requestRepository.existsById(request.getRequestId()))
 			return false;
 		requestRepository.save(request);
 		return true;
