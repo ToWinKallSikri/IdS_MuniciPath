@@ -49,14 +49,33 @@ public class CityHandlerTests {
 	
 	@Test
 	void testCreateDeleteCity() {
-		assertFalse(ch.createCity("civitanova", 62012, "twinkal", new Position(1, 2)));
-		uh.addUser("twinkal", "password");
-		uh.userValidation("twinkal");
-		String id = "" + ("civitanova"+62012).hashCode();
+		assertFalse(ch.createCity("tokyo", 12345, "naruto", new Position(1, 2)));
+		uh.addUser("naruto", "password");
+		uh.userValidation("naruto");
+		String id = "" + ("tokyo"+12345).hashCode();
 		assertFalse(ch.deleteCity(id));
-		assertTrue(ch.createCity("civitanova", 62012, "twinkal", new Position(1, 2)));
-		ch.getCities().forEach(c -> System.out.println( c.getId() ));
+		assertTrue(ch.createCity("tokyo", 12345, "naruto", new Position(1, 2)));
+		uh.addUser("sasuke", "password");
+		uh.userValidation("sasuke");
+		assertFalse(ch.createCity("tokyo", 12345, "sasuke", new Position(1, 2)));
 		assertTrue(ch.deleteCity(id));
+		uh.removeUser("naruto");
+		uh.removeUser("sasuke");
+	}
+	
+	@Test
+	void testGetCity() {
+		uh.addUser("naruto", "password");
+		uh.userValidation("naruto");
+		String id = "" + ("tokyo"+12345).hashCode();
+		assertTrue(ch.getCity(id) == null);
+		ch.createCity("tokyo", 12345, "naruto", new Position(1, 2));
+		assertFalse(ch.getCity(id) == null);
+		City city = ch.getCity(id);
+		assertEquals(ch.getCities().get(0), city);
+		assertEquals(ch.getCities("Tokyo").get(0), city);
+		ch.deleteCity(id);
+		uh.removeUser("naruto");
 	}
 	
 }

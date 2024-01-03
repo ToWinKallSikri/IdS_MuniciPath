@@ -45,12 +45,8 @@ public class CityHandler {
     	return this.cityRepository.existsById(cityId);
     }
     
-    private Optional<City> getOptCity (String cityId) {
-    	return this.cityRepository.findById(cityId);
-    }
-    
     public City getCity(String cityId) {
-    	return this.getOptCity(cityId).orElse(null);
+    	return this.cityRepository.findById(cityId).orElse(null);
     }
     
     public List<City> getCities(){
@@ -64,10 +60,9 @@ public class CityHandler {
     }
 
     public boolean updateCity(String id, String cityName, int cap, String curator, Position pos ){
-    	Optional<City> oCity = getOptCity(id);
-    	if(oCity.isEmpty())
+    	City city = getCity(id);
+    	if(city == null)
     		return false;
-    	City city = oCity.get();
     	if(!(city.getCurator().equals(curator) || 
     		this.mediator.changeCurator(curator, id)) )
         	return false;
@@ -80,10 +75,9 @@ public class CityHandler {
     }
 
     public boolean deleteCity(String cityId) {
-    	Optional<City> oCity = getOptCity(cityId);
-    	if(oCity.isEmpty())
+    	City city = getCity(cityId);
+    	if(city == null)
     		return false;
-    	City city = oCity.get();
     	this.cityRepository.delete(city);
     	this.mediator.deleteCity(cityId);
     	this.roleHandler.removeCity(cityId);

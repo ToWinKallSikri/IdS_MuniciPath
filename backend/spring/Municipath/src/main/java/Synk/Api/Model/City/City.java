@@ -3,6 +3,8 @@ package Synk.Api.Model.City;
 
 
 
+import java.util.Objects;
+
 import Synk.Api.Model.Post.Position;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -68,5 +70,24 @@ public class City {
 	public void setPos(Position pos) {
 		Pos = pos;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(Id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		City other = (City) obj;
+		return Objects.equals(Id, other.Id);
+	}
+	
+	
 
 }
