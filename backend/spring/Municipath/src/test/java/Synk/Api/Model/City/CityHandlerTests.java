@@ -59,8 +59,8 @@ public class CityHandlerTests {
 		uh.userValidation("sasuke");
 		assertFalse(ch.createCity("tokyo", 12345, "sasuke", new Position(1, 2)));
 		assertTrue(ch.deleteCity(id));
-		uh.removeUser("naruto");
 		uh.removeUser("sasuke");
+		uh.removeUser("naruto");
 	}
 	
 	@Test
@@ -76,6 +76,34 @@ public class CityHandlerTests {
 		assertEquals(ch.getCities("Tokyo").get(0), city);
 		ch.deleteCity(id);
 		uh.removeUser("naruto");
+	}
+	
+	@Test
+	void testUpdateCity() {
+		uh.addUser("naruto", "password");
+		uh.userValidation("naruto");
+		uh.addUser("sasuke", "password");
+		uh.userValidation("sasuke");
+		String id = "" + ("tokyo"+12345).hashCode();
+		Position p1 = new Position(1, 2);
+		Position p2 = new Position(2, 1);
+		assertFalse(ch.updateCity(id, "berlino", 54321, "sasuke", p2));
+		ch.createCity("tokyo", 12345, "naruto", p1);
+		City city = ch.getCity(id);
+		assertEquals(city.getPos(), p1);
+		assertEquals(city.getCap(), 12345);
+		assertEquals(city.getName(), "tokyo");
+		assertEquals(city.getCurator(), "naruto");
+		//ch.deleteCity(id);
+		assertTrue(ch.updateCity(id, "berlino", 54321, "sasuke", p2));
+		city = ch.getCity(id);
+		assertEquals(city.getPos(), p2);
+		assertEquals(city.getCap(), 54321);
+		assertEquals(city.getName(), "berlino");
+		assertEquals(city.getCurator(), "sasuke");
+		ch.deleteCity(id);
+		uh.removeUser("naruto");
+		uh.removeUser("sasuke");
 	}
 	
 }

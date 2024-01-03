@@ -90,6 +90,7 @@ public class UserHandler {
     	if(user == null || user.isCurator())
     		return false;
     	user.setCityId(cityId);
+		this.userRepository.save(user);
     	return true;
     }
     
@@ -99,13 +100,17 @@ public class UserHandler {
     		return false;
     	_old.setCityId(null);
     	_new.setCityId(cityId);
+		this.userRepository.save(_old);
+		this.userRepository.save(_new);
 		return true;
     }
     
     public void discreditCurator(String cityId) {
     	User curator = findCuratorOf(cityId);
-    	if(curator != null)
+    	if(curator != null) {
     		curator.setCityId(null);
+    		this.userRepository.save(curator);
+    	}
 
     }
 

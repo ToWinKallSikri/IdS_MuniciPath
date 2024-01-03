@@ -1,6 +1,5 @@
 package Synk.Api.Model.City;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,9 +62,9 @@ public class CityHandler {
     	City city = getCity(id);
     	if(city == null)
     		return false;
-    	if(!(city.getCurator().equals(curator) || 
-    		this.mediator.changeCurator(curator, id)) )
-        	return false;
+    	if(!city.getCurator().equals(curator))
+    		if(!this.mediator.changeCurator(curator, id))
+    			return false;
         city.setName(cityName);
         city.setCap(cap);
         city.setCurator(curator);
