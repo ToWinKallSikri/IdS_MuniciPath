@@ -217,11 +217,11 @@ public class MuniciPathModel {
     }
     
     public User getUserConvalidated(String username) {
-    	return this.uh.getUserConvalidated(username);
+    	return this.uh.getConvalidatedUser(username);
     }
     
     public List<User> getUsersNotConvalidated(){
-    	return this.uh.getUsersNotConvalidated();
+    	return this.uh.getNotConvalidatedUsers();
     }
 	
 	

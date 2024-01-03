@@ -40,7 +40,7 @@ public class UserHandler {
 	}
 	
 	public boolean changePassowrd(String username, String password) {
-		User user = getUserConvalidated(username);
+		User user = getConvalidatedUser(username);
 		if(user == null) 
 			return false;
 		user.setPassword(password);
@@ -58,7 +58,7 @@ public class UserHandler {
 	}
 	
 	public boolean manageManager(String username, boolean auth) {
-		User user = getUserConvalidated(username);
+		User user = getConvalidatedUser(username);
 		if(user == null || user.isManager() == auth) 
 			return false;
 		user.setManager(auth);
@@ -70,12 +70,12 @@ public class UserHandler {
     	return this.userRepository.findById(username).orElse(null);
     }
     
-    public User getUserConvalidated(String username) {
+    public User getConvalidatedUser(String username) {
     	User user = this.getUser(username);
     	return user != null && user.isConvalidated() ? user : null;
     }
     
-    public List<User> getUsersNotConvalidated(){
+    public List<User> getNotConvalidatedUsers(){
     	return StreamSupport.stream(userRepository.findAll().spliterator(), true)
 		.filter(u -> !u.isConvalidated()).toList();
     }
@@ -86,7 +86,7 @@ public class UserHandler {
     }
 
     public boolean matchCurator(String curator, String cityId) {
-    	User user = getUserConvalidated(curator);
+    	User user = getConvalidatedUser(curator);
     	if(user == null || user.isCurator())
     		return false;
     	user.setCityId(cityId);
@@ -95,7 +95,7 @@ public class UserHandler {
     }
     
     public boolean changeCurator(String curator, String cityId) {
-    	User _old = findCuratorOf(cityId), _new = getUserConvalidated(curator);
+    	User _old = findCuratorOf(cityId), _new = getConvalidatedUser(curator);
     	if(_old == null || _new == null || _new.isCurator())
     		return false;
     	_old.setCityId(null);
