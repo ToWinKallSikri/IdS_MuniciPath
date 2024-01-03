@@ -83,15 +83,13 @@ public class GroupHandler {
 		else mediator.addGroupPending(groupId, title, sorted, postIds, start, end, persistence);
 		return true;
 	}
-	
 
-	
 	public boolean editGroup(PendingRequest request) {
 		Group group = viewGroup(request.getId());
 		return editGroup(request.getId(), request.getTitle(), group.getAuthor(), request.isSorted(), 
 				request.getData(), request.getStartTime(), request.getEndTime(), request.isPersistence());
 	}
-	
+
 	public boolean removeGroup(String author, String groupId) {
 		Group group = viewGroup(groupId);
 		if(group == null)
