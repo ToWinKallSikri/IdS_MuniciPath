@@ -28,7 +28,7 @@ public class WeatherForecastProxy implements WeatherService {
     	Prediction prediction = searchPrediction(position, time);
     	if(prediction != null)
     		return prediction.getMeteo();
-    	String meteo = this.getWeather(position, time);
+    	String meteo = service.getWeather(position, time);
     	this.predictions.add(new Prediction(position, time, meteo));
         return meteo;
     }

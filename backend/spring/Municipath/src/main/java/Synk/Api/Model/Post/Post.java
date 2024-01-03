@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import Synk.Api.Model.Pending.PendingRequest;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
@@ -29,6 +32,7 @@ public class Post {
     @Id
     private String postId;
     @ElementCollection
+    @Fetch(FetchMode.JOIN)
     private List<String> multimediaData;
     @Transient
     private List<String> groups;
@@ -123,10 +127,6 @@ public class Post {
 
     public void setPostId(String postId) {
         this.postId = postId;
-    }
-
-    public String getId() {
-        return cityID;
     }
 
     public LocalDateTime getStartTime() {

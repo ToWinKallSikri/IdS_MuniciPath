@@ -176,6 +176,15 @@ public class MuniciPathModel {
 	}
     
     
+    public boolean addContentToContest(String contestAuthor, String contestId, List<String> content) {
+		return this.poh.addContentToContest(contestAuthor, contestId, content);
+	}
+	
+	
+	public boolean declareWinner(String author, String contestId, String winnerId) {
+		return this.poh.declareWinner(author, contestId, winnerId);
+	}
+    
     
     
     public boolean judge(String pendingId, boolean outcome, String motivation) {

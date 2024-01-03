@@ -4,6 +4,8 @@ package Synk.Api.Model.Group;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -25,6 +27,7 @@ public class Group {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     @ElementCollection
+    @Fetch(FetchMode.JOIN)
     private List<String> posts;
     
     public Group() {}

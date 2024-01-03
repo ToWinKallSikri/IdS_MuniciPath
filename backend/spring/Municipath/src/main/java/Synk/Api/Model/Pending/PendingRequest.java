@@ -3,6 +3,9 @@ package Synk.Api.Model.Pending;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import Synk.Api.Model.Post.PostType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -23,6 +26,7 @@ public class PendingRequest {
 	@Enumerated(EnumType.STRING)
 	private PostType type;
     @ElementCollection
+    @Fetch(FetchMode.JOIN)
 	private List<String> data;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;

@@ -3,6 +3,9 @@ package Synk.Api.Model.Post.Contribute;
 import java.util.List;
 import java.util.Objects;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -15,6 +18,7 @@ public class Contribute {
 	private String author;
 	private String contestId;
 	@ElementCollection
+    @Fetch(FetchMode.JOIN)
 	private List<String> contribute;
 	
 	public Contribute(String id, String author, String contestId, List<String> contribute) {

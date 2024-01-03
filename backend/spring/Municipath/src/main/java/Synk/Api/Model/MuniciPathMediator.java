@@ -76,6 +76,7 @@ public class MuniciPathMediator {
 	}
 
 	public City getCity(String cityID) {
+		
 		return this.city.getCity(cityID);
 	}
 
@@ -139,7 +140,7 @@ public class MuniciPathMediator {
 	}
 
 	public String getAuthor(String pendingId) {
-		return pendingId.split(".")[1].equals("g") ? point.getAuthor(pendingId) : group.getAuthor(pendingId);
+		return pendingId.split("\\.")[1].equals("g") ? point.getAuthor(pendingId) : group.getAuthor(pendingId);
 	}
 
 	public void send(String username, String message) {

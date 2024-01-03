@@ -112,7 +112,7 @@ public class GroupHandler {
 	private String getId(String cityId) {
 		this.count = 0;
 		getAllFromCity(cityId).forEach(g -> {
-			int v = Integer.parseInt(g.getId().split(".")[2]);
+			int v = Integer.parseInt(g.getId().split("\\.")[2]);
 		    this.count = count > v ? count : v + 1;
 		});
 		return cityId+".g."+ this.count;
@@ -145,7 +145,7 @@ public class GroupHandler {
 	}
 	
 	private String getCityId(String id) {
-		return id.split(".")[0];
+		return id.split("\\.")[0];
 	}
 	
 	public boolean approveGroup(String groupId) {

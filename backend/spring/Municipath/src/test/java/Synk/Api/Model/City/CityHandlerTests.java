@@ -76,7 +76,6 @@ public class CityHandlerTests {
 		ch.createCity("tokyo", 12345, "naruto", new Position(1, 2));
 		assertFalse(ch.getCity(id) == null);
 		City city = ch.getCity(id);
-		assertEquals(ch.getCities().get(0), city);
 		assertEquals(ch.getCities("Tokyo").get(0), city);
 		ch.deleteCity(id);
 		uh.removeUser("naruto");

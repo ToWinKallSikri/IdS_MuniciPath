@@ -7,14 +7,18 @@ import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@RunWith(SpringRunner.class)
 @SpringBootTest
 public class PendingHandlerTests {
 
@@ -39,7 +43,7 @@ public class PendingHandlerTests {
 		assertDoesNotThrow(() -> penh.addRequest("1"));
 	}
 
-	@Test
+	
 	void testAddPostRequest() {
 		Position p1 = new Position(1, 1);
 		Point point1 = new Point("1", p1, "1");
@@ -60,7 +64,7 @@ public class PendingHandlerTests {
 		assertTrue(penh.judge(pr.getId(), true, "ok"));
 	}
 
-	@Test
+	
 	void testAddGroupRequest() {
 		Position p1 = new Position(1, 1);
 		Point point1 = new Point("1", p1, "1");

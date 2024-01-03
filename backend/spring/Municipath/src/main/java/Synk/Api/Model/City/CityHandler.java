@@ -35,8 +35,8 @@ public class CityHandler {
         if(!this.mediator.matchCurator(curator, id)) 
         	return false;
         cityRepository.save(c1);
-        this.mediator.createPostForNewCity(id, cityName, curator, pos);
         this.roleHandler.addCity(id, curator);
+        this.mediator.createPostForNewCity(id, cityName, curator, pos);
         return true;
     }
 
@@ -77,9 +77,9 @@ public class CityHandler {
     	City city = getCity(cityId);
     	if(city == null)
     		return false;
-    	this.cityRepository.delete(city);
     	this.mediator.deleteCity(cityId);
     	this.roleHandler.removeCity(cityId);
+    	this.cityRepository.delete(city);
     	return true;
     }
     
@@ -96,7 +96,7 @@ public class CityHandler {
 	
 	public Licence getAuthorization(String username, String cityId) {
 		if (!this.mediator.usernameExists(username)) 
-			return null;
+			return new Licence(cityId, username, Role.LIMITED);
 		return this.roleHandler.getAuthorization(username, cityId);
 	}
 	

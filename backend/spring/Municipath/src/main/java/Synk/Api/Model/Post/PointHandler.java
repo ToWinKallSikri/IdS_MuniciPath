@@ -60,20 +60,20 @@ public class PointHandler {
     }
     
     public boolean createPost(String title, PostType type, String text, String author, Position pos,
-            String cityId, ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
+            String cityId, List<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
     	if(!(this.mediator.isAuthorizedToPost(cityId, author) && checkTiming(type, start, end, persistence)))
     		return false;
     	boolean published = this.mediator.canPublish(cityId, author);
         Post post = new Post(title, type, text, author, pos, cityId, null, data, published, start, end, persistence);
         Point point = getPoint(pos, cityId);
         post.setPostId(point.getNewPostId());
-        if(!checkContest(post.getId(), type, published))
+        if(!checkContest(post.getPostId(), type, published))
         	return false;
     	this.pointRepository.save(point);
         this.postRepository.save(post);
         point.getPosts().add(post);
         if(!published)
-        	this.mediator.addPending(post.getId());
+        	this.mediator.addPending(post.getPostId());
         return true;
     }
 
@@ -83,7 +83,7 @@ public class PointHandler {
     	if(post == null|| (!post.getAuthor().equals(author)) || (!checkTiming(type, start, end, persistence)) || isPrime(post))
     		return false;
     	boolean published = this.mediator.canPublish(cityId, author);
-        if(!checkContest(post.getId(), post.getType(), type, published))
+        if(!checkContest(post.getPostId(), post.getType(), type, published))
         	return false;
     	if(published) {
     		post.updateInfo(title, type, text, data, start, end, persistence);
@@ -160,10 +160,7 @@ public class PointHandler {
     
     public void deleteCityPoints (String cityId) {
         List<Point> ps = this.points.get(cityId);
-        ps.forEach(p -> {
-        	p.getPosts().forEach( po -> deletePost(po.getPostId()));
-        	this.postRepository.deleteAll(p.getPosts());
-        });
+        ps.forEach(p ->  this.postRepository.deleteAll(p.getPosts()));
         this.pointRepository.deleteAll(ps);
         this.points.remove(cityId);
         this.mediator.removeAllCityGroups(cityId);
@@ -186,18 +183,18 @@ public class PointHandler {
     public Post getPost(String postId) {
     	Point point = searchPointFromPost(postId);
     	Post post = point.getPosts().stream()
-    			.filter(p -> p.getId().equals(postId))
+    			.filter(p -> p.getPostId().equals(postId))
     			.findFirst().orElse(null);
     	return post == null ? null : updatePost(post);
     }
     
     private Point searchPointFromPost(String postId) {
-    	String[] parts = postId.split(".");
+    	String[] parts = postId.split("\\.");
     	return searchPoint(parts[0]+"."+parts[1]);
     }
     
     private String searchCityIdFromPoint(String pointId) {
-    	return pointId.split(".")[0];
+    	return pointId.split("\\.")[0];
     }
     
     private Point searchPoint (String pointId) {
@@ -229,7 +226,9 @@ public class PointHandler {
     private boolean deletePost(Post post) {
     	if(isPrime(post))
     		return false;
-    	Point point = searchPoint(post.getId());
+    	if(post.getType() == PostType.CONTEST)
+    		this.contributes.removeContest(post.getPostId());
+    	Point point = searchPointFromPost(post.getPostId());
     	point.getPosts().remove(post);
     	this.postRepository.delete(post);
     	if(point.getPosts().isEmpty()) {
@@ -247,10 +246,10 @@ public class PointHandler {
 	}
 	
 	public List<Post> getPosts(List<String> postIds){
-		String cityId = postIds.get(0).split(".")[0];
+		String cityId = postIds.get(0).split("\\.")[0];
 		return this.points.get(cityId).stream()
 				.map(p -> p.getPosts()).flatMap(List::stream).
-				filter(post -> postIds.contains(post.getId()))
+				filter(post -> postIds.contains(post.getPostId()))
 			    .collect(Collectors.toList());
 	}
 	
@@ -273,8 +272,11 @@ public class PointHandler {
 		return this.contributes.getContributes(postId);
 	}
 	
-	public boolean addContestToContest(String contestAuthor, String contestId, List<String> content) {
+	public boolean addContentToContest(String contestAuthor, String contestId, List<String> content) {
 		if(!this.mediator.usernameExists(contestAuthor))
+			return false;
+		Post contest = getPost(contestId);
+		if(contest == null || contest.getEndTime().isBefore(LocalDateTime.now()))
 			return false;
 		return this.contributes.addContributeToContest(contestAuthor, contestId, content);
 	}
@@ -282,12 +284,12 @@ public class PointHandler {
 	
 	public boolean declareWinner(String author, String contestId, String winnerId) {
 		Post post = getPost(contestId);
-		if(post == null || !post.getAuthor().equals(author))
+		if(post == null || !post.getAuthor().equals(author) || post.getEndTime().isAfter(LocalDateTime.now()))
 			return false;
 		List<String> winnercontent = this.contributes.declareWinner(contestId, winnerId);
 		if(winnercontent == null)
 			return false;
-		PendingRequest edit = new PendingRequest(post.getId(), post.getTitle(), "", 
+		PendingRequest edit = new PendingRequest(post.getPostId(), post.getTitle(), "", 
 				true, PostType.SOCIAL, winnercontent, null, null);
 		editPost(edit);
 		post.setAuthor(winnerId);
@@ -297,14 +299,16 @@ public class PointHandler {
 	
 	public void checkEndingPosts() {
 		LocalDateTime date = LocalDateTime.now();
+		List<Post> toDelete = new ArrayList<>();
 		this.points.values().forEach(l -> l.forEach( p -> p.getPosts()
 				.stream()
 				.filter(po -> ! po.isPersistence())
 				.filter(po -> po.getType() == PostType.EVENT)
 				.forEach(po -> {
 					if(po.getEndTime().isBefore(date))
-						p.getPosts().remove(po); })
+						toDelete.add(po); })
 		));
+		toDelete.forEach(po -> deletePost(po));
 	}
 
 	public String getAuthor(String pendingId) {
