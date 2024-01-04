@@ -13,6 +13,14 @@ public class IdentifierManager {
     public String getCityId(String contentId) {
     	return contentId.split("\\.")[0];
     }
+    
+    public boolean isGroup(String id) {
+    	return id.split("\\.")[1].equals("g");
+    }
+    
+    public String getContentId(String id) {
+    	return id.split("\\.")[2];
+    }
 	
 	
 }

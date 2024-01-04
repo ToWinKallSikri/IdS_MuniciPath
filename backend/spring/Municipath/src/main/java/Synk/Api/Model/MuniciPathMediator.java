@@ -23,6 +23,7 @@ public class MuniciPathMediator {
 	private CityHandler city;
 	private GroupHandler group;
 	private PendingHandler pending;
+	private IdentifierManager idManager = new IdentifierManager();
 	
 	public void setPoint(PointHandler point) {
 		this.point = point;
@@ -140,7 +141,7 @@ public class MuniciPathMediator {
 	}
 
 	public String getAuthor(String pendingId) {
-		return pendingId.split("\\.")[1].equals("g") ? group.getAuthor(pendingId) : point.getAuthor(pendingId);
+		return idManager.isGroup(pendingId) ? group.getAuthor(pendingId) : point.getAuthor(pendingId);
 	}
 
 	public void send(String username, String message) {

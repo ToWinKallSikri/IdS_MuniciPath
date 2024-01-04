@@ -10,6 +10,7 @@ import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import Synk.Api.Model.IdentifierManager;
 import Synk.Api.Model.MuniciPathMediator;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Post;
@@ -19,6 +20,7 @@ public class GroupHandler {
 	
 	private MuniciPathMediator mediator;
 	private int count;
+	private IdentifierManager idManager = new IdentifierManager();
 	
 	@Autowired
 	private GroupRepository groupRepository;
@@ -28,7 +30,7 @@ public class GroupHandler {
     }
 
 	public void removeFromAll(String post) {
-		String cityId = this.getCityId(post);
+		String cityId = idManager.getCityId(post);
 		groupRepository.findAll().forEach(g -> g.removePost(post));
 		checkCompositionOfGroups(cityId);
 	}
@@ -77,7 +79,7 @@ public class GroupHandler {
 		List<Post> posts = this.mediator.getPostsIfAllExists(postIds);
 		if(posts == null || posts.size() < 1)
 			return false;
-		if(mediator.canPublish(getCityId(groupId), author)) {
+		if(mediator.canPublish(idManager.getCityId(groupId), author)) {
 			group.edit(title, sorted, postIds, start, end, persistence);
 			groupRepository.save(group);
 		}
@@ -125,7 +127,7 @@ public class GroupHandler {
 	private String getId(String cityId) {
 		this.count = 0;
 		getAllFromCity(cityId).forEach(g -> {
-			int v = Integer.parseInt(g.getId().split("\\.")[2]);
+			int v = Integer.parseInt(idManager.getContentId(g.getId()));
 		    this.count = count > v ? count : v + 1;
 		});
 		return cityId+".g."+ this.count;
@@ -164,10 +166,6 @@ public class GroupHandler {
     		return false;
     	return group.getEndTime() == null || group.getEndTime().isAfter(LocalDateTime.now());
     }
-	
-	private String getCityId(String id) {
-		return id.split("\\.")[0];
-	}
 	
 	public boolean approveGroup(String groupId) {
 		Group group = viewGroup(groupId);

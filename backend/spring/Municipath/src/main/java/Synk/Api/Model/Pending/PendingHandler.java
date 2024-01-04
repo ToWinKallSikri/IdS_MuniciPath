@@ -7,6 +7,7 @@ import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import Synk.Api.Model.IdentifierManager;
 import Synk.Api.Model.MuniciPathMediator;
 import Synk.Api.Model.Post.PostType;
 
@@ -17,6 +18,7 @@ public class PendingHandler {
 
 	@Autowired
 	private PendingRepository pendingRepository;
+	private IdentifierManager idManager = new IdentifierManager();
 
 	public void setMediator(MuniciPathMediator mediator) {
         this.mediator = mediator;
@@ -40,7 +42,7 @@ public class PendingHandler {
 		PendingRequest request = getRequest(pendingId);
 		if(request == null)
 			return false;
-		boolean isGroup = pendingId.split("\\.")[1].equals("g");
+		boolean isGroup = idManager.isGroup(pendingId);
 		String username = this.mediator.getAuthor(pendingId);
 		String response = "Contenuto " + (outcome ? "accettato" : "rifiutato") + ".\n";
 		if(outcome) {
@@ -60,7 +62,7 @@ public class PendingHandler {
 
 	public List<PendingRequest> getAllRequest(String cityId){
 		return StreamSupport.stream(pendingRepository.findAll().spliterator(), true)
-				.filter(p -> p.getId().split("\\.")[0].equals(cityId)).toList();
+				.filter(p -> idManager.getCityId(p.getId()).equals(cityId)).toList();
 	}
 	
 	public PendingRequest getRequest(String requestId) {
