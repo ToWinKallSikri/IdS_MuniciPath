@@ -51,6 +51,8 @@ public class MuniciPathModel {
     
     
     public boolean createCity(String cityName, int cap, String curator, Position pos ) {
+    	if(cityName == null || curator == null || pos == null)
+    		return false;
         return ch.createCity(cityName, cap, curator, pos);
     }
 

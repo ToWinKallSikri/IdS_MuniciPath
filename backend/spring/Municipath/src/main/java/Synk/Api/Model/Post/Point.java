@@ -12,6 +12,9 @@ import jakarta.persistence.Transient;
 @Entity
 public class Point {
 	
+	/**
+	 * parametri della classe
+	 */
 	@Id
 	private String pointId;
 	@Embedded
@@ -21,15 +24,34 @@ public class Point {
 	private List<Post> posts;
 	private int idCount;
     
+	/**
+	 * costruttore vuoto del Point, per le logiche jpa
+	 */
     public Point() {
     	this.posts = new ArrayList<>();
 		this.idCount = 0;
     }
     
+    /**
+     * costruttore con parametri del Point,
+     * per le logiche del model
+     * @param id id del punto
+     * @param pos poszione del punto
+     * @param cityId id del comune
+     */
     public Point(String id, Position pos, String cityId) {
     	this(id, pos, cityId, new ArrayList<>());
     }
     
+    /**
+     * costruttore con paramentri del Point,
+     * per le logiche del model.
+     * accetta anche una lista di Post.
+     * @param id id del punto
+     * @param pos posizione del punto
+     * @param cityId id della citta'
+     * @param posts Posts da inserire
+     */
     public Point(String id, Position pos, String cityId, ArrayList<Post> posts) {
     	this.pointId = id;
 		this.pos = pos;
@@ -37,12 +59,14 @@ public class Point {
 		this.posts = posts;
 		this.idCount = 0;
 	}
-
+    
+    
 	@Override
 	public int hashCode() {
 		return Objects.hash(pos);
 	}
-
+	
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -56,7 +80,7 @@ public class Point {
 	}
 	
 	
-
+	
 	public String getPointId() {
 		return pointId;
 	}

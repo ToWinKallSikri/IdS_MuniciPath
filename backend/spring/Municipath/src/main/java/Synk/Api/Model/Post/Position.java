@@ -6,14 +6,13 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class Position {
-
+	
 	private double lat;
 	private double lng;
 	
 	public Position() {}
 
     public Position(double d, double e) {
-		super();
 		this.lat = d;
 		this.lng = e;
 	}
@@ -50,6 +49,12 @@ public class Position {
 				&& Double.doubleToLongBits(this.lng) == Double.doubleToLongBits(other.lng);
 	}
 	
+	/**
+	 * ritorna true se due posizioni sono identiche per
+	 * le tre prime cifre decimali
+	 * @param obj posizione da controllare
+	 * @return true se sono quasi uguali, false altrimenti.
+	 */
 	public boolean almostEquals(Object obj) {
 		if (this == obj)
 			return true;

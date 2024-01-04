@@ -205,13 +205,27 @@ public class Post {
 			return false;
 		return true;
 	}
-
+	
+	/**
+	 * restituisce il momento di cui si vuole sapere il meteo
+	 * @return adesso se il momento di inizio e' null, oppure il momento di inizio
+	 */
 	public LocalDateTime getMeteoDate() {
 		return this.startTime == null ? LocalDateTime.now() : this.startTime;
 	}
 	
 
-
+	/**
+	 * dati i seugenti parametri, li
+	 * usa per aggiornare il post
+	 * @param title nuovo titolo
+	 * @param type nuovo tipo
+	 * @param text nuovo testo
+	 * @param data nuovi contenuti
+	 * @param start nuovo momento di inizio
+	 * @param end nuovo momento di fine
+	 * @param persistence se e' persistente
+	 */
     public void updateInfo(String title, PostType type, String text,
     		List<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
         this.title = title;
@@ -224,6 +238,11 @@ public class Post {
         this.persistence = persistence;
     }
     
+    /**
+     * data una pending request, la usa per aggiornare le sue info 
+     * in accordo alla pending request
+     * @param request richiesta di aggiornamento da usare
+     */
     public void updateInfo(PendingRequest request) {
 		this.title = request.getTitle();
 		this.type = request.getType();
