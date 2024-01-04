@@ -2,6 +2,7 @@ package Synk.Api.Model.Group;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -56,11 +57,11 @@ public class GroupHandler {
 		if(!this.mediator.isAuthorizedToPost(cityId, author))
 			return false;
 		List<Post> posts = this.mediator.getPostsIfAllExists(postIds);
-		if(posts == null || posts.size() < 1 || !checkTiming(start, end, persistence))
+		if(posts == null || posts.size() < 1 || (!checkTiming(start, end, persistence)))
 			return false;
 		boolean publish = this.mediator.canPublish(cityId, author);
 		String id = getId(cityId);
-		Group group = new Group(id, title, author, cityId,
+		Group group = new Group(id, title, cityId, author,
 				sorted, publish, persistence, start, end, postIds);
 		if(!publish)
 			this.mediator.addPending(id);
@@ -71,7 +72,7 @@ public class GroupHandler {
 	public boolean editGroup(String groupId, String title, String author, boolean sorted,
 			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
 		Group group = viewGroup(groupId);
-		if(group == null || !(group.getAuthor().equals(author) || checkTiming(start, end, persistence)))
+		if(!(group != null && group.getAuthor().equals(author) && checkTiming(start, end, persistence)))
 			return false;
 		List<Post> posts = this.mediator.getPostsIfAllExists(postIds);
 		if(posts == null || posts.size() < 1)
@@ -83,18 +84,30 @@ public class GroupHandler {
 		else mediator.addGroupPending(groupId, title, sorted, postIds, start, end, persistence);
 		return true;
 	}
-
+	
+	public boolean editGroup(String groupId, String title, boolean sorted, List<String> postIds,
+			LocalDateTime start, LocalDateTime end, boolean persistence) {
+		Group group = viewGroup(groupId);
+		if(!(group != null && checkTiming(start, end, persistence)))
+			return false;
+		List<Post> posts = this.mediator.getPostsIfAllExists(postIds);
+		if(posts == null || posts.size() < 1)
+			return false;
+		group.edit(title, sorted, postIds, start, end, persistence);
+		groupRepository.save(group);
+		return true;
+	}
+	
 	public boolean editGroup(PendingRequest request) {
-		Group group = viewGroup(request.getId());
-		return editGroup(request.getId(), request.getTitle(), group.getAuthor(), request.isSorted(), 
-				request.getData(), request.getStartTime(), request.getEndTime(), request.isPersistence());
+		List<String> list = new ArrayList<>();
+		list.addAll(request.getData());
+		return editGroup(request.getId(), request.getTitle(), request.isSorted(),
+				list, request.getStartTime(), request.getEndTime(), request.isPersistence());
 	}
 
 	public boolean removeGroup(String author, String groupId) {
 		Group group = viewGroup(groupId);
-		if(group == null)
-			return false;
-		if(!group.getAuthor().equals(author))
+		if(group == null || (!group.getAuthor().equals(author)))
 			return false;
 		this.groupRepository.delete(group);
 		return true;
@@ -138,11 +151,19 @@ public class GroupHandler {
 				.findFirst().orElse(null);
 	}
 	
-	public List<String> viewGroupFrom(String postId) {
-		return getStreamOfAll().filter(Group::isPublished)
-				.filter(g -> g.getPosts().contains(postId))
+	public List<String> viewGroupFrom(String postId, String username) {
+		return getStreamOfAll().filter(g -> g.getPosts().contains(postId))
+				.filter(g -> toShow(g, username))
 				.map(g -> g.getId()).toList();
 	}
+	
+	private boolean toShow(Group group, String username) {
+    	if(group.getAuthor().equals(username))
+    		return true;
+    	if(!group.isPublished())
+    		return false;
+    	return group.getEndTime() == null || group.getEndTime().isAfter(LocalDateTime.now());
+    }
 	
 	private String getCityId(String id) {
 		return id.split("\\.")[0];
@@ -153,6 +174,7 @@ public class GroupHandler {
 		if(group == null || group.isPublished())
 			return false;
 		group.setPublished(true);
+		this.groupRepository.save(group);
 		return true;
 	}
 	

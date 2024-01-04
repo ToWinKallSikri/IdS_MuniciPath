@@ -112,8 +112,8 @@ public class MuniciPathMediator {
 	}
 	
 	
-	public List<String> viewGroupFrom(Post post) {
-		return this.group.viewGroupFrom(post.getPostId());
+	public List<String> viewGroupFrom(Post post, String username) {
+		return this.group.viewGroupFrom(post.getPostId(), username);
 	}
 
 	public boolean checkCityId(String cityId) {
@@ -140,7 +140,7 @@ public class MuniciPathMediator {
 	}
 
 	public String getAuthor(String pendingId) {
-		return pendingId.split("\\.")[1].equals("g") ? point.getAuthor(pendingId) : group.getAuthor(pendingId);
+		return pendingId.split("\\.")[1].equals("g") ? group.getAuthor(pendingId) : point.getAuthor(pendingId);
 	}
 
 	public void send(String username, String message) {
@@ -157,5 +157,14 @@ public class MuniciPathMediator {
 		if(request.isNew())
 			this.point.approvePost(request.getId());
 		else this.point.editPost(request);
+	}
+
+	public void deletePendingGroup(String pendingId) {
+		this.group.removeGroup(pendingId);
+		
+	}
+
+	public void deletePendingPost(String pendingId) {
+		this.point.deletePost(pendingId);
 	}
 }

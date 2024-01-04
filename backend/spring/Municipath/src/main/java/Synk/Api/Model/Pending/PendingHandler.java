@@ -21,12 +21,10 @@ public class PendingHandler {
 	public void setMediator(MuniciPathMediator mediator) {
         this.mediator = mediator;
     }
-
 	
 	public void addRequest(String id) {
 		this.pendingRepository.save(new PendingRequest(id));
 	}
-
 	
 	public void addPostRequest(String postId, String title, PostType type, String text,
 			List<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
@@ -42,13 +40,18 @@ public class PendingHandler {
 		PendingRequest request = getRequest(pendingId);
 		if(request == null)
 			return false;
+		boolean isGroup = pendingId.split("\\.")[1].equals("g");
+		String username = this.mediator.getAuthor(pendingId);
+		String response = "Contenuto " + (outcome ? "accettato" : "rifiutato") + ".\n";
 		if(outcome) {
-			if(pendingId.split(".")[1].equals("g")) 
+			if(isGroup) 
 				mediator.manageGroupRequest(request);
 			else mediator.managePostRequest(request);
+		} else if(request.isNew()) {
+			if(isGroup) 
+				this.mediator.deletePendingGroup(pendingId);
+			else this.mediator.deletePendingPost(pendingId);
 		}
-		String username = this.mediator.getAuthor(pendingId);
-		String response = "Pending " + (outcome ? "accettato" : "rifiutato") + ".\n";
 		this.mediator.send(username, response+outcome);
 		this.pendingRepository.delete(request);
 		return true;
@@ -57,7 +60,7 @@ public class PendingHandler {
 
 	public List<PendingRequest> getAllRequest(String cityId){
 		return StreamSupport.stream(pendingRepository.findAll().spliterator(), true)
-				.filter(p -> p.getId().split(".")[0].equals(cityId)).toList();
+				.filter(p -> p.getId().split("\\.")[0].equals(cityId)).toList();
 	}
 	
 	public PendingRequest getRequest(String requestId) {

@@ -159,8 +159,8 @@ public class MuniciPathModel {
         return this.poh.getPosts(postIds);
     }
     
-    public Post viewPost(String postId) {
-        return this.poh.getPost(postId);
+    public Post viewPost(String postId, String username) {
+        return this.poh.getPost(postId, username);
     }
     
     public boolean deletePost (String postId, String author) {

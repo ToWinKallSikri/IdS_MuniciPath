@@ -93,9 +93,6 @@ public class UserHandlerTests {
 		uh.addUser("goku", "password");
 		uh.addUser("vegeta", "password");
 		uh.userValidation("goku");
-		Position p = new Position(1, 2);
-		String id = "" + ("tokyo"+12345).hashCode();
-		City city = new City(id, "tokyo", p, null, 12345);
 		assertTrue(uh.matchCurator("goku", "12345"));
 		assertFalse(uh.matchCurator("goku", "12345"));
 		assertFalse(uh.matchCurator("vegeta", "12345"));
@@ -109,9 +106,6 @@ public class UserHandlerTests {
 		uh.addUser("vegeta", "password");
 		uh.userValidation("goku");
 		uh.userValidation("vegeta");
-		Position p = new Position(1, 2);
-		String id = "" + ("tokyo"+12345).hashCode();
-		City city = new City(id, "tokyo", p, null, 12345);
 		assertTrue(uh.matchCurator("goku", "12345"));
 		assertFalse(uh.changeCurator("goku", "12345"));
 		assertTrue(uh.changeCurator("vegeta", "12345"));

@@ -152,9 +152,9 @@ public class PointHandler {
         		  .filter( p -> p.getPosts().stream().anyMatch(po -> toShow(po, username))).toList();
     }
     
-    private Post updatePost(Post post) {
+    private Post updatePost(Post post, String username) {
     	post.setMeteo(this.weather.getWeather(post.getPos(), post.getMeteoDate()));
-    	post.setGroups(this.mediator.viewGroupFrom(post));
+    	post.setGroups(this.mediator.viewGroupFrom(post, username));
     	return post;
     }
     
@@ -177,7 +177,14 @@ public class PointHandler {
     	if(!post.isPublished())
     		return false;
     	return post.getType() != PostType.EVENT || post.getEndTime().isAfter((LocalDateTime.now()));
-    	
+    }
+    
+    public Post getPost(String postId, String username) {
+    	Point point = searchPointFromPost(postId);
+    	Post post = point.getPosts().stream()
+    			.filter(p -> p.getPostId().equals(postId))
+    			.findFirst().orElse(null);
+    	return post == null ? null : updatePost(post, username);
     }
     
     public Post getPost(String postId) {
@@ -185,7 +192,7 @@ public class PointHandler {
     	Post post = point.getPosts().stream()
     			.filter(p -> p.getPostId().equals(postId))
     			.findFirst().orElse(null);
-    	return post == null ? null : updatePost(post);
+    	return post == null ? null : updatePost(post, null);
     }
     
     private Point searchPointFromPost(String postId) {
@@ -284,7 +291,7 @@ public class PointHandler {
 	
 	public boolean declareWinner(String author, String contestId, String winnerId) {
 		Post post = getPost(contestId);
-		if(post == null || !post.getAuthor().equals(author) || post.getEndTime().isAfter(LocalDateTime.now()))
+		if(post == null || (!post.getAuthor().equals(author)) || post.getEndTime().isAfter(LocalDateTime.now()))
 			return false;
 		List<String> winnercontent = this.contributes.declareWinner(contestId, winnerId);
 		if(winnercontent == null)
@@ -293,6 +300,7 @@ public class PointHandler {
 				true, PostType.SOCIAL, winnercontent, null, null);
 		editPost(edit);
 		post.setAuthor(winnerId);
+		this.postRepository.save(post);
 		return true;
 	}
 	

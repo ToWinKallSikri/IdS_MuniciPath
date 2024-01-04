@@ -1,10 +1,13 @@
 package Synk.Api.Model.Pending;
-import Synk.Api.Model.Group.Group;
+import Synk.Api.Model.Group.GroupHandler;
 import Synk.Api.Model.MuniciPathMediator;
-import Synk.Api.Model.Post.Point;
+import Synk.Api.Model.City.City;
+import Synk.Api.Model.City.CityHandler;
+import Synk.Api.Model.City.Role.Role;
+import Synk.Api.Model.Post.PointHandler;
 import Synk.Api.Model.Post.Position;
-import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
+import Synk.Api.Model.User.UserHandler;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -21,15 +24,31 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class PendingHandlerTests {
-
+	
 	@Autowired
-	private PendingHandler penh;
+    private CityHandler ch;
+	@Autowired
+    private UserHandler uh;
+	@Autowired
+    private PointHandler poh;
+	@Autowired
+    private GroupHandler gh;
+	@Autowired
+	private PendingHandler peh;
 
 	@PostConstruct
 	public void init() {
 		MuniciPathMediator mediator = new MuniciPathMediator();
-		penh.setMediator(mediator);
-		mediator.setPending(penh);
+		ch.setMediator(mediator);
+		poh.setMediator(mediator);
+		uh.setMediator(mediator);
+		gh.setMediator(mediator);
+		peh.setMediator(mediator);
+		mediator.setCity(ch);
+		mediator.setPoint(poh);
+		mediator.setUser(uh);
+		mediator.setGroup(gh);
+		mediator.setPending(peh);
 	}
 
 	@Test
@@ -38,66 +57,126 @@ public class PendingHandlerTests {
 	}
 
 	@Test
-	void testAddRequest() {
-		PendingRequest pr = new PendingRequest("1");
-		assertDoesNotThrow(() -> penh.addRequest("1"));
+	void testAcceptRequest() {
+		String id = "" + ("tokyo"+12345).hashCode(), user = "naruto";
+		uh.addUser(user, "password");
+		uh.userValidation(user);
+		uh.addUser("sasuke", "password");
+		uh.userValidation("sasuke");
+		ch.createCity("tokyo", 12345, user, new Position(1, 2));
+		List<String> empty = new ArrayList<>();
+		Position pos = new Position(10, 10);
+		ch.setRole("sasuke", id, Role.CONTR_NOT_AUTH);
+		poh.createPost("urlo da battaglia", PostType.HEALTHandWELLNESS,
+				"aaaaaaaaa", "sasuke", pos, id, empty, null, null, true);
+		assertTrue(this.peh.getAllRequest(id).size() == 1);
+		String pendingId = peh.getAllRequest(id).get(0).getId();
+		peh.judge(pendingId, true, "");
+		assertTrue(this.peh.getAllRequest(id).isEmpty());
+		assertTrue(this.poh.getPost(pendingId).isPublished());
+		ch.deleteCity(id);
+		uh.removeUser(user);
+		uh.removeUser("sasuke");
+	}
+	
+	
+	@Test
+	void testRejectRequest() {
+		String id = "" + ("tokyo"+12345).hashCode(), user = "naruto";
+		uh.addUser(user, "password");
+		uh.userValidation(user);
+		uh.addUser("sasuke", "password");
+		uh.userValidation("sasuke");
+		ch.createCity("tokyo", 12345, user, new Position(1, 2));
+		List<String> empty = new ArrayList<>();
+		Position pos = new Position(10, 10);
+		ch.setRole("sasuke", id, Role.CONTR_NOT_AUTH);
+		poh.createPost("urlo da battaglia", PostType.HEALTHandWELLNESS,
+				"aaaaaaaaa", "sasuke", pos, id, empty, null, null, true);
+		assertTrue(this.peh.getAllRequest(id).size() == 1);
+		String pendingId = peh.getAllRequest(id).get(0).getId();
+		peh.judge(pendingId, false, "");
+		assertTrue(this.peh.getAllRequest(id).isEmpty());
+		assertEquals(this.poh.getPost(pendingId), null);
+		ch.deleteCity(id);
+		uh.removeUser(user);
+		uh.removeUser("sasuke");
 	}
 
-	
+	@Test
 	void testAddPostRequest() {
-		Position p1 = new Position(1, 1);
-		Point point1 = new Point("1", p1, "1");
-		Post post1 = new Post("Punto Panoramico", PostType.TOURISTIC,
-				"Ottimo luogo per ammirare la skyline della città", "Shaun Murphy",
-				p1, "1", point1.getNewPostId(), null, false, null, null, false);
-		PendingRequest pr = new PendingRequest();
-		pr.setId(post1.getPostId());
-		pr.setTitle(post1.getTitle());
-		pr.setText(post1.getText());
-		pr.setPersistence(post1.isPersistence());
-		pr.setType(post1.getType());
-		pr.setData(post1.getMultimediaData());
-		pr.setStartTime(post1.getStartTime());
-		pr.setEndTime(post1.getEndTime());
-		assertDoesNotThrow(() -> penh.addPostRequest(pr.getId(), pr.getTitle(), pr.getType(), pr.getText(), pr.getData(),
-				pr.getStartTime(), pr.getEndTime(), pr.isPersistence()));
-		assertTrue(penh.judge(pr.getId(), true, "ok"));
+		String id = "" + ("tokyo"+12345).hashCode(), user = "naruto";
+		uh.addUser(user, "password");
+		uh.userValidation(user);
+		uh.addUser("sasuke", "password");
+		uh.userValidation("sasuke");
+		ch.createCity("tokyo", 12345, user, new Position(1, 2));
+		List<String> empty = new ArrayList<>();
+		Position pos = new Position(10, 10);
+		ch.setRole("sasuke", id, Role.CONTR_NOT_AUTH);
+		poh.createPost("urlo da battaglia", PostType.HEALTHandWELLNESS,
+				"aaaaaaaaa", "sasuke", pos, id, empty, null, null, true);
+		String pendingId = peh.getAllRequest(id).get(0).getId();
+		peh.judge(pendingId, true, "");
+		poh.editPost(pendingId, "Urlo da Battaglia!", PostType.SOCIAL,
+				"AAAAAAAAAA", "sasuke", id, empty, null, null, true);
+		assertEquals(this.poh.getPost(pendingId).getText(), "aaaaaaaaa");
+		assertEquals(this.poh.getPost(pendingId).getType(), PostType.HEALTHandWELLNESS);
+		assertEquals(this.poh.getPost(pendingId).getTitle(), "urlo da battaglia");
+		assertTrue(this.peh.getAllRequest(id).size() == 1);
+		peh.judge(pendingId, true, "");
+		assertTrue(this.peh.getAllRequest(id).isEmpty());
+		assertEquals(this.poh.getPost(pendingId).getText(), "AAAAAAAAAA");
+		assertEquals(this.poh.getPost(pendingId).getType(), PostType.SOCIAL);
+		assertEquals(this.poh.getPost(pendingId).getTitle(), "Urlo da Battaglia!");
+		ch.deleteCity(id);
+		uh.removeUser(user);
+		uh.removeUser("sasuke");
 	}
 
-	
+	@Test
 	void testAddGroupRequest() {
-		Position p1 = new Position(1, 1);
-		Point point1 = new Point("1", p1, "1");
-		Post post1 = new Post("Punto Panoramico", PostType.TOURISTIC,
-				"Ottimo luogo per ammirare la skyline della città", "Shaun Murphy",
-				p1, "1", point1.getNewPostId(), null, false, null, null, false);
-		Post post2 = new Post("Punto Storico", PostType.TOURISTIC,
-				"Luogo simbolico della città, offre la possibilità di conoscere il background" +
-						"storico della città", "Aaron Glassman",
-				p1, "1", point1.getNewPostId(), null, false, null, null, false);
-		List<String> postIds = new ArrayList<>();
-		postIds.add(post1.getPostId());
-		postIds.add(post2.getPostId());
-		Group g1 = new Group();
-		g1.setId("1.g.1");
-		g1.setTitle("Gruppo 1");
-		g1.setSorted(false);
-		g1.setPersistence(false);
-		g1.setAuthor("Lea DiLallo");
-		g1.setCityId("1");
-		g1.setPublished(false);
-		g1.setStartTime(null);
-		g1.setEndTime(null);
-		PendingRequest pr2 = new PendingRequest();
-		pr2.setId(g1.getId());
-		pr2.setTitle(g1.getTitle());
-		pr2.setSorted(g1.isSorted());
-		pr2.setPersistence(g1.isPersistence());
-		pr2.setData(g1.getPosts());
-		pr2.setStartTime(g1.getStartTime());
-		pr2.setEndTime(g1.getEndTime());
-		assertDoesNotThrow(() -> penh.addGroupRequest(pr2.getId(), pr2.getTitle(), pr2.isSorted(), pr2.getData(),
-				pr2.getStartTime(), pr2.getEndTime(), pr2.isPersistence()));
-		assertTrue(penh.judge(pr2.getId(), true, "ok"));
+		String id = "" + ("tokyo"+12345).hashCode(), user = "naruto", user2 = "sasuke";
+		uh.addUser(user, "password");
+		uh.userValidation(user);
+		uh.addUser(user2, "password");
+		uh.userValidation(user2);
+		ch.createCity("tokyo", 12345, user, new Position(1, 2));
+		ch.setRole(user2, id, Role.CONTR_NOT_AUTH);
+		List<String> empty = new ArrayList<>();
+		Position pos = new Position(10, 10);
+		Position pos2 = new Position(11, 10);
+		Position pos3 = new Position(12, 10);
+		poh.createPost("statua", PostType.TOURISTIC, "è bella.", user, pos, id, empty, null, null, true);
+		poh.createPost("lago", PostType.TOURISTIC, "è sporco.", user, pos2, id, empty, null, null, true);
+		poh.createPost("trattoria", PostType.HEALTHandWELLNESS, "si mangia.", user, pos3, id, empty, null, null, true);
+		City city = ch.getCity(id);
+		List<String> postIds = this.poh.getPoints(id, user).stream()
+				.filter(p -> !p.getPos().equals(city.getPos()))
+				.map(p -> p.getPosts().get(0).getPostId()).toList();
+		gh.createGroup("un giretto in centro", user2, true, id, postIds, null, null, true);
+		assertTrue(poh.getPost(postIds.get(0)).getGroups().isEmpty());
+		peh.judge(id+".g.0", true, "");
+		assertFalse(poh.getPost(postIds.get(0)).getGroups().isEmpty());
+		Position pos4 = new Position(13, 10);
+		poh.createPost("piazza nuovo", PostType.SOCIAL, "c'è un bel panorama.", user, pos4, id, empty, null, null, true);
+		List<String> postIds2 = this.poh.getPoints(id, user).stream()
+				.filter(p -> !p.getPos().equals(city.getPos()))
+				.map(p -> p.getPosts().get(0).getPostId()).toList();
+		assertTrue(gh.viewGroup(id+".g.0").getPosts().size() == 3);
+		assertTrue(gh.viewGroup(id+".g.0").isSorted());
+		assertTrue(gh.editGroup(id+".g.0", "un giretto in centro", user2, false, postIds2, null, null, true));
+		assertTrue(gh.viewGroup(id+".g.0").getPosts().size() == 3);
+		assertTrue(gh.viewGroup(id+".g.0").isSorted());
+		peh.judge(id+".g.0", true, "");
+		assertFalse(gh.viewGroup(id+".g.0").isSorted());
+		assertTrue(gh.viewGroup(id+".g.0").getPosts().size() == 4);
+		gh.removeGroup(user, id+".g.0");
+		ch.deleteCity(id);
+		uh.removeUser(user);
+		uh.removeUser(user2);
 	}
 }
+
+
+

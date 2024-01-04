@@ -147,4 +147,5 @@ public class Group {
 		this.endTime = end;
 		this.persistence = persistence;
 	}
+
 }

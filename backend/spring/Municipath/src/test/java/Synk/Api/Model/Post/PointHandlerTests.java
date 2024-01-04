@@ -98,8 +98,11 @@ public class PointHandlerTests {
 		assertTrue(poh.createPost("urlo da battaglia", PostType.HEALTHandWELLNESS, "aaaaaaaaa", "sasuke", pos2, id, empty, null, null, true));
 		list = poh.getPoints(id, user);
 		assertTrue(list.size() == 2);
+		String pendingId = peh.getAllRequest(id).get(0).getId();
+		peh.judge(pendingId, false, "");
 		ch.deleteCity(id);
 		uh.removeUser(user);
+		uh.removeUser("sasuke");
 	}
 	
 	@Test
