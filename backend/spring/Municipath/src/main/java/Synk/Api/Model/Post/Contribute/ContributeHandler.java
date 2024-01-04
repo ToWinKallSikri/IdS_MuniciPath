@@ -14,10 +14,16 @@ import jakarta.annotation.PostConstruct;
 @Repository
 public class ContributeHandler {
 	
+	/**
+	 * mappa con i contributi associati con gli id dei post
+	 */
 	private Map<String, List<Contribute>> contributes;
-	
 	private ContributeRepository contributesRepository;
 	
+	/**
+	 * costruttore del bean
+	 * @param contributesRepository repository dei contributi
+	 */
 	public ContributeHandler(ContributeRepository contributesRepository) {
 		this.contributesRepository = contributesRepository;
 		this.contributes = new HashMap<>();
@@ -28,7 +34,14 @@ public class ContributeHandler {
 		this.contributes = StreamSupport.stream(contributesRepository.findAll().spliterator(), false)
 			.collect(Collectors.groupingBy(c -> c.getContestId()));
 	}
-
+	
+	/**
+	 * metodo per aggiungere contenuti ad un contest
+	 * @param author autore del contributo
+	 * @param contestId id del contest
+	 * @param content contenuto da aggiungere
+	 * @return true se il contenuto è stato aggiunto, false altrimenti
+	 */
 	public boolean addContributeToContest(String author, String contestId, List<String> content) {
 		if(!this.contributes.containsKey(contestId))
 			return false;
@@ -40,10 +53,21 @@ public class ContributeHandler {
 		return true;
 	}
 	
+	/**
+	 * metodo per ottenere i contributi di un dato contest
+	 * @param contestId da ricercare
+	 * @return lista di contributi, o null se non esiste
+	 */
 	public List<Contribute> getContributes(String contestId){
 		return this.contributes.getOrDefault(contestId, null);
 	}
-
+	
+	/**
+	 * metodo per concludere un contest dichiarando un vincitore
+	 * @param contestId id del contest
+	 * @param winnerId vincitore del contest
+	 * @return lista con i contributi vincenti, o null se non e' possibile dichiararlo vincitore
+	 */
 	public List<String> declareWinner(String contestId, String winnerId) {
 		if(!this.contributes.containsKey(contestId))
 			return null;
@@ -54,6 +78,11 @@ public class ContributeHandler {
 		return content;
 	}
 	
+	/**
+	 * metodo per aggiungere un contest
+	 * @param contestId id del contest da aggiungere
+	 * @return true se il contest e' stato aggiunto, false altrimenti
+	 */
 	public boolean addContest(String contestId) {
 		if(this.contributes.containsKey(contestId))
 			return false;
@@ -61,6 +90,11 @@ public class ContributeHandler {
 		return true;
 	}
 	
+	/**
+	 * metodo per rimuovere un contest
+	 * @param contestId id del contest da rimuovere
+	 * @return true se il contest e' stato rimosso, false altrimenti
+	 */
 	public boolean removeContest(String contestId) {
 		if(!this.contributes.containsKey(contestId))
 			return false;
@@ -69,6 +103,13 @@ public class ContributeHandler {
 		return true;
 	}
 	
+	/**
+	 * metodo privato per controllare se un dato utente
+	 * ha gia' partecipato ad un dato contest
+	 * @param username username da controllare
+	 * @param contestId contest da controllare
+	 * @return true se non ha gia' contribuito, false altrimenti
+	 */
 	private boolean canPartecipate(String username, String contestId) {
 		return this.contributes.get(contestId).stream()
 				.noneMatch(c -> c.getAuthor().equals(username));

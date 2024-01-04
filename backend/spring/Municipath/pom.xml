@@ -70,6 +70,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
 					</image>
 				</configuration>
 			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+					<show>private</show>
+					<nohelp>true</nohelp>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 

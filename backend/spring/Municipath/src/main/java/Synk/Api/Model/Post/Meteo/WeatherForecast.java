@@ -27,7 +27,12 @@ public class WeatherForecast implements WeatherService {
     	return callService(count, position);
     }
 
-
+    /**
+     * Ritorna il numero di lassi di tempo di tre ore che corrispondono
+     * alla distanza tra il momento attuale e quello dato
+     * @param time momento dato
+     * @return numero di lassi di tre ore
+     */
 	private int getThreeHourIndex(LocalDateTime time) {
     	LocalDateTime now = LocalDateTime.now();
     	for(int count = 0; count < 40; count++) {
@@ -38,6 +43,13 @@ public class WeatherForecast implements WeatherService {
     	return 40;
     }
     
+	/**
+	 * metodo privato che chiama un servizio meteo
+	 * che permette di ottenere il meteo del giorno
+	 * @param index lassi di tre ore da adesso
+	 * @param pos posizione da ricercare
+	 * @return meteo ricercato
+	 */
     private String callService(int index, Position pos) {
         ResponseEntity<String> response = new RestTemplate().getForEntity(
         		WEATHER_URL, String.class, pos.getLat(), pos.getLng());
