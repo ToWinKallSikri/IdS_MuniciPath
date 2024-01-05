@@ -92,7 +92,13 @@ public class UserHandler {
 			return false;
 		return this.encoder.matches(password, user.getPassword());
 	}
-	
+
+	/**
+	 * Metodo per cambiare la password di un utente
+	 * @param username, lo username dell'utente
+	 * @param password, la nuova password dell'utente
+	 * @return true se la password è stata cambiata, false altrimenti
+	 */
 	public boolean changePassowrd(String username, String password) {
 		User user = getConvalidatedUser(username);
 		if(user == null) 
@@ -102,7 +108,12 @@ public class UserHandler {
 		this.userRepository.save(user);
 		return true;
 	}
-	
+
+	/**
+	 * Metodo per convalidare un utente dopo che ha fatto il Sign-In nella piattaforma
+	 * @param username, lo username dell'utente da convalidare
+	 * @return true se l'utente è stato convalidato, false altrimenti
+	 */
 	public boolean userValidation(String username) {
 		User user = getUser(username);
 		if(user == null || user.isConvalidated()) 
@@ -111,7 +122,13 @@ public class UserHandler {
 		this.userRepository.save(user);
 		return true;
 	}
-	
+
+	/**
+	 * Metodo per gestire l'autorizzazione da Gestore della Piattaforma
+	 * @param username, lo username dell'utente da gestire
+	 * @param auth, true se si vuole settare come Gestore, false altrimenti
+	 * @return true se l'autorizzazione è stata gestita, false altrimenti
+	 */
 	public boolean manageManager(String username, boolean auth) {
 		User user = getConvalidatedUser(username);
 		if(user == null || user.isManager() == auth) 
@@ -120,26 +137,51 @@ public class UserHandler {
 		this.userRepository.save(user);
 		return true;
 	}
-    
-    public User getUser(String username) {
+
+	/**
+	 * Metodo per ottenere un utente
+	 * @param username, lo username dell'utente da ottenere
+	 * @return l'utente se esiste, null altrimenti
+	 */
+	public User getUser(String username) {
     	return this.userRepository.findById(username).orElse(null);
     }
-    
-    public User getConvalidatedUser(String username) {
+
+	/**
+	 * Metodo per ottenere un utente convalidato
+	 * @param username, lo username dell'utente da ottenere
+	 * @return l'utente se esiste ed è convalidato, null altrimenti
+	 */
+	public User getConvalidatedUser(String username) {
     	User user = this.getUser(username);
     	return user != null && user.isConvalidated() ? user : null;
     }
-    
-    public List<User> getNotConvalidatedUsers(){
+
+	/**
+	 * Metodo per ottenere tutti gli utenti non convalidati
+	 * @return una lista di tutti gli utenti non convalidati
+	 */
+	public List<User> getNotConvalidatedUsers(){
     	return StreamSupport.stream(userRepository.findAll().spliterator(), true)
 		.filter(u -> !u.isConvalidated()).toList();
     }
-    
-    private User findCuratorOf(String cityId) {
+
+	/**
+	 * Metodo per ottenere il curatore di una determinata città
+	 * @param cityId, l'id della città di cui si vuole ottenere il curatore
+	 * @return l'utente curatore se esiste, null altrimenti
+	 */
+	private User findCuratorOf(String cityId) {
     	return StreamSupport.stream(userRepository.findAll().spliterator(), true)
 				.filter(u -> cityId.equals(u.getCityId())).findFirst().orElse(null);
     }
 
+	/**
+	 * Metodo per associare un curatore a una determinata città
+	 * @param curator, lo username dell'utente da associare alla città come curatore
+	 * @param cityId, l'id della città
+	 * @return true se il curatore è stato associato alla città, false altrimenti
+	 */
     public boolean matchCurator(String curator, String cityId) {
     	User user = getConvalidatedUser(curator);
     	if(user == null || user.isCurator())
@@ -148,7 +190,13 @@ public class UserHandler {
 		this.userRepository.save(user);
     	return true;
     }
-    
+
+	/**
+	 * Metodo per cambiare il curatore di una determinata città
+	 * @param curator, lo username dell'utente da associare alla città come curatore
+	 * @param cityId, l'id della città
+	 * @return true se il curatore è stato cambiato, false altrimenti
+	 */
     public boolean changeCurator(String curator, String cityId) {
     	User _old = findCuratorOf(cityId), _new = getConvalidatedUser(curator);
     	if(_old == null || _new == null || _new.isCurator())
@@ -159,8 +207,12 @@ public class UserHandler {
 		this.userRepository.save(_new);
 		return true;
     }
-    
-    public void discreditCurator(String cityId) {
+
+	/**
+	 * Metodo per dissociare un curatore da una determinata città
+	 * @param cityId, l'id della città
+	 */
+	public void discreditCurator(String cityId) {
     	User curator = findCuratorOf(cityId);
     	if(curator != null) {
     		curator.setCityId(null);
@@ -169,10 +221,20 @@ public class UserHandler {
 
     }
 
+	/**
+	 * Metodo per verificare l'esistenza di un utente nella piattaforma+
+	 * @param username, lo username dell'utente da verificare
+	 * @return true se l'utente esiste, false altrimenti
+	 */
 	public boolean usernameExists(String username) {
 		return this.userRepository.existsById(username);
 	}
 
+	/**
+	 * Metodo per inviare una notifica a un utente
+	 * @param username, lo username dell'utente a cui inviare la notifica
+	 * @param message, il messaggio da inviare nella notifica
+	 */
 	public void send(String username, String message) {
 		if(usernameExists(username))
 			this.notifications.send(username, message);

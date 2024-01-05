@@ -216,7 +216,7 @@ public class Post {
 	
 
 	/**
-	 * dati i seugenti parametri, li
+	 * dati i seguenti parametri, li
 	 * usa per aggiornare il post
 	 * @param title nuovo titolo
 	 * @param type nuovo tipo
