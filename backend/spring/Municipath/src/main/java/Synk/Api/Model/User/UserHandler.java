@@ -4,6 +4,7 @@ package Synk.Api.Model.User;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
+import Synk.Api.Controller.Encoder;
 import Synk.Api.Model.MuniciPathMediator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -13,12 +14,14 @@ public class UserHandler {
 
     private NotificationHandler notifications;
     private MuniciPathMediator mediator;
+	private Encoder encoder;
 
 	@Autowired
 	private UserRepository userRepository;
 
     public UserHandler() {
         this.notifications = new NotificationHandler();
+        this.encoder = new Encoder();
     }
 
 	public void setMediator(MuniciPathMediator mediator) {
@@ -37,6 +40,15 @@ public class UserHandler {
 			return false;
 		this.userRepository.deleteById(username);
 		return true;
+	}
+	
+
+
+	public boolean isThePassword(String username, String password) throws Exception {
+		User user = getConvalidatedUser(username);
+		if(user == null) 
+			return false;
+		return this.encoder.decode(user.getPassword()).equals(password);
 	}
 	
 	public boolean changePassowrd(String username, String password) {
