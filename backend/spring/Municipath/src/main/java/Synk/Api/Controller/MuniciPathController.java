@@ -25,6 +25,11 @@ import Synk.Api.Model.Post.Contribute.Contribute;
 import Synk.Api.Model.Post.Point;
 import Synk.Api.Model.User.User;
 
+/**
+ * questa classe funge da maschera per il lato controller
+ * del progetto e ha la responsabilita' di controllare
+ * la validita' delle richieste del lato view
+ */
 @Service
 public class MuniciPathController {
 	
@@ -36,6 +41,7 @@ public class MuniciPathController {
     private PendingHandler peh;
     private IdentifierManager idManager;
     private MuniciPathMediator mediator;
+    
     
     public MuniciPathController(PointHandler poh, UserHandler uh, CityHandler ch, GroupHandler gh, PendingHandler peh){
     	this.mediator = new MuniciPathMediator();
@@ -55,11 +61,23 @@ public class MuniciPathController {
         mediator.setGroup(gh);
         mediator.setPoint(poh);
         mediator.setPending(peh);
+        /*
+         * parallelamente, elimino i post e i gruppi terminati
+         * e non persistenti ogni 5 minuti.
+         */
         Executors.newScheduledThreadPool(1)
         	.scheduleAtFixedRate(this::checkEnding, 0, 5, TimeUnit.MINUTES);
     }
     
-    
+    /**
+     * metodo per creare un comune
+     * @param username username dell'utente
+     * @param cityName nome del comune
+     * @param cap cap del comune
+     * @param curator curatore del comune
+     * @param pos posizione del comune
+     * @return true se la creazione e' andata a buon fine, false altrimenti
+     */
     public boolean createCity(String username, String cityName, int cap, String curator, Position pos ) {
 		if(username == null || (!checkManager(username)))
     		return false;
@@ -68,6 +86,16 @@ public class MuniciPathController {
         return ch.createCity(cityName, cap, curator, pos);
     }
     
+    /**
+     * metodo per modificare le informazioni di un comune
+     * @param username username dell'utente
+     * @param id id del comune
+     * @param cityName nuovonome del comune
+     * @param cap nuovo cap del comune
+     * @param curator nuovo curatore del comune
+     * @param pos nuova posizione del comune
+     * @return true se la modifica e' andata a buon fine, false altrimenti
+     */
     public boolean updateCity(String username, String id, String cityName, int cap, String curator, Position pos ){
 		if(username == null || (!checkManager(username)))
     		return false;
@@ -76,6 +104,12 @@ public class MuniciPathController {
 		return ch.updateCity(id, cityName, cap, curator, pos);
     }
     
+    /**
+     * metodo per eliminare un comune
+     * @param username username dell'utente
+     * @param cityId id del comune
+     * @return true se l'eliminazione e' andata a buon fine, false altrimenti
+     */
     public boolean deleteCity(String username, String cityId) {
 		if(username == null || (!checkManager(username)))
     		return false;
@@ -84,13 +118,25 @@ public class MuniciPathController {
     	return ch.deleteCity(cityId);
     }
     
+    /**
+     * metodo per cercare un comune partendo dal nome
+     * @param search comune da cercare
+     * @return lista dei comuni con nomi simili
+     */
     public List<City> searchCity(String search){
     	if(search == null)
     		search = "";
     	return ch.getCities(search);
     }
 	
-    
+    /**
+     * imposta il ruolo di un utente rispetto ad un dato comune
+     * @param username username dell'utente che esegue l'operazione
+     * @param toSet username dell'utente da impostare
+     * @param cityId id del comune sul quale impostarlo
+     * @param role ruolo da impostare
+     * @return true se l'operazione e' andata a buon fine, false altimenti
+     */
 	public boolean setRole(String username, String toSet, String cityId, Role role) {
 		if(cityId == null || username == null || (!checkStaff(username, cityId)))
 			return false;
@@ -99,6 +145,12 @@ public class MuniciPathController {
 		return this.ch.setRole(toSet, cityId, role);
 	}
 	
+	/**
+	 * metodo per ottenere il ruolo di un utente rispetto ad un comune
+	 * @param username  username dell'utente
+	 * @param cityId id del comune
+	 * @return ruolo che ha l'utente rispetto al comune
+	 */
 	public Role getRole(String username, String cityId) {
 		if(username == null)
 			return Role.LIMITED;
@@ -107,7 +159,13 @@ public class MuniciPathController {
 		return this.ch.getRole(username, cityId);
 	}
 	
-	
+	/**
+	 * metodo per aggiungere un moderatore ad un comune
+	 * @param username username dell'utente che esegue l'operazione
+	 * @param toSet username dell'utente da impostare
+	 * @param cityId id del comune dove impostarlo
+	 * @return true se l'operazione e' andata a buon fine, false altimenti
+	 */
 	public boolean addModerator(String username, String toSet, String cityId) {
 		if(username == null || cityId == null || (!checkCurator(username, cityId)))
 			return false;
@@ -116,7 +174,13 @@ public class MuniciPathController {
 		return this.ch.addModerator(toSet, cityId);
 	}
 	
-	
+	/**
+	 * metodo per rimuovere un moderatore ad un comune
+	 * @param username username dell'utente che esegue l'operazione
+	 * @param toSet username dell'utente da impostare
+	 * @param cityId id del comune dove impostarlo
+	 * @return true se l'operazione e' andata a buon fine, false altimenti
+	 */
 	public boolean removeModerator(String username, String toSet, String cityId) {
 		if(username == null || cityId == null || (!checkCurator(username, cityId)))
 			return false;
@@ -125,36 +189,75 @@ public class MuniciPathController {
 		return this.ch.removeModerator(toSet, cityId);
 	}
 	
+	/**
+	 * metodo per aggiungere una richiesta di permessi di pubblicazione
+	 * in un dato comune
+	 * @param username username dell'utente
+	 * @param cityId id del comune
+	 * @return true se l'operazione e' andata a buon fine, false altimenti
+	 */
 	public boolean addRequest(String username, String cityId) {
 		if(username == null || cityId == null)
 			return false;
 		return this.ch.addRequest(username, cityId);
 	}
 	
-	
+	/**
+	 * metodo per ottenere le richieste di permessi di un dato comune
+	 * @param username username dell'utente che esegue l'operazione
+	 * @param cityId id del comune dove cercare
+	 * @return lista delle richieste trovate
+	 */
 	public List<RoleRequest> getRequests(String username, String cityId){
 		if(username == null || cityId == null || (!checkStaff(username, cityId)))
 			return null;
 		return this.ch.getRequests(cityId);
 	}
 	
-	
+	/**
+	 * metodo per giudicare una richiesta di autorizzazione in un dato comune
+	 * @param username username dell'utente che esegue l'operazione
+	 * @param requestId id della richiesta
+	 * @param outcome verdetto sulla richiesta
+	 * @return true se l'operazione e' andata a buon fine, false altimenti
+	 */
 	public boolean judge(String username, String requestId, boolean outcome) {
 		if(username == null || requestId == null || (!checkStaff(username, idManager.getCityId(requestId))))
 			return false;
 		return this.ch.judge(requestId, outcome);
 	}
 	
-	
-	
-	
+	/**
+	 * metodo per creare un gruppo di post
+	 * @param title titolo del gruppo
+	 * @param author autore del gruppo
+	 * @param sorted se il gruppo e' ordinato o meno
+	 * @param cityId id del comune
+	 * @param postIds identificatori dei post
+	 * @param start momento di inizio
+	 * @param end momento di fine
+	 * @param persistence se e' persistente
+	 * @return true se l'operazione e' andata a buon fine, false altimenti
+	 */
 	public boolean createGroup(String title, String author, boolean sorted, String cityId,
 			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
 		if(title == null || author == null || cityId == null || postIds == null)
 			return false;
 		return this.gh.createGroup(title, author, sorted, cityId, postIds, start, end, persistence);
 	}
-
+	
+	/**
+	 * metodo per modificare un gruppo
+	 * @param groupId id del grupp
+	 * @param title nuovo titolo del gruppo
+	 * @param author autore del 
+	 * @param sorted
+	 * @param postIds
+	 * @param start
+	 * @param end
+	 * @param persistence
+	 * @return true se l'operazione e' andata a buon fine, false altimenti
+	 */
 	public boolean editGroup(String groupId, String title, String author, boolean sorted,
 			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
 		if(groupId == null || title == null || author == null || postIds == null)
@@ -299,7 +402,9 @@ public class MuniciPathController {
 		return this.peh.getAllRequest(cityId);
 	}
 	
-	public PendingRequest getRequest(String requestId) {
+	public PendingRequest getRequest(String username, String requestId) {
+		if(username == null || (!checkStaff(username, this.idManager.getCityId(requestId))))
+			return null;
 		if(requestId == null)
 			return null;
 		return this.peh.getRequest(requestId);
