@@ -1,12 +1,18 @@
 package Synk.Api.View;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import Synk.Api.Controller.MuniciPathController;
+import Synk.Api.Model.City.Role.Role;
+import Synk.Api.Model.City.Role.RoleRequest;
+import Synk.Api.Model.Post.Position;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,9 +40,23 @@ public class MuniciPathRestController {
 		return username == null ? TURIST : username;
 	}
 	
+
+
+	@GetMapping(value="/api/v1/isManager")
+	public ResponseEntity<Object> isManager(@RequestHeader(name="Authorization") String token) {
+		String username = getUsernameFromToken(token);
+		return new ResponseEntity<Object>(this.controller.checkManager(username), HttpStatus.OK);
+	}
+
+	@GetMapping(value="/api/v1/role")
+	public ResponseEntity<Object> getRole(@RequestHeader(name="Authorization") String token, @PathParam("cityId") String cityId) {
+		String username = getUsernameFromToken(token);
+		return new ResponseEntity<Object>(this.controller.getRole(username, cityId), HttpStatus.OK);
+	}
+	
 	
 	@PostMapping(value="/api/v1/signin")
-	public ResponseEntity<Object> signin(@PathParam("username") String username, @PathParam("password") String password) throws Exception{
+	public ResponseEntity<Object> signin(@PathParam("username") String username, @PathParam("password") String password) {
 		if(this.controller.addUser(username, password)) {
 			return new ResponseEntity<Object>("Creazione account riuscito.", HttpStatus.OK);
 		} else {
@@ -67,98 +87,129 @@ public class MuniciPathRestController {
 		}
 	}
 	
-	@PutMapping(value="/api/v1/manager/createCity")
+	@PostMapping(value="/api/v1/manager/createCity")
 	public ResponseEntity<Object> createCity(@RequestHeader(name="Authorization") String token,
-			String cityName, int cap, String curator, double lat, double lng ) {
-		return null;
+			@PathParam("cityName") String cityName, @PathParam("cap") int cap, @PathParam("curator") String curator,
+			@PathParam("lat") double lat,  @PathParam("lng") double lng) {
+		String username = getUsernameFromToken(token);
+		Position pos = new Position(lat, lng);
+		if(this.controller.createCity(username, cityName, cap, curator, pos)) {
+			return new ResponseEntity<Object>("Comune creato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Creazione fallita.", HttpStatus.BAD_REQUEST);
+		}
     }
+	
+	@PutMapping(value="/api/v1/manager/updateCity")
+	public ResponseEntity<Object> updateCity(@RequestHeader(name="Authorization") String token,
+			@PathParam("cityId") String cityId, @PathParam("cityName") String cityName, @PathParam("cap") int cap,
+			@PathParam("curator") String curator, @PathParam("lat") double lat,  @PathParam("lng") double lng) {
+		String username = getUsernameFromToken(token);
+		Position pos = new Position(lat, lng);
+		if(this.controller.updateCity(username, cityId, cityName, cap, curator, pos)) {
+			return new ResponseEntity<Object>("Comune aggiornato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Aggiornamento fallito.", HttpStatus.BAD_REQUEST);
+		}
+    }
+	
+	@PutMapping(value="/api/v1/manager/deleteCity")
+	public ResponseEntity<Object> deleteCity(@RequestHeader(name="Authorization") String token, @PathParam("cityId") String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.deleteCity(username, cityId)) {
+			return new ResponseEntity<Object>("Comune eliminato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Eliminazione fallita.", HttpStatus.BAD_REQUEST);
+		}
+    }
+	
+	@GetMapping(value="/api/v1/cities")
+	public ResponseEntity<Object> getCities(@PathParam("cityName") String cityName) {
+		return new ResponseEntity<Object>(this.controller.searchCity(cityName), HttpStatus.OK);
+    }
+	
+	@PutMapping(value="/api/v1/city/{cityId}/staff/setRole")
+	public ResponseEntity<Object> setRole(@RequestHeader(name="Authorization") String token,
+			@PathParam("toSet") String toSet, @PathVariable("cityId") String cityId, @PathParam("role") String role) {
+		String username = getUsernameFromToken(token);
+		Role _role = Role.safeValueOf(role);
+		if(this.controller.setRole(username, toSet, cityId, _role)) {
+			return new ResponseEntity<Object>("Ruovo modificato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Operazione fallita.", HttpStatus.BAD_REQUEST);
+		}
+    }
+
+	@PutMapping(value="/api/v1/city/{cityId}/staff/addModerator")
+	public ResponseEntity<Object> addModerator(@RequestHeader(name="Authorization") String token,
+			@PathParam("toSet") String toSet, @PathVariable("cityId") String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.addModerator(username, toSet, cityId)) {
+			return new ResponseEntity<Object>("Moderatore aggiunto.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Operazione fallita.", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PutMapping(value="/api/v1/city/{cityId}/staff/removeModerator")
+	public ResponseEntity<Object> removeModerator(@RequestHeader(name="Authorization") String token,
+			@PathParam("toSet") String toSet, @PathVariable("cityId") String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.removeModerator(username, toSet, cityId)) {
+			return new ResponseEntity<Object>("Moderatore rimosso.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Operazione fallita.", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping(value="/api/v1/city/{cityId}/addRoleRequest")
+	public ResponseEntity<Object> addRoleRequest(@RequestHeader(name="Authorization") String token,
+			@PathVariable("cityId") String cityId) {
+		String username = this.auth.getUsername(token);
+		if(this.controller.addRequest(username, cityId)) {
+			return new ResponseEntity<Object>("Richiesta inviata.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Operazione fallita.", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping(value="/api/v1/city/{cityId}/staff/roleRequests")
+	public ResponseEntity<Object> getRoleRequests(@RequestHeader(name="Authorization") String token,
+			@PathVariable("cityId") String cityId) {
+		String username = getUsernameFromToken(token);
+		List<RoleRequest> list = this.controller.getRequests(username, cityId);
+		if(list != null) {
+			return new ResponseEntity<Object>(list, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Richieste non trovate.", HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PutMapping(value="/api/v1/city/{cityId}/staff/acceptRoleRequest")
+	public ResponseEntity<Object> acceptRoleRequest(@RequestHeader(name="Authorization") String token,
+			@PathVariable("cityId") String cityId, @PathParam("requestId") String requestId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.judge(username, requestId, true)) {
+			return new ResponseEntity<Object>("Richiesta accettata", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Richieste non trovate.", HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	
+	@PutMapping(value="/api/v1/city/{cityId}/staff/rejectRoleRequest")
+	public ResponseEntity<Object> rejectRoleRequest(@RequestHeader(name="Authorization") String token,
+			@PathVariable("cityId") String cityId, @PathParam("requestId") String requestId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.judge(username, requestId, false)) {
+			return new ResponseEntity<Object>("Richiesta rifiutata", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Richieste non trovate.", HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	
 	/*
-    public boolean createCity(String username, String cityName, int cap, String curator, Position pos ) {
-		if(username == null || (!checkManager(username)))
-    		return false;
-    	if(cityName == null || curator == null || pos == null)
-    		return false;
-        return ch.createCity(cityName, cap, curator, pos);
-    }
-    
-    public boolean updateCity(String username, String id, String cityName, int cap, String curator, Position pos ){
-		if(username == null || (!checkManager(username)))
-    		return false;
-    	if(id == null || cityName == null || curator == null || pos == null)
-    		return false;
-		return ch.updateCity(id, cityName, cap, curator, pos);
-    }
-    
-    public boolean deleteCity(String username, String cityId) {
-		if(username == null || (!checkManager(username)))
-    		return false;
-    	if(cityId == null)
-    		return false;
-    	return ch.deleteCity(cityId);
-    }
-    
-    public List<City> searchCity(String search){
-    	if(search == null)
-    		search = "";
-    	return ch.getCities(search);
-    }
-    
-    public List<City> getAllCity(){
-    	return ch.getCities();
-    }
-	
-    
-	public boolean setRole(String username, String toSet, String cityId, Role role) {
-		if(cityId == null || username == null || (!checkStaff(username, cityId)))
-			return false;
-		if(toSet == null || role == null)
-			return false;
-		return this.ch.setRole(toSet, cityId, role);
-	}
-	
-	public Role getRole(String username, String cityId) {
-		if(username == null)
-			return Role.LIMITED;
-		if(cityId == null)
-			return Role.TOURIST;
-		return this.ch.getRole(username, cityId);
-	}
-	
-	
-	public boolean addModerator(String username, String cityId) {
-		if(username == null || cityId == null || (!checkCurator(username, cityId)))
-			return false;
-		return this.ch.addModerator(username, cityId);
-	}
-	
-	
-	public boolean removeModerator(String username, String cityId) {
-		if(username == null || cityId == null || (!checkCurator(username, cityId)))
-			return false;
-		return this.ch.removeModerator(username, cityId);
-	}
-	
-	public boolean addRequest(String username, String cityId) {
-		if(username == null || cityId == null)
-			return false;
-		return this.ch.addRequest(username, cityId);
-	}
-	
-	
-	public List<RoleRequest> getRequests(String username, String cityId){
-		if(username == null || cityId == null || (!checkStaff(username, cityId)))
-			return null;
-		return this.ch.getRequests(cityId);
-	}
-	
-	
-	public boolean judge(String username, String requestId, boolean outcome) {
-		if(username == null || requestId == null || (!checkStaff(username, idManager.getCityId(requestId))))
-			return false;
-		return this.ch.judge(requestId, outcome);
-	}
-	
 	
 	
 	
@@ -320,14 +371,6 @@ public class MuniciPathRestController {
 	}
 	
 	
-	
-	public boolean addUser(String username, String password) {
-		if(username == null || password == null)
-			return false;
-		return this.uh.addUser(username, password);
-	}
-	
-	
 	public boolean removeUser(String username, String toRemove) {
 		if(username == null || (!checkManager(username)))
     		return false;
@@ -336,25 +379,11 @@ public class MuniciPathRestController {
 		return this.uh.removeUser(toRemove);
 	}
 	
-	public boolean isThePassword(String username, String password) throws Exception {
-		if(username == null || password == null)
-			return false;
-		return this.uh.isThePassword(username, password);
-	}
 	
 	public boolean changePassowrd(String username, String password) {
 		if(username == null || password == null)
 			return false;
 		return this.uh.changePassowrd(username, password);
-	}
-	
-	
-	public boolean userValidation(String username, String toValidate) {
-		if(username == null || (!checkManager(username)))
-    		return false;
-		if(toValidate == null)
-			return false;
-		return this.uh.userValidation(toValidate);
 	}
 	
 	

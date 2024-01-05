@@ -7,5 +7,14 @@ public enum Role {
 	CONTR_AUTH,
 	CONTR_NOT_AUTH,
 	TOURIST,
-	LIMITED
+	LIMITED;
+	
+	
+	public static Role safeValueOf(String data) {
+		try {
+			return valueOf(data.toUpperCase());
+		} catch(Exception e) {
+			return Role.TOURIST;
+		}
+	}
 }

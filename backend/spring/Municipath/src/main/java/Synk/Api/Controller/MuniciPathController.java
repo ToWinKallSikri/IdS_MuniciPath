@@ -89,10 +89,6 @@ public class MuniciPathController {
     		search = "";
     	return ch.getCities(search);
     }
-    
-    public List<City> getAllCity(){
-    	return ch.getCities();
-    }
 	
     
 	public boolean setRole(String username, String toSet, String cityId, Role role) {
@@ -112,17 +108,21 @@ public class MuniciPathController {
 	}
 	
 	
-	public boolean addModerator(String username, String cityId) {
+	public boolean addModerator(String username, String toSet, String cityId) {
 		if(username == null || cityId == null || (!checkCurator(username, cityId)))
 			return false;
-		return this.ch.addModerator(username, cityId);
+		if(toSet == null)
+			return false;
+		return this.ch.addModerator(toSet, cityId);
 	}
 	
 	
-	public boolean removeModerator(String username, String cityId) {
+	public boolean removeModerator(String username, String toSet, String cityId) {
 		if(username == null || cityId == null || (!checkCurator(username, cityId)))
 			return false;
-		return this.ch.removeModerator(username, cityId);
+		if(toSet == null)
+			return false;
+		return this.ch.removeModerator(toSet, cityId);
 	}
 	
 	public boolean addRequest(String username, String cityId) {
