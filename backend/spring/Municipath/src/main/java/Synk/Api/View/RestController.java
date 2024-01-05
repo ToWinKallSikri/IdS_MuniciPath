@@ -18,8 +18,8 @@ import org.springframework.http.ResponseEntity;
 
 import jakarta.websocket.server.PathParam;
 
-@RestController
-public class MuniciPathRestController {
+@org.springframework.web.bind.annotation.RestController
+public class RestController {
 	
 	@Autowired
 	private MuniciPathController controller;
@@ -27,7 +27,7 @@ public class MuniciPathRestController {
 	private FileHandler fh;
 	private final String TURIST = "unregistered_tourist";
 	
-	public MuniciPathRestController() throws Exception {
+	public RestController() throws Exception {
 		this.auth = new Authenticator();
 		this.fh = new FileHandler();
 	}
@@ -209,11 +209,11 @@ public class MuniciPathRestController {
 	@PostMapping(value="/api/v1/city/{cityId}/groups/createGroup")
 	public ResponseEntity<Object> createGroup(@RequestHeader(name="Authorization") String token,
 											  @PathParam("title") String title, @PathParam("sorted") boolean sorted,
-											  @PathParam("cityId") String cityID, @PathParam("postIds") List<String> postIds,
+											  @PathParam("postIds") List<String> postIds,
 											  @PathParam("start") LocalDateTime start, @PathParam("end") LocalDateTime end,
 											  @PathParam("persistence") boolean persistence, @PathVariable String cityId) {
 		String username = getUsernameFromToken(token);
-		if(this.controller.createGroup(username, title, sorted, cityID, postIds, start, end, persistence)) {
+		if(this.controller.createGroup(username, title, sorted, cityId, postIds, start, end, persistence)) {
 			return new ResponseEntity<Object>("Gruppo creato.", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Object>("Creazione fallita.", HttpStatus.BAD_REQUEST);
@@ -354,216 +354,150 @@ public class MuniciPathRestController {
 		}
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-	
-	/*
-	
-	
-	
-//	public boolean createGroup(String title, String author, boolean sorted, String cityId,
-//			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
-//		if(title == null || author == null || cityId == null || postIds == null)
-//			return false;
-//		return this.gh.createGroup(title, author, sorted, cityId, postIds, start, end, persistence);
-//	}
-
-//	public boolean editGroup(String groupId, String title, String author, boolean sorted,
-//			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
-//		if(groupId == null || title == null || author == null || postIds == null)
-//			return false;
-//		return this.gh.editGroup(groupId, title, author, sorted, postIds, start, end, persistence);
-//	}
-	
-	
-//	public boolean editGroupFromStaff(String username, String groupId, String title, boolean sorted,
-//			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
-//		if(username == null || groupId == null ||  title == null
-//				|| postIds == null || (!checkStaff(username, idManager.getCityId(groupId))))
-//			return false;
-//		return this.gh.editGroup(groupId, title, sorted, postIds, start, end, persistence);
-//	}
-	
-//	public boolean removeGroup(String author, String groupId) {
-//		if(author == null || groupId == null)
-//			return false;
-//		return this.gh.removeGroup(author, groupId);
-//	}
-	
-//	public boolean removeGroup(String groupId) {
-//		if(groupId == null)
-//			return false;
-//		return this.gh.removeGroup(groupId);
-//	}
-	
-//	public Group viewGroup(String groupId) {
-//		if(groupId == null)
-//			return null;
-//		return this.gh.viewGroup(groupId);
-//	}
-	
-//	public List<Group> viewGroups(List<String> groupIds) {
-//		if(groupIds == null)
-//			return null;
-//		return this.gh.viewGroups(groupIds);
-//	}
-	
-    
-//    public boolean createPost(String title, PostType type, String text, String author, Position pos,
-//            String cityId, ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
-//    	if(title == null || type == null || text == null || author == null
-//    			|| pos == null || cityId == null || data == null)
-//    		return false;
-//    	return this.poh.createPost(title, type, text, author, pos, cityId, data, start, end, persistence);
-//    }
-    
-//    public boolean editPost(String postId, String title, PostType type, String text,
-//    		String author, String cityId, ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
-//    	if(postId == null || title == null || type == null || text == null
-//    			|| author == null ||  cityId == null || data == null)
-//    		return false;
-//        return this.poh.editPost(postId, title, type, text, author, cityId, data, start, end, persistence);
-//    }
-    
-    
-//    public boolean editPostFromStaff(String username, String postId, String title, PostType type, String text,
-//    		ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
-//		if(username == null || postId == null || (!checkStaff(username, idManager.getCityId(postId))))
-//			return false;
-//    	if(title == null || type == null || text == null || data == null)
-//    		return false;
-//        return this.poh.editPost(postId, title, type, text, data, start, end, persistence);
-//    }
-    
-    public List<Point> getPoints (String cityId, String username) {
-    	if(cityId == null || username == null)
-    		return null;
-        return this.poh.getPoints(cityId, username);
-      
-    }
-    
-    public List<Post> viewPosts (String pointId, String username) {
-    	if(pointId == null || username == null)
-    		return null;
-        return this.poh.viewPosts(pointId, username);
-    }
-
-
-    public List<Post> viewPosts (List<String> postIds) {
-    	if(postIds == null)
-    		return null;
-        return this.poh.getPosts(postIds);
-    }
-    
-    public Post viewPost(String postId, String username) {
-    	if(postId == null || username == null)
-    		return null;
-        return this.poh.getPost(postId, username);
-    }
-    
-    public boolean deletePost (String postId, String author) {
-    	if(postId == null || author == null)
-    		return false;
-    	return this.poh.deletePost(postId, author);
-    }
-    
-    
-    public boolean deletePostFromStaff (String username, String postId) {
-		if(username == null || postId == null || (!checkStaff(username, idManager.getCityId(postId))))
-			return false;
-    	return this.poh.deletePost(postId);
-    }
-    
-    
-    public List<Contribute> getContributes(String username, String postId){
-    	if(postId == null || username == null)
-    		return null;
-		return this.poh.getContributes(username, postId);
+	@GetMapping(value="/api/v1/city/{cityId}/points/viewPost")
+	public ResponseEntity<Object> viewPost(@RequestHeader(name="Authorization") String token,
+										   @PathParam("postId") String postId, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.viewPost(postId, username) != null) {
+			return new ResponseEntity<Object>(this.controller.viewPost(postId, username), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Post non trovato.", HttpStatus.NOT_FOUND);
+		}
 	}
-    
-    
-    public boolean addContentToContest(String contestAuthor, String contestId, List<String> content) {
-    	if(contestAuthor == null || contestId == null || content == null)
-    		return false;
-		return this.poh.addContentToContest(contestAuthor, contestId, content);
+
+	@DeleteMapping(value="/api/v1/city/{cityId}/points/deletePost")
+	public ResponseEntity<Object> deletePost(@RequestHeader(name="Authorization") String token,
+										   @PathParam("postId") String postId, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.deletePost(postId, username)) {
+			return new ResponseEntity<Object>("Post eliminato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Eliminazione fallita.", HttpStatus.BAD_REQUEST);
+		}
 	}
-	
-	
-	public boolean declareWinner(String author, String contestId, String winnerId) {
-		if(author == null || contestId == null || winnerId == null)
-			return false;
-		return this.poh.declareWinner(author, contestId, winnerId);
+
+	@DeleteMapping(value="/api/v1/city/{cityId}/staff/deletePostFromStaff")
+	public ResponseEntity<Object> deletePostFromStaff(@RequestHeader(name="Authorization") String token,
+													  @PathParam("postId") String postId, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if (this.controller.deletePostFromStaff(username, postId)) {
+			return new ResponseEntity<Object>("Post eliminato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Eliminazione fallita.", HttpStatus.BAD_REQUEST);
+		}
 	}
-    
-    
-    public boolean judge(String username, String pendingId, boolean outcome, String motivation) {
-		if(username == null || pendingId == null || (!checkStaff(username, idManager.getCityId(pendingId))))
-			return false;
-    	if(motivation == null)
-    		return false;
-		return this.peh.judge(pendingId, outcome, motivation);
+
+	@PostMapping(value="/api/v1/city/{cityId}/points/contest/getContributes")
+	public ResponseEntity<Object> getContributes(@RequestHeader(name="Authorization") String token,
+												 @PathParam("postId") String postId, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.getContributes(username, postId) != null) {
+			return new ResponseEntity<Object>(this.controller.getContributes(username, postId), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Nessun contributo trovato", HttpStatus.NOT_FOUND);
+		}
 	}
-	
-    
-	public List<PendingRequest> getAllRequest(String username, String cityId){
-		if(username == null || (!checkStaff(username, cityId)))
-			return null;
-		if(cityId == null)
-			return null;
-		return this.peh.getAllRequest(cityId);
+
+	@PostMapping(value="/api/v1/city/{cityId}/points/contest/addContentToContest")
+	public ResponseEntity<Object> addContentToContest(@RequestHeader(name="Authorization") String token,
+													  @PathParam("contestId") String contestId, List<String> content,
+													  @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.addContentToContest(username, contestId, content)) {
+			return new ResponseEntity<Object>("Contenuto aggiunto.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Aggiunta fallita.", HttpStatus.BAD_REQUEST);
+		}
 	}
-	
-	public PendingRequest getRequest(String requestId) {
-		if(requestId == null)
-			return null;
-		return this.peh.getRequest(requestId);
+
+	@PostMapping(value="/api/v1/city/{cityId}/points/contest/declareWinner")
+	public ResponseEntity<Object> declareWinner(@RequestHeader(name="Authorization") String token,
+												@PathParam("contestId") String contestId, @PathParam("winnerId") String winnerId,
+												@PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.declareWinner(username, contestId, winnerId)) {
+			return new ResponseEntity<Object>("Vincitore dichiarato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Dichiarazione fallita.", HttpStatus.BAD_REQUEST);
+		}
 	}
-	
-	
-	public boolean removeUser(String username, String toRemove) {
-		if(username == null || (!checkManager(username)))
-    		return false;
-		if(toRemove == null)
-			return false;
-		return this.uh.removeUser(toRemove);
+
+	@PutMapping(value="/api/v1/city/{cityId}/staff/judge")
+	public ResponseEntity<Object> judge(@RequestHeader(name="Authorization") String token,
+										@PathParam("pendingId") String pendingId, @PathParam("outcome") boolean outcome,
+										@PathParam("motivation") String motivation, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.judge(username, pendingId, outcome, motivation)) {
+			return new ResponseEntity<Object>("Giudizio emesso.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Giudizio fallito.", HttpStatus.BAD_REQUEST);
+		}
 	}
-	
-	
-	public boolean changePassowrd(String username, String password) {
-		if(username == null || password == null)
-			return false;
-		return this.uh.changePassowrd(username, password);
+
+	@GetMapping(value="/api/v1/city/{cityId}/staff/getAllRequest")
+	public ResponseEntity<Object> getAllRequest(@RequestHeader(name="Authorization") String token,
+												@PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.getAllRequest(username, cityId) != null) {
+			return new ResponseEntity<Object>(this.controller.getAllRequest(username, cityId), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Richieste non trovate.", HttpStatus.NOT_FOUND);
+		}
 	}
-	
-	
-	public boolean manageManager(String username, String toManage, boolean auth) {
-		if(username == null || (!checkManager(username)))
-    		return false;
-		if(toManage == null)
-			return false;
-		return this.uh.manageManager(toManage, auth);
+
+	@GetMapping(value="/api/v1/city/{cityId}/staff/getRequest")
+	public ResponseEntity<Object> getRequest(@RequestHeader(name="Authorization") String token,
+											 @PathParam("requestId") String requestId, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.getRequest(username, requestId) != null) {
+			return new ResponseEntity<Object>(this.controller.getRequest(username, requestId), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Richiesta non trovata.", HttpStatus.NOT_FOUND);
+		}
 	}
-    
-    
-    public List<User> getUsersNotConvalidated(String username){
-    	if(username == null || (!checkManager(username)))
-    		return null;
-    	return this.uh.getNotConvalidatedUsers();
-    }
-    */
-	
+
+	@DeleteMapping(value="/api/v1/manager/removeUser")
+	public ResponseEntity<Object> removeUser(@RequestHeader(name="Authorization") String token,
+											 @PathParam("toRemove") String toRemove) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.removeUser(username, toRemove)) {
+			return new ResponseEntity<Object>("Utente rimosso.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Rimozione fallita.", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PutMapping(value="/api/v1/changePassword")
+	public ResponseEntity<Object> changePassword(@RequestHeader(name="Authorization") String token,
+												 @PathParam("newPassword") String newPassword) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.changePassword(username, newPassword)) {
+			return new ResponseEntity<Object>("Password cambiata.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Cambio fallito.", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping(value="/api/v1/manager/manageManager")
+	public ResponseEntity<Object> manageManager(@RequestHeader(name="Authorization") String token,
+											@PathParam("toManage") String toManage,
+											@PathParam("auth") boolean auth) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.manageManager(username, toManage, auth)) {
+			return new ResponseEntity<Object>("Manager modificato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Modifica fallita.", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping(value="/api/v1/manager/getUsersNotConvalidated")
+	public ResponseEntity<Object> getUsersNotConvalidated(@RequestHeader(name="Authorization") String token) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.getUsersNotConvalidated(username) != null) {
+			return new ResponseEntity<Object>(this.controller.getUsersNotConvalidated(username), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Utenti non trovati.", HttpStatus.NOT_FOUND);
+		}
+	}
+
 }

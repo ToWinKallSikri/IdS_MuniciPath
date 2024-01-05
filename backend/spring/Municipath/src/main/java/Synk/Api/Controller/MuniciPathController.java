@@ -447,7 +447,7 @@ public class MuniciPathController {
 	public boolean changePassword(String username, String password) {
 		if(username == null || password == null)
 			return false;
-		return this.uh.changePassowrd(username, password);
+		return this.uh.changePassword(username, password);
 	}
 	
 	
