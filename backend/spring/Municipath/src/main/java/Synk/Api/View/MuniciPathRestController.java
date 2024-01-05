@@ -1,17 +1,15 @@
 package Synk.Api.View;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import Synk.Api.Model.Post.PostType;
+import org.springframework.web.bind.annotation.*;
 
 import Synk.Api.Controller.MuniciPathController;
 import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.City.Role.RoleRequest;
 import Synk.Api.Model.Post.Position;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,7 +111,7 @@ public class MuniciPathRestController {
 		}
     }
 	
-	@PutMapping(value="/api/v1/manager/deleteCity")
+	@DeleteMapping(value="/api/v1/manager/deleteCity")
 	public ResponseEntity<Object> deleteCity(@RequestHeader(name="Authorization") String token, @PathParam("cityId") String cityId) {
 		String username = getUsernameFromToken(token);
 		if(this.controller.deleteCity(username, cityId)) {
@@ -207,58 +205,165 @@ public class MuniciPathRestController {
 			return new ResponseEntity<Object>("Richieste non trovate.", HttpStatus.NOT_FOUND);
 		}
 	}
+
+	@PostMapping(value="/api/v1/city/{cityId}/groups/createGroup")
+	public ResponseEntity<Object> createGroup(@RequestHeader(name="Authorization") String token,
+											  @PathParam("title") String title, @PathParam("sorted") boolean sorted,
+											  @PathParam("cityId") String cityID, @PathParam("postIds") List<String> postIds,
+											  @PathParam("start") LocalDateTime start, @PathParam("end") LocalDateTime end,
+											  @PathParam("persistence") boolean persistence, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.createGroup(username, title, sorted, cityID, postIds, start, end, persistence)) {
+			return new ResponseEntity<Object>("Gruppo creato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Creazione fallita.", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PutMapping(value="/api/v1/city/{cityId}/groups/editGroup")
+	public ResponseEntity<Object> editGroup(@RequestHeader(name="Authorization") String token,
+											@PathParam("groupId") String groupId, @PathParam("title") String title,
+											@PathParam("sorted") boolean sorted, @PathParam("postIds") List<String> postIds,
+											@PathParam("start") LocalDateTime start, @PathParam("end") LocalDateTime end,
+											@PathParam("persistence") boolean persistence, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.editGroup(username, groupId, title, sorted, postIds, start, end, persistence)) {
+			return new ResponseEntity<Object>("Gruppo modificato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Modifica fallita.", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PutMapping(value="/api/v1/city/{cityId}/staff/editGroupFromStaff")
+	public ResponseEntity<Object> editGroupFromStaff(@RequestHeader(name="Authorization") String token,
+											@PathParam("groupId") String groupId, @PathParam("title") String title,
+											@PathParam("sorted") boolean sorted, @PathParam("postIds") List<String> postIds,
+											@PathParam("start") LocalDateTime start, @PathParam("end") LocalDateTime end,
+											@PathParam("persistence") boolean persistence, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.editGroupFromStaff(username, groupId, title, sorted, postIds, start, end, persistence)) {
+			return new ResponseEntity<Object>("Gruppo modificato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Modifica fallita.", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@DeleteMapping(value="/api/v1/city/{cityId}/groups/removeGroup")
+	public ResponseEntity<Object> removeGroup(@RequestHeader(name="Authorization") String token,
+											  @PathParam("groupId") String groupId, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.removeGroup(username, groupId)) {
+			return new ResponseEntity<Object>("Gruppo eliminato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Eliminazione fallita.", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@DeleteMapping(value="/api/v1/city/{cityId}/staff/removeGroupFromStaff")
+	public ResponseEntity<Object> removeGroupFromStaff(@RequestHeader(name="Authorization") String token,
+											  @PathParam("groupId") String groupId, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.removeGroupFromStaff(username, groupId)) {
+			return new ResponseEntity<Object>("Gruppo eliminato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Eliminazione fallita.", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping(value="/api/v1/city/{cityId}/groups/viewGroup")
+	public ResponseEntity<Object> viewGroup(@PathParam("groupId") String groupId, @PathVariable String cityId) {
+		if(this.controller.viewGroup(groupId) != null) {
+			return new ResponseEntity<Object>(this.controller.viewGroup(groupId), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Gruppo non trovato.", HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@GetMapping(value="/api/v1/city/{cityId}/groups/viewGroups")
+	public ResponseEntity<Object> viewGroups(@PathParam("groupIds") List<String> groupIds, @PathVariable String cityId) {
+		if(this.controller.viewGroups(groupIds) != null) {
+			return new ResponseEntity<Object>(this.controller.viewGroups(groupIds), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Gruppi non trovati.", HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@PostMapping(value="/api/v1/city/{cityId}/posts/createPost")
+	public ResponseEntity<Object> createPost(@RequestHeader(name="Authorization") String token,
+											 @PathParam("title") String title, @PathParam("type") PostType type,
+											 @PathParam("text") String text,
+											 @PathParam("lat") double lat, @PathParam("lng") double lng,
+											 @PathParam("data") List<String> data, @PathParam("start") LocalDateTime start,
+											 @PathParam("end") LocalDateTime end, @PathParam("persistence") boolean persistence,
+											 @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.createPost(title, type, text, username, new Position(lat, lng), cityId, (ArrayList<String>) data, start, end, persistence)) {
+			return new ResponseEntity<Object>("Post creato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Creazione fallita.", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+
+
+
+
+
+
+
+
 	
 	
 	/*
 	
 	
 	
-	public boolean createGroup(String title, String author, boolean sorted, String cityId,
-			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
-		if(title == null || author == null || cityId == null || postIds == null)
-			return false;
-		return this.gh.createGroup(title, author, sorted, cityId, postIds, start, end, persistence);
-	}
+//	public boolean createGroup(String title, String author, boolean sorted, String cityId,
+//			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
+//		if(title == null || author == null || cityId == null || postIds == null)
+//			return false;
+//		return this.gh.createGroup(title, author, sorted, cityId, postIds, start, end, persistence);
+//	}
 
-	public boolean editGroup(String groupId, String title, String author, boolean sorted,
-			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
-		if(groupId == null || title == null || author == null || postIds == null)
-			return false;
-		return this.gh.editGroup(groupId, title, author, sorted, postIds, start, end, persistence);
-	}
+//	public boolean editGroup(String groupId, String title, String author, boolean sorted,
+//			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
+//		if(groupId == null || title == null || author == null || postIds == null)
+//			return false;
+//		return this.gh.editGroup(groupId, title, author, sorted, postIds, start, end, persistence);
+//	}
 	
 	
-	public boolean editGroupFromStaff(String username, String groupId, String title, boolean sorted,
-			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
-		if(username == null || groupId == null ||  title == null 
-				|| postIds == null || (!checkStaff(username, idManager.getCityId(groupId))))
-			return false;
-		return this.gh.editGroup(groupId, title, sorted, postIds, start, end, persistence);
-	}
+//	public boolean editGroupFromStaff(String username, String groupId, String title, boolean sorted,
+//			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
+//		if(username == null || groupId == null ||  title == null
+//				|| postIds == null || (!checkStaff(username, idManager.getCityId(groupId))))
+//			return false;
+//		return this.gh.editGroup(groupId, title, sorted, postIds, start, end, persistence);
+//	}
 	
-	public boolean removeGroup(String author, String groupId) {
-		if(author == null || groupId == null)
-			return false;
-		return this.gh.removeGroup(author, groupId);
-	}
+//	public boolean removeGroup(String author, String groupId) {
+//		if(author == null || groupId == null)
+//			return false;
+//		return this.gh.removeGroup(author, groupId);
+//	}
 	
-	public boolean removeGroup(String groupId) {
-		if(groupId == null)
-			return false;
-		return this.gh.removeGroup(groupId);
-	}
+//	public boolean removeGroup(String groupId) {
+//		if(groupId == null)
+//			return false;
+//		return this.gh.removeGroup(groupId);
+//	}
 	
-	public Group viewGroup(String groupId) {
-		if(groupId == null)
-			return null;
-		return this.gh.viewGroup(groupId);
-	}
+//	public Group viewGroup(String groupId) {
+//		if(groupId == null)
+//			return null;
+//		return this.gh.viewGroup(groupId);
+//	}
 	
-	public List<Group> viewGroups(List<String> groupIds) {
-		if(groupIds == null)
-			return null;
-		return this.gh.viewGroups(groupIds);
-	}
+//	public List<Group> viewGroups(List<String> groupIds) {
+//		if(groupIds == null)
+//			return null;
+//		return this.gh.viewGroups(groupIds);
+//	}
 	
     
     public boolean createPost(String title, PostType type, String text, String author, Position pos,

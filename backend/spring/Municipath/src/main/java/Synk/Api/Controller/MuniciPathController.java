@@ -177,8 +177,8 @@ public class MuniciPathController {
 		return this.gh.removeGroup(author, groupId);
 	}
 	
-	public boolean removeGroup(String groupId) {
-		if(groupId == null)
+	public boolean removeGroupFromStaff(String username, String groupId) {
+		if(username == null || groupId == null || (!checkStaff(username, idManager.getCityId(groupId))))
 			return false;
 		return this.gh.removeGroup(groupId);
 	}
