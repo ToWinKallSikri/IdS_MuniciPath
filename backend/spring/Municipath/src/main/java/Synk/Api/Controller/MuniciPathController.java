@@ -322,7 +322,7 @@ public class MuniciPathController {
 		return this.uh.removeUser(toRemove);
 	}
 	
-	public boolean isThePassword(String username, String password) throws Exception {
+	public boolean isThePassword(String username, String password) {
 		if(username == null || password == null)
 			return false;
 		return this.uh.isThePassword(username, password);

@@ -58,7 +58,7 @@ public class MuniciPathRestController {
 	
 	
 	@GetMapping(value="/api/v1/login")
-	public ResponseEntity<Object> login(@PathParam("username") String username, @PathParam("password") String password) throws Exception{
+	public ResponseEntity<Object> login(@PathParam("username") String username, @PathParam("password") String password) {
 		if(this.controller.isThePassword(username, password)) {
 			String jwt = auth.createJwt(username);
 			return new ResponseEntity<Object>(jwt, HttpStatus.OK);

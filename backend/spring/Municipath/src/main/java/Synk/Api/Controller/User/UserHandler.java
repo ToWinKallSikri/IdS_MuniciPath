@@ -17,22 +17,49 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserHandler {
 
+	/**
+	 * Oggetto NotificatioHandler, utilizzato per gestire le notifiche
+	 */
     private NotificationHandler notifications;
+
+	/**
+	 * Oggetto mediator, utilizzato per far comunicare i vari handler fra di loro
+	 */
     private MuniciPathMediator mediator;
+
+	/**
+	 * Oggetto encoder, utilizzato per criptare le password
+	 */
 	private BCryptPasswordEncoder encoder;
 
+	/**
+	 * Oggetto userRepository, utilizzato per gestire la JPA
+	 */
 	@Autowired
 	private UserRepository userRepository;
 
+	/**
+	 * Costruttore della classe UserHandler, per gli oggetti "notifications" e "encoder"
+	 */
     public UserHandler() {
         this.notifications = new NotificationHandler();
         this.encoder = new BCryptPasswordEncoder();
     }
 
+	/**
+	 * Metodo setter per l'oggetto mediator
+	 * @param mediator, il mediator da settare
+	 */
 	public void setMediator(MuniciPathMediator mediator) {
 		this.mediator = mediator;
 	}
-	
+
+	/**
+	 * Metodo per creare un utente
+	 * @param username, lo username dell'utente
+	 * @param password, la password dell'utente
+	 * @return true se l'utente è stato creato, false altrimenti
+	 */
 	public boolean addUser(String username, String password) {
 		if(usernameExists(username))
 			return false;
@@ -40,17 +67,26 @@ public class UserHandler {
 		this.userRepository.save(new User(username, password, false, false));
 		return true;
 	}
-	
+
+	/**
+	 * Metodo per rimuovere un utente
+	 * @param username, lo username dell'utente da rimuovere
+	 * @return true se l'utente è stato rimosso, false altrimenti
+	 */
 	public boolean removeUser(String username) {
 		if(!this.usernameExists(username)) 
 			return false;
 		this.userRepository.deleteById(username);
 		return true;
 	}
-	
 
-
-	public boolean isThePassword(String username, String password) throws Exception {
+	/**
+	 * Metodo per controllare se ci sono match della password in chiaro con quella criptata, per un determinato utente
+	 * @param username, lo username dell'utente
+	 * @param password, la password dell'utente
+	 * @return true se la password corrisponde, false altrimenti
+	 */
+	public boolean isThePassword(String username, String password) {
 		User user = getConvalidatedUser(username);
 		if(user == null) 
 			return false;
