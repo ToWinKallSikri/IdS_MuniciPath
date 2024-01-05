@@ -36,8 +36,8 @@ public class UserHandlerTests {
 	void testChangePassword() {
 		uh.addUser("naruto", "password");
 		uh.userValidation("naruto");
-		assertTrue(uh.changePassowrd("naruto", "newPassword"));
-		assertFalse(uh.changePassowrd("sasuke", "newPassword"));
+		assertTrue(uh.changePassword("naruto", "newPassword"));
+		assertFalse(uh.changePassword("sasuke", "newPassword"));
 		uh.removeUser("naruto");
 	}
 

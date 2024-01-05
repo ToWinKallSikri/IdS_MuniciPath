@@ -285,6 +285,7 @@ public class MuniciPathController {
 		return this.gh.editGroup(groupId, title, sorted, postIds, start, end, persistence);
 	}
 	
+	
 	public boolean removeGroup(String author, String groupId) {
 		if(author == null || groupId == null)
 			return false;
@@ -502,10 +503,16 @@ public class MuniciPathController {
     	return role == Role.CURATOR || role == Role.MODERATOR;
     }
 	
-	public boolean isAuthor(String username, String contentId) {
+	public boolean checkAuthor(String username, String contentId) {
 		if(username == null || contentId == null)
 			return false;
-		return this.idManager.isGroup(contentId) ? username.equals(this.gh.getAuthor(contentId)) : username.equals(this.gh.getAuthor(contentId));
+		return username.equals(this.idManager.isGroup(contentId) ?
+				this.gh.getAuthor(contentId) : this.poh.getAuthor(contentId));
+	}
+	
+	public boolean havePowerWithIt(String username, String contentId) {
+		return checkStaff(username, idManager.getCityId(contentId))
+				|| checkAuthor(username, contentId);
 	}
     
 }
