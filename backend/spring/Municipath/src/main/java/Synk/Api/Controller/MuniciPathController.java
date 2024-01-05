@@ -1,6 +1,5 @@
 package Synk.Api.Controller;
 
-import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -346,11 +345,11 @@ public class MuniciPathController {
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
     public boolean createPost(String title, PostType type, String text, String author, Position pos,
-            String cityId, ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
+            String cityId, List<String> list, LocalDateTime start, LocalDateTime end, boolean persistence) {
     	if(title == null || type == null || text == null || author == null 
-    			|| pos == null || cityId == null || data == null)
+    			|| pos == null || cityId == null || list == null)
     		return false;
-    	return this.poh.createPost(title, type, text, author, pos, cityId, data, start, end, persistence);
+    	return this.poh.createPost(title, type, text, author, pos, cityId, list, start, end, persistence);
     }
 
 	/**
@@ -368,11 +367,11 @@ public class MuniciPathController {
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
     public boolean editPost(String postId, String title, PostType type, String text,
-    		String author, String cityId, ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
+    		String author, String cityId, List<String> list, LocalDateTime start, LocalDateTime end, boolean persistence) {
     	if(postId == null || title == null || type == null || text == null 
-    			|| author == null ||  cityId == null || data == null)
+    			|| author == null ||  cityId == null || list == null)
     		return false;
-        return this.poh.editPost(postId, title, type, text, author, cityId, data, start, end, persistence);
+        return this.poh.editPost(postId, title, type, text, author, cityId, list, start, end, persistence);
     }
 
 	/**
@@ -389,12 +388,12 @@ public class MuniciPathController {
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
     public boolean editPostFromStaff(String username, String postId, String title, PostType type, String text,
-    		ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
+    		List<String> list, LocalDateTime start, LocalDateTime end, boolean persistence) {
 		if(username == null || postId == null || (!checkStaff(username, idManager.getCityId(postId))))
 			return false;
-    	if(title == null || type == null || text == null || data == null)
+    	if(title == null || type == null || text == null || list == null)
     		return false;
-        return this.poh.editPost(postId, title, type, text, data, start, end, persistence);
+        return this.poh.editPost(postId, title, type, text, list, start, end, persistence);
     }
 
 	/**
