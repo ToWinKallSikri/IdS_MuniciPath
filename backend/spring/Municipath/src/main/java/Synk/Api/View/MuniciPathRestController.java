@@ -288,7 +288,7 @@ public class MuniciPathRestController {
 		}
 	}
 
-	@PostMapping(value="/api/v1/city/{cityId}/posts/createPost")
+	@PostMapping(value="/api/v1/city/{cityId}/points/createPost")
 	public ResponseEntity<Object> createPost(@RequestHeader(name="Authorization") String token,
 											 @PathParam("title") String title, @PathParam("type") PostType type,
 											 @PathParam("text") String text,
@@ -303,6 +303,63 @@ public class MuniciPathRestController {
 			return new ResponseEntity<Object>("Creazione fallita.", HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	@PutMapping(value="/api/v1/city/{cityId}/points/editPost")
+	public ResponseEntity<Object> editPost(@RequestHeader(name="Authorization") String token, @PathParam("postId") String postId,
+										   @PathParam("title") String title, @PathParam("type") PostType type,
+										   @PathParam("text") String text, @PathParam("data") List<String> data,
+										   @PathParam("start") LocalDateTime start, @PathParam("end") LocalDateTime end,
+										   @PathParam("persistence") boolean persistence, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.editPost(postId, title, type, text, username, cityId, (ArrayList<String>) data, start, end, persistence)) {
+			return new ResponseEntity<Object>("Post modificato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Modifica fallita.", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PutMapping(value="/api/v1/city/{cityId}/staff/editPostFromStaff")
+	public ResponseEntity<Object> editPostFromStaff(@RequestHeader(name="Authorization") String token, @PathParam("postId") String postId,
+										   @PathParam("title") String title, @PathParam("type") PostType type,
+										   @PathParam("text") String text, @PathParam("data") List<String> data,
+										   @PathParam("start") LocalDateTime start, @PathParam("end") LocalDateTime end,
+										   @PathParam("persistence") boolean persistence, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.editPostFromStaff(username, postId, title, type, text, (ArrayList<String>) data, start, end, persistence)) {
+			return new ResponseEntity<Object>("Post modificato.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Modifica fallita.", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping(value="/api/v1/city/{cityId}/points/getPoints")
+	public ResponseEntity<Object> getPoints(@RequestHeader(name="Authorization") String token,
+											@PathVariable String cityId) {
+	String username = getUsernameFromToken(token);
+		if(this.controller.getPoints(cityId, username) != null) {
+			return new ResponseEntity<Object>(this.controller.getPoints(cityId, username), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Punti non trovati.", HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@GetMapping(value="/api/v1/city/{cityId}/points/viewPosts")
+	public ResponseEntity<Object> viewPosts(@RequestHeader(name="Authorization") String token,
+											@PathParam("pointId") String pointId, @PathVariable String cityId) {
+		String username = getUsernameFromToken(token);
+		if(this.controller.viewPosts(pointId, username) != null) {
+			return new ResponseEntity<Object>(this.controller.viewPosts(pointId, username), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>("Post non trovati.", HttpStatus.NOT_FOUND);
+		}
+	}
+
+
+
+
+
+
+
 
 
 
@@ -366,31 +423,31 @@ public class MuniciPathRestController {
 //	}
 	
     
-    public boolean createPost(String title, PostType type, String text, String author, Position pos,
-            String cityId, ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
-    	if(title == null || type == null || text == null || author == null 
-    			|| pos == null || cityId == null || data == null)
-    		return false;
-    	return this.poh.createPost(title, type, text, author, pos, cityId, data, start, end, persistence);
-    }
+//    public boolean createPost(String title, PostType type, String text, String author, Position pos,
+//            String cityId, ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
+//    	if(title == null || type == null || text == null || author == null
+//    			|| pos == null || cityId == null || data == null)
+//    		return false;
+//    	return this.poh.createPost(title, type, text, author, pos, cityId, data, start, end, persistence);
+//    }
     
-    public boolean editPost(String postId, String title, PostType type, String text,
-    		String author, String cityId, ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
-    	if(postId == null || title == null || type == null || text == null 
-    			|| author == null ||  cityId == null || data == null)
-    		return false;
-        return this.poh.editPost(postId, title, type, text, author, cityId, data, start, end, persistence);
-    }
+//    public boolean editPost(String postId, String title, PostType type, String text,
+//    		String author, String cityId, ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
+//    	if(postId == null || title == null || type == null || text == null
+//    			|| author == null ||  cityId == null || data == null)
+//    		return false;
+//        return this.poh.editPost(postId, title, type, text, author, cityId, data, start, end, persistence);
+//    }
     
     
-    public boolean editPostFromStaff(String username, String postId, String title, PostType type, String text,
-    		ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
-		if(username == null || postId == null || (!checkStaff(username, idManager.getCityId(postId))))
-			return false;
-    	if(title == null || type == null || text == null || data == null)
-    		return false;
-        return this.poh.editPost(postId, title, type, text, data, start, end, persistence);
-    }
+//    public boolean editPostFromStaff(String username, String postId, String title, PostType type, String text,
+//    		ArrayList<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
+//		if(username == null || postId == null || (!checkStaff(username, idManager.getCityId(postId))))
+//			return false;
+//    	if(title == null || type == null || text == null || data == null)
+//    		return false;
+//        return this.poh.editPost(postId, title, type, text, data, start, end, persistence);
+//    }
     
     public List<Point> getPoints (String cityId, String username) {
     	if(cityId == null || username == null)
@@ -404,7 +461,8 @@ public class MuniciPathRestController {
     		return null;
         return this.poh.viewPosts(pointId, username);
     }
-    
+
+
     public List<Post> viewPosts (List<String> postIds) {
     	if(postIds == null)
     		return null;
