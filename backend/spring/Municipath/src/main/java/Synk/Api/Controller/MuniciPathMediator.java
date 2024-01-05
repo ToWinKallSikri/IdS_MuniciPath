@@ -10,12 +10,15 @@ import Synk.Api.Controller.Pending.PendingHandler;
 import Synk.Api.Controller.Post.PointHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.City.City;
-import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
 
+/**
+ * classe che implementa il pattern
+ * mediator per gli handler del progetto
+ */
 public class MuniciPathMediator {
 	
 	private PointHandler point;
@@ -24,6 +27,7 @@ public class MuniciPathMediator {
 	private GroupHandler group;
 	private PendingHandler pending;
 	private IdentifierManager idManager = new IdentifierManager();
+	
 	
 	public void setPoint(PointHandler point) {
 		this.point = point;
@@ -45,126 +49,219 @@ public class MuniciPathMediator {
 		this.pending = pending;
 	}
 	
+	/**
+	 * controlla se un dato autore può postare in un dato comune
+	 * @param cityId id del comune
+	 * @param author username dell'autore
+	 * @return true se puo' postare, false altrimenti
+	 */
 	public boolean isAuthorizedToPost(String cityId, String author) {
 		return this.city.isAuthorized(cityId, author);
 	}
-
+	
+	/**
+	 * controlla se un dato autore può pubblicare in un dato comune
+	 * @param cityId id del comune
+	 * @param author username dell'autore
+	 * @return true se puo' pubblicare, false altrimenti
+	 */
 	public boolean canPublish(String cityId, String author) {
 		return this.city.canPublish(cityId, author);
 	}
-
+	
+	/**
+	 * metodo per aggiungere un pending di creazione al pending handler
+	 * @param id id del contenuto da inserire
+	 */
 	public void addPending(String id) {
 		this.pending.addRequest(id);
 	}
-
+	
+	/**
+	 * metodo per aggiungere un pending di modifica post al pending handler
+	 * @param postId id del post
+	 * @param title nuovo titolo
+	 * @param type nuovo tipo
+	 * @param text nuovo testo
+	 * @param data nuovi contenuti multimediali
+	 * @param start nuovo momento di inizio
+	 * @param end nuovo momento di fine
+	 * @param persistence nuova persistenza
+	 */
 	public void addPostPending(String postId, String title, PostType type, String text,
 			List<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
 		this.pending.addPostRequest(postId, title, type, text, data, start, end, persistence);
 	}
 	
+	/**
+	 * metodo per aggiungere un pending di modifica group al pending handler
+	 * @param groupId id del gruppo
+	 * @param title nuovo titolo
+	 * @param sorted se ora e' ordinato
+	 * @param postIds nuovi posts
+	 * @param start nuovo momento di inizio
+	 * @param end nuovo momento di fine
+	 * @param persistence se ora e' persistente
+	 */
 	public void addGroupPending(String groupId, String title, boolean sorted, List<String> postIds, 
 			LocalDateTime start, LocalDateTime end, boolean persistence) {
 		this.pending.addGroupRequest(groupId, title, sorted, postIds, start, end, persistence);
 	}
-
+	
+	/**
+	 * metodo per rimuovere tutti i gruppi di un dato comune
+	 * @param cityId id del comune
+	 */
 	public void removeAllCityGroups(String cityId) {
 		this.group.removeAllFromCity(cityId);
 		
 	}
-
+	
+	/**
+	 * metodo per rimuovere da tutti i gruppi un certo post 
+	 * @param post post id da rimuovere
+	 */
 	public void removeFromAllGroups(String post) {
 		this.group.removeFromAll(post);
 	}
-
+	
+	/**
+	 * metodo per ottenere un comune dall'id
+	 * @param cityID id del comune
+	 * @return comune ricercato se esiste, null altrimenti
+	 */
 	public City getCity(String cityID) {
-		
 		return this.city.getCity(cityID);
 	}
-
+	
+	/**
+	 * metodo per associare un curatore ad un comune
+	 * @param curator username del nuovo curatore
+	 * @param id id del comune
+	 * @return true se e' stato associato, false altrimenti
+	 */
 	public boolean matchCurator(String curator, String id) {
 		return this.user.matchCurator(curator, id);
 	}
 
+	/**
+	 * metodo per inizializzare il point handler 
+	 * rispetto ad un nuovo comune
+	 * @param id id del nuovo comune
+	 * @param cityName nome del comune
+	 * @param curator curatore del comune
+	 * @param pos posizione del comune
+	 */
 	public void createPostForNewCity(String id, String cityName, String curator, Position pos) {
         this.point.addNewCity(id);
         this.point.createPost("Comune di "+cityName, PostType.INSTITUTIONAL, "",
         		curator, pos, id, new ArrayList<>(), null, null, true);
 	}
-
+	
+	/**
+	 * metodo per cambiare curatore di un comune
+	 * @param curator nuovo curatore
+	 * @param cityId id del comune
+	 * @return true se il curatore e' stato cambiato, false altrimenti
+	 */
 	public boolean changeCurator(String curator, String cityId) {
 		return this.user.changeCurator(curator, cityId);
 	}
-
+	
+	/**
+	 * metodo chiamato da city handler per eliminare un comune
+	 * si assicura che anche l'user hander e point handler vengano aggiornati
+	 * @param cityId id del comune da eliminare
+	 */
 	public void deleteCity(String cityId) {
     	this.user.discreditCurator(cityId);
     	this.point.deleteCityPoints(cityId);
 	}
-
+	
+	/**
+	 * metodo che controlla se un dato username esiste
+	 * @param username username da controllare
+	 * @return true se esiste, false altrimenti
+	 */
 	public boolean usernameExists(String username) {
 		return this.user.usernameExists(username);
 	}
 	
-	public boolean postExist(String postId) {
-		return this.point.getPost(postId) != null;
-	}
-
+	
+	/**
+	 * metodo chiamato dal group handler per controllare se
+	 * un insieme di id di post corrispondono ad un uguale numero
+	 * di post esistenti
+	 * @param postIds id dei post da controllare
+	 * @return lista dei post se tutti esistono, null altrimenti
+	 */
 	public List<Post> getPostsIfAllExists(List<String> postIds) {
 		return this.point.getPostsIfAllExists(postIds);
 	}
 	
-	
+	/**
+	 * metodo chiamato dal point handler per aggiornare
+	 * un post quando viene visualizzato
+	 * @param post post visualizzato
+	 * @param username visualizzatore
+	 * @return lista di gruppi di cui il post fa parte
+	 */
 	public List<String> viewGroupFrom(Post post, String username) {
 		return this.group.viewGroupFrom(post.getPostId(), username);
 	}
-
-	public boolean checkCityId(String cityId) {
-		return this.city.getCity(cityId) != null;
-	}
-
-	public Group getGroup(String groupId) {
-		return this.group.viewGroup(groupId);
-	}
-
-	public Post getPost(String id) {
-		return this.point.getPost(id);
-	}
-
-	public void addPost(Post post) {
-		this.point.createPost(post.getTitle(), post.getType(), post.getText(), post.getAuthor(),
-				post.getPos(), post.getCityID(), (ArrayList<String>) post.getMultimediaData(), post.getStartTime(),
-				post.getEndTime(), post.isPersistence());
-	}
-
-	public void addGroup(Group group) {
-		this.group.createGroup(group.getTitle(), group.getAuthor(), group.isSorted(), group.getCityId(),
-				group.getPosts(), group.getStartTime(), group.getEndTime(), group.isPersistence());
-	}
-
+	
+	/**
+	 * metodo per ottenere l'autore di un post o di un
+	 * gruppo tramite l'id
+	 * @param pendingId id del contenuto
+	 * @return l'autore se esiste, false altrimenti
+	 */
 	public String getAuthor(String pendingId) {
 		return idManager.isGroup(pendingId) ? group.getAuthor(pendingId) : point.getAuthor(pendingId);
 	}
-
+	
+	/**
+	 * metodo per inviare un messaggio ad un dato utente
+	 * @param username destinatario del messaggio
+	 * @param message messaggio da inviare
+	 */
 	public void send(String username, String message) {
 		this.user.send(username, message);
 	}
-
+	
+	/**
+	 * metodo per gestire una richiesta in pending di gruppo approvata
+	 * @param request richiesta da gestire
+	 */
 	public void manageGroupRequest(PendingRequest request) {
 		if(request.isNew())
 			this.group.approveGroup(request.getId());
 		else this.group.editGroup(request);
 	}
-
+	
+	/**
+	 * metodo per gestire una richiesta di pensing di post approvata
+	 * @param request richiesta da gestire
+	 */
 	public void managePostRequest(PendingRequest request) {
 		if(request.isNew())
 			this.point.approvePost(request.getId());
 		else this.point.editPost(request);
 	}
-
+	
+	/**
+	 * metodo per eliminare un group in pending
+	 * @param pendingId id del gruppo
+	 */
 	public void deletePendingGroup(String pendingId) {
 		this.group.removeGroup(pendingId);
 		
 	}
-
+	
+	/**
+	 * metodo per eliminare un post in pending
+	 * @param pendingId id del post
+	 */
 	public void deletePendingPost(String pendingId) {
 		this.point.deletePost(pendingId);
 	}
