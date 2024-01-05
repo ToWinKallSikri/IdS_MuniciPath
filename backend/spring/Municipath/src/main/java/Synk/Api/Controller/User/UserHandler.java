@@ -4,28 +4,29 @@ package Synk.Api.Controller.User;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-import Synk.Api.Controller.Encoder;
+
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Model.User.NotificationHandler;
 import Synk.Api.Model.User.User;
 import Synk.Api.Model.User.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
-@Repository
+@Service
 public class UserHandler {
 
     private NotificationHandler notifications;
     private MuniciPathMediator mediator;
-	private Encoder encoder;
+	private BCryptPasswordEncoder encoder;
 
 	@Autowired
 	private UserRepository userRepository;
 
     public UserHandler() {
         this.notifications = new NotificationHandler();
-        this.encoder = new Encoder();
+        this.encoder = new BCryptPasswordEncoder();
     }
 
 	public void setMediator(MuniciPathMediator mediator) {
@@ -35,6 +36,7 @@ public class UserHandler {
 	public boolean addUser(String username, String password) {
 		if(usernameExists(username))
 			return false;
+		password = encoder.encode(password);
 		this.userRepository.save(new User(username, password, false, false));
 		return true;
 	}
@@ -52,13 +54,14 @@ public class UserHandler {
 		User user = getConvalidatedUser(username);
 		if(user == null) 
 			return false;
-		return this.encoder.decode(user.getPassword()).equals(password);
+		return this.encoder.matches(password, user.getPassword());
 	}
 	
 	public boolean changePassowrd(String username, String password) {
 		User user = getConvalidatedUser(username);
 		if(user == null) 
 			return false;
+		password = encoder.encode(password);
 		user.setPassword(password);
 		this.userRepository.save(user);
 		return true;

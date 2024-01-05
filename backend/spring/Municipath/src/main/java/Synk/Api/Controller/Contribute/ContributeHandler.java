@@ -7,13 +7,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import Synk.Api.Model.Post.Contribute.Contribute;
 import Synk.Api.Model.Post.Contribute.ContributeRepository;
 import jakarta.annotation.PostConstruct;
 
-@Repository
+@Service
 public class ContributeHandler {
 	
 	/**

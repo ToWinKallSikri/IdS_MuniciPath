@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import Synk.Api.Model.City.Role.Licence;
 import Synk.Api.Model.City.Role.LicenceRepository;
@@ -14,7 +14,7 @@ import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.City.Role.RoleRequest;
 
 
-@Repository
+@Service
 public class RoleHandler {
 
 	/**
@@ -117,6 +117,7 @@ public class RoleHandler {
 	 */
 	public void addCity(String cityId, String curator) {
 		this.licenceRepository.save(new Licence(cityId, curator, Role.CURATOR));
+		this.licenceRepository.save(new Licence(cityId, "unregistered_tourist", Role.LIMITED));
 	}
 
 	/**

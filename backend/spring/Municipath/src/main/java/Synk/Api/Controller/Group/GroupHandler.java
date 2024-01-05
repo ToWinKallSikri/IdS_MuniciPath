@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Controller.MuniciPathMediator;
@@ -17,7 +17,7 @@ import Synk.Api.Model.Group.GroupRepository;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Post;
 
-@Repository
+@Service
 public class GroupHandler {
 	
 	private MuniciPathMediator mediator;

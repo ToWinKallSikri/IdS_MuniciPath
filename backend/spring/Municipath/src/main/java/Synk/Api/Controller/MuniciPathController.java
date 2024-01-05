@@ -3,9 +3,9 @@ package Synk.Api.Controller;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.City.CityHandler;
@@ -24,7 +24,6 @@ import Synk.Api.Model.Post.PostType;
 import Synk.Api.Model.Post.Contribute.Contribute;
 import Synk.Api.Model.Post.Point;
 import Synk.Api.Model.User.User;
-import jakarta.annotation.PostConstruct;
 
 @Service
 public class MuniciPathController {
@@ -56,6 +55,8 @@ public class MuniciPathController {
         mediator.setGroup(gh);
         mediator.setPoint(poh);
         mediator.setPending(peh);
+        Executors.newScheduledThreadPool(1)
+        	.scheduleAtFixedRate(this::checkEnding, 0, 5, TimeUnit.MINUTES);
     }
     
     
@@ -358,8 +359,8 @@ public class MuniciPathController {
     	return this.uh.getNotConvalidatedUsers();
     }
 	
-	//metodo di servizio parallelo
-	public void checkEnding() {
+	
+	private void checkEnding() {
 		this.poh.checkEndingPosts();
 		this.gh.checkEndingGroups();
 	}

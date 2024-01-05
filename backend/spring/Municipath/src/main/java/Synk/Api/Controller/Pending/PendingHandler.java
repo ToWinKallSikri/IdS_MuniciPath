@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Controller.MuniciPathMediator;
@@ -13,7 +13,7 @@ import Synk.Api.Model.Pending.PendingRepository;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.PostType;
 
-@Repository
+@Service
 public class PendingHandler {
 
 	private MuniciPathMediator mediator;

@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Controller.MuniciPathMediator;
@@ -15,7 +15,7 @@ import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.City.Role.RoleRequest;
 
 
-@Repository
+@Service
 public class CityHandler {
 	/**
 	 * Oggetto mediator, utilizzato per far comunicare i vari handler fra di loro

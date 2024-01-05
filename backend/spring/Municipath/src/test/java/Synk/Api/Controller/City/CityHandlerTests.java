@@ -121,7 +121,7 @@ public class CityHandlerTests {
 		String id = "" + ("tokyo"+12345).hashCode();
 		Position pos = new Position(1, 2);
 		ch.createCity("tokyo", 12345, "naruto", pos);
-		assertTrue(ch.getAuthorizations(id).size() == 1);
+		assertTrue(ch.getAuthorizations(id).size() == 2);
 		assertFalse(ch.getAuthorization("naruto", id) == null);
 		assertEquals(ch.getAuthorization("naruto", id).getRole(), Role.CURATOR);
 		assertEquals(ch.getRole("naruto", id), Role.CURATOR);
