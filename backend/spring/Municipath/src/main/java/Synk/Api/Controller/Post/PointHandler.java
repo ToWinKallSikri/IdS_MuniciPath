@@ -205,7 +205,6 @@ public class PointHandler {
 		if(type == PostType.CONTEST) {
 			if(!published)
 				return false;
-			this.contributes.addContest(id);
 		}
 		return true;
 	}
@@ -223,9 +222,7 @@ public class PointHandler {
 		if(type == PostType.CONTEST || newType == PostType.CONTEST ) {
 			if(!published)
 				return false;
-			if(type != PostType.CONTEST || newType == PostType.CONTEST )
-				this.contributes.addContest(id);
-			else if (type == PostType.CONTEST || newType != PostType.CONTEST)
+			if (type == PostType.CONTEST || newType != PostType.CONTEST)
 				this.contributes.removeContest(id);
 		}
 		return true;
@@ -528,7 +525,7 @@ public class PointHandler {
 	 */
 	public List<Contribute> getContributes(String username, String postId){
 		Post post = getPost(postId);
-		if(post == null || (!post.getAuthor().equals(username)))
+		if(post == null || post.getType() != PostType.CONTEST || (!post.getAuthor().equals(username)))
 			return null;
 		return this.contributes.getContributes(postId);
 	}
@@ -539,7 +536,8 @@ public class PointHandler {
 	 * @return contributi del post se esso esiste, null altrimenti
 	 */
 	public List<Contribute> getContributes(String postId){
-		if(getPost(postId) == null)
+		Post post = getPost(postId);
+		if(post == null || post.getType() != PostType.CONTEST)
 			return null;
 		return this.contributes.getContributes(postId);
 	}
@@ -555,7 +553,7 @@ public class PointHandler {
 		if(!this.mediator.usernameExists(contestAuthor))
 			return false;
 		Post contest = getPost(contestId);
-		if(contest == null || contest.getEndTime().isBefore(LocalDateTime.now()))
+		if(contest == null || contest.getType() != PostType.CONTEST || contest.getEndTime().isBefore(LocalDateTime.now()))
 			return false;
 		return this.contributes.addContributeToContest(contestAuthor, contestId, content);
 	}
