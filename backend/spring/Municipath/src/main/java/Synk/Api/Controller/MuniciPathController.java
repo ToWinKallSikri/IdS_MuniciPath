@@ -250,12 +250,12 @@ public class MuniciPathController {
 	 * metodo per modificare un gruppo
 	 * @param groupId id del grupp
 	 * @param title nuovo titolo del gruppo
-	 * @param author autore del 
-	 * @param sorted
-	 * @param postIds
-	 * @param start
-	 * @param end
-	 * @param persistence
+	 * @param author autore del gruppo
+	 * @param sorted se il gruppo ora e' ordinato
+	 * @param postIds nuovi id dei post
+	 * @param start nuovo momento di inizio
+	 * @param end nuovo momento di fine
+	 * @param persistence se e' persistente
 	 * @return true se l'operazione e' andata a buon fine, false altimenti
 	 */
 	public boolean editGroup(String groupId, String title, String author, boolean sorted,
@@ -265,7 +265,18 @@ public class MuniciPathController {
 		return this.gh.editGroup(groupId, title, author, sorted, postIds, start, end, persistence);
 	}
 	
-	
+	/**
+	 * metodo per modificare un gruppo da parte del comune
+	 * @param username username dell'utente che esegue l'operazione
+	 * @param groupId 
+	 * @param title
+	 * @param sorted
+	 * @param postIds
+	 * @param start
+	 * @param end
+	 * @param persistence
+	 * @return
+	 */
 	public boolean editGroupFromStaff(String username, String groupId, String title, boolean sorted,
 			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
 		if(username == null || groupId == null ||  title == null 
@@ -433,7 +444,7 @@ public class MuniciPathController {
 		return this.uh.isThePassword(username, password);
 	}
 	
-	public boolean changePassowrd(String username, String password) {
+	public boolean changePassword(String username, String password) {
 		if(username == null || password == null)
 			return false;
 		return this.uh.changePassowrd(username, password);
@@ -472,19 +483,29 @@ public class MuniciPathController {
     
 	
     public boolean checkManager(String username) {
+		if(username == null)
+			return false;
     	return this.uh.getUser(username).isManager();
     }
 
     private boolean checkCurator(String username, String cityId) {
+		if(username == null || cityId == null)
+			return false;
     	Role role = this.getRole(username, cityId);
     	return role == Role.CURATOR;
     }
     
     private boolean checkStaff(String username, String cityId) {
+		if(username == null || cityId == null)
+			return false;
     	Role role = this.getRole(username, cityId);
     	return role == Role.CURATOR || role == Role.MODERATOR;
     }
 	
-	 
+	public boolean isAuthor(String username, String contentId) {
+		if(username == null || contentId == null)
+			return false;
+		return this.idManager.isGroup(contentId) ? username.equals(this.gh.getAuthor(contentId)) : username.equals(this.gh.getAuthor(contentId));
+	}
     
 }

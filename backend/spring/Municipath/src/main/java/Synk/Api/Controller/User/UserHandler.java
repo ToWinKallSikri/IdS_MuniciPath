@@ -99,7 +99,7 @@ public class UserHandler {
 	 * @param password, la nuova password dell'utente
 	 * @return true se la password è stata cambiata, false altrimenti
 	 */
-	public boolean changePassowrd(String username, String password) {
+	public boolean changePassword(String username, String password) {
 		User user = getConvalidatedUser(username);
 		if(user == null) 
 			return false;
