@@ -18,7 +18,7 @@ export class AppComponent {
   }
 
   liked(){
-    this.like = this.like ? false : true;
+    this.like = !this.like;
   }
 
   share(){

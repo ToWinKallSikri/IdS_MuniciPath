@@ -1,40 +1,31 @@
-<!DOCTYPE html>
-<html>
-  <head>
-      <title>Municipath</title>
-  </head>
-  <body>
-    <p>
-      <mat-toolbar color="primary">
-        <mat-toolbar-row>
-          <span style="color: black; margin: 10px;">Municipath</span>
-          <span class="spacer"></span>
-            <button mat-icon-button [routerLink]="['']" [ngClass]="{'home': isHomePage()}">
-              <mat-icon class="icon" [ngClass]="{'home': isHomePage()}">
-                home
-              </mat-icon>
-            </button>
-            <button mat-icon-button (click)="liked()" [ngClass]="{'home': like}">
-              <mat-icon class="icon" [ngClass]="{'home': like}">
-                favorite
-              </mat-icon>
-            </button>
-            <button mat-icon-button (click)="share()" >
-              <mat-icon style="color: black;">
-                share
-              </mat-icon>
-            </button>
-        </mat-toolbar-row>
-      </mat-toolbar>
-    </p>
+<p>
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span style="color: black; margin: 10px;">MuniciPath</span>
+      <span class="spacer"></span>
+        <button mat-icon-button [routerLink]="['']" [ngClass]="{'home': isHomePage()}">
+          <mat-icon class="icon" [ngClass]="{'home': isHomePage()}">
+            home
+          </mat-icon>
+        </button>
+        <button mat-icon-button (click)="liked()" [ngClass]="{'home': like}">
+          <mat-icon class="icon" [ngClass]="{'home': like}">
+            favorite
+          </mat-icon>
+        </button>
+        <button mat-icon-button (click)="share()" >
+          <mat-icon style="color: black;">
+            share
+          </mat-icon>
+        </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</p>
+<router-outlet></router-outlet>
 
-    <router-outlet></router-outlet>
-
-    <mat-card class="fooder">
-      <mat-card-content class="footercontent">
-        Copyright © 2023-2024 Synk Group | All Rights Reserved.
-      </mat-card-content>
-    </mat-card>
-  </body>
-</html>
+<mat-card class="fooder">
+  <mat-card-content class="footercontent">
+    Copyright © 2023-2024 Synk Group | All Rights Reserved.
+  </mat-card-content>
+</mat-card>
 
