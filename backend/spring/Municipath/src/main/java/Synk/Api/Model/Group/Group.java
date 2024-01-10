@@ -30,13 +30,16 @@ public class Group {
     @ElementCollection
     @Fetch(FetchMode.JOIN)
     private List<String> posts;
+    private boolean ofCity;
+    private int viewsCount;
     
     public Group() {}
     
     
 	
     public Group(String id, String title, String cityId, String author, boolean sorted,
-    		boolean published, boolean persistence, LocalDateTime start, LocalDateTime end, List<String> posts) {
+    		boolean published, boolean persistence, LocalDateTime start, 
+    		LocalDateTime end, List<String> posts, boolean ofCity) {
 		this.id = id;
 		this.title = title;
 		this.author = author;
@@ -47,6 +50,8 @@ public class Group {
 		this.startTime = start;
 		this.endTime = end;
 		this.posts = posts;
+	    this.ofCity = ofCity;
+	    this.viewsCount = 0;
 	    this.publicationTime = LocalDateTime.now();
 	}
 
@@ -137,12 +142,31 @@ public class Group {
 		return publicationTime;
 	}
 
-
+	
 
 	public void setPublicationTime(LocalDateTime publicationTime) {
 		this.publicationTime = publicationTime;
 	}
+	
+	public boolean isOfCity() {
+		return ofCity;
+	}
 
+	public void setOfCity(boolean ofCity) {
+		this.ofCity = ofCity;
+	}
+
+	public int getViewsCount() {
+		return viewsCount;
+	}
+
+	public void setViewsCount(int viewsCount) {
+		this.viewsCount = viewsCount;
+	}
+
+	public void addOneView () {
+		this.viewsCount++;
+	}
 
 
 	public boolean isGroup() {

@@ -116,8 +116,9 @@ public class GroupHandler {
 			return false;
 		boolean publish = this.mediator.canPublish(cityId, author);
 		String id = getId(cityId);
+    	boolean ofCity = this.mediator.isTheStaff(cityId, author);
 		Group group = new Group(id, title, cityId, author,
-				sorted, publish, persistence, start, end, postIds);
+				sorted, publish, persistence, start, end, postIds, ofCity);
 		if(!publish)
 			this.mediator.addPending(id);
 		this.groupRepository.save(group);
@@ -266,9 +267,14 @@ public class GroupHandler {
 	 * @return gruppo ricercato se esiste, altrimenti null
 	 */
 	public Group viewGroup(String groupId) {
-		return getStreamOfAll()
+		Group group = getStreamOfAll()
 				.filter(g -> g.getId().equals(groupId))
 				.findFirst().orElse(null);
+		if(group == null)
+			return null;
+		group.addOneView();
+		this.groupRepository.save(group);
+		return group;
 	}
 	
 	/**
