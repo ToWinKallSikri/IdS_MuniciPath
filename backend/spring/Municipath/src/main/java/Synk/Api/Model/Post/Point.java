@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Point {
@@ -20,8 +24,10 @@ public class Point {
 	@Embedded
     private Position pos;
     private String cityId;
-    @Transient
-	private List<Post> posts;
+    @OneToMany
+    @JoinColumn(name = "pointId", referencedColumnName = "pointId")
+    @Fetch(FetchMode.JOIN)
+    private List<Post> posts;
 	private int idCount;
     
 	/**

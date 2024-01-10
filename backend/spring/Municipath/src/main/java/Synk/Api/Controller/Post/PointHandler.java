@@ -1,9 +1,7 @@
 package Synk.Api.Controller.Post;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -23,17 +21,15 @@ import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostRepository;
 import Synk.Api.Model.Post.PostType;
 import Synk.Api.Model.Post.Contribute.Contribute;
-import jakarta.annotation.PostConstruct;
 
 @Service
 public class PointHandler {
 	
 	/**
-	 * la mappa dei punti, il servizio meteo
-	 * e il medietor, che collega la classe con
+	 * il servizio meteo e il medietor, 
+	 * che collega la classe con
 	 * gli altri handler
 	 */
-    private Map<String, List<Point>> points;
     private WeatherService weather;
     private MuniciPathMediator mediator;
     private IdentifierManager idManager;
@@ -41,12 +37,12 @@ public class PointHandler {
     /**
      * beans iniettati per la persistenza
      */
-    @Autowired
-	private PostRepository postRepository;
 	@Autowired
 	private PointRepository pointRepository;
 	@Autowired
     private ContributeHandler contributes;
+	@Autowired
+	private PostRepository postRepository;
     
 	/**
 	 * costruttore della classe. inizializza la mappa
@@ -54,7 +50,6 @@ public class PointHandler {
 	 * previsioni meteo.
 	 */
     public PointHandler() {
-    	points = new HashMap<>();
         weather = new WeatherForecastProxy();
         idManager = new IdentifierManager();
     }
@@ -67,32 +62,7 @@ public class PointHandler {
         this.mediator = mediator;
     }
     
-    /**
-     * caricamento di dati nella mappa alla creazione
-     */
-    @PostConstruct
-    public void loadData() {
-    	this.points = StreamSupport.stream(pointRepository.findAll().spliterator(), false)
-    			.map(p -> {
-    				p.setPosts(StreamSupport.stream(postRepository.findAll().spliterator(), false)
-    					.filter(po -> po.getPos().equals(p.getPos()))
-    					.toList()); return p; })
-    			.collect(Collectors.groupingBy(Point::getCityId));
-    }
-    
-    /**
-     * Metodo che crea una citta'
-     * viene chiamato dal moderatore, 
-     * in seguito alla logica di CityHandler.
-     * @param cityId id della città da inserire
-     * @return true se la citta' non esisteva, false altrimenti
-     */
-    public boolean addNewCity(String cityId) {
-    	if(this.points.containsKey(cityId))
-    		return false;
-    	this.points.put(cityId, new ArrayList<Point>());
-    	return true;
-    }
+
     
     /**
      * Metodo per creare un nuovo post
@@ -114,14 +84,17 @@ public class PointHandler {
     	if(!(this.mediator.isAuthorizedToPost(cityId, author) && checkTiming(type, start, end, persistence)))
     		return false;
     	boolean published = this.mediator.canPublish(cityId, author);
-        Post post = new Post(title, type, text, author, pos, cityId, null, data, published, start, end, persistence);
+    	if(!checkContest(type, published))
+        	return false;
+    	boolean ofCity = this.mediator.isTheStaff(cityId, author);
+        Post post = new Post(title, type, text, author, pos, cityId, null,
+        		data, published, start, end, persistence, ofCity);
         Point point = getPoint(pos, cityId);
         post.setPostId(point.getNewPostId());
-        if(!checkContest(post.getPostId(), type, published))
-        	return false;
-    	this.pointRepository.save(point);
-        this.postRepository.save(post);
+        post.setPointId(point.getPointId());
+        postRepository.save(post);
         point.getPosts().add(post);
+    	this.pointRepository.save(point);
         if(!published)
         	this.mediator.addPending(post.getPostId());
         return true;
@@ -151,7 +124,7 @@ public class PointHandler {
         	return false;
     	if(published) {
     		post.updateInfo(title, type, text, data, start, end, persistence);
-            this.postRepository.save(post);
+            postRepository.save(post);
     	}
     	else this.mediator.addPostPending(postId, title, type, text, data, start, end, persistence);
         return true;
@@ -177,7 +150,7 @@ public class PointHandler {
         if(!checkContest(post.getPostId(), post.getType(), type, true))
         	return false;
     	post.updateInfo(title, type, text, data, start, end, persistence);
-        this.postRepository.save(post);
+        postRepository.save(post);
         return true;
     }
     
@@ -190,18 +163,17 @@ public class PointHandler {
     public void editPost(PendingRequest request) {
     	Post post = getPost(request.getId());
     	post.updateInfo(request);
-        this.postRepository.save(post);
+        postRepository.save(post);
     }
     
     /**
      * metodo privato per controllare se un post di tipo contest e'
      * stato formulato nel modo corretto
-     * @param id id del post
      * @param type tipo del post
      * @param published se e' pubblicato
      * @return true se e' formulato nel modo corretto, false altrimenti
      */
-	private boolean checkContest(String id, PostType type, boolean published) {
+	private boolean checkContest(PostType type, boolean published) {
 		if(type == PostType.CONTEST) {
 			if(!published)
 				return false;
@@ -222,7 +194,7 @@ public class PointHandler {
 		if(type == PostType.CONTEST || newType == PostType.CONTEST ) {
 			if(!published)
 				return false;
-			if (type == PostType.CONTEST || newType != PostType.CONTEST)
+			if (type == PostType.CONTEST && newType != PostType.CONTEST)
 				this.contributes.removeContest(id);
 		}
 		return true;
@@ -265,7 +237,7 @@ public class PointHandler {
      * @return punto trovato, o un nuovo punto vuoto
      */
     private Point getPoint(Position pos, String cityId) {
-    	return this.points.get(cityId).stream().filter(p -> p.getPos().equals(pos))
+    	return this.pointRepository.findByCityId(cityId).stream().filter(p -> p.getPos().equals(pos))
     			.findFirst().orElse(makeNewPoint(pos, cityId));
     }
     
@@ -277,7 +249,6 @@ public class PointHandler {
      */
     private Point makeNewPoint(Position pos, String cityId) {
     	Point point = new Point(cityId+"."+pos, pos, cityId);
-    	this.points.get(cityId).add(point);
     	this.pointRepository.save(point);
     	return point;
     }
@@ -291,7 +262,7 @@ public class PointHandler {
      * @return lista di punti
      */
     public List<Point> getPoints (String cityId, String username) {
-          return this.points.get(cityId).stream()
+          return this.pointRepository.findByCityId(cityId).stream()
         		  .filter( p -> p.getPosts().stream().anyMatch(po -> toShow(po, username))).toList();
     }
     
@@ -317,10 +288,10 @@ public class PointHandler {
      * @param cityId id del comune da cancellare
      */
     public void deleteCityPoints (String cityId) {
-        List<Point> ps = this.points.get(cityId);
-        ps.forEach(p ->  this.postRepository.deleteAll(p.getPosts()));
+        List<Point> ps = this.pointRepository.findByCityId(cityId);
         this.pointRepository.deleteAll(ps);
-        this.points.remove(cityId);
+        ps.stream().map(p -> p.getPosts())
+        	.forEach(p -> this.postRepository.deleteAll(p));
         this.mediator.removeAllCityGroups(cityId);
     }
     
@@ -334,7 +305,8 @@ public class PointHandler {
      * @return lista di post da vedere
      */
     public List<Post> viewPosts (String pointId, String username) {
-        return searchPoint(pointId).getPosts().stream()
+    	Point point = this.pointRepository.findById(pointId).orElse(null);
+        return point == null ? null : point.getPosts().stream()
         		.filter(p -> toShow(p, username)).toList();
     }
     
@@ -361,11 +333,12 @@ public class PointHandler {
      * @return post ricercato
      */
     public Post getPost(String postId, String username) {
-    	Point point = searchPointFromPost(postId);
-    	Post post = point.getPosts().stream()
-    			.filter(p -> p.getPostId().equals(postId))
-    			.findFirst().orElse(null);
-    	return post == null ? null : updatePost(post, username);
+    	Post post = postRepository.findById(postId).orElse(null);
+    	if(post == null)
+    		return null;
+    	post.addOneView();
+    	this.postRepository.save(post);
+    	return updatePost(post, username);
     }
     
     /**
@@ -375,32 +348,8 @@ public class PointHandler {
      * @return post ricercato
      */
     public Post getPost(String postId) {
-    	Point point = searchPointFromPost(postId);
-    	Post post = point.getPosts().stream()
-    			.filter(p -> p.getPostId().equals(postId))
-    			.findFirst().orElse(null);
+    	Post post = postRepository.findById(postId).orElse(null);
     	return post == null ? null : updatePost(post, null);
-    }
-    
-    /**
-     * metodo privato per ottenere il punto che contiene
-     * un post passando solo il suo id.
-     * @param postId id del post
-     * @return punto che lo contiene
-     */
-    private Point searchPointFromPost(String postId) {
-    	return searchPoint(idManager.FromPostToPoint(postId));
-    }
-    
-    /**
-     * metood privato per cercare un punto dato il pointId
-     * @param pointId id del punto
-     * @return punto ricercato
-     */
-    private Point searchPoint (String pointId) {
-        return this.points.get(idManager.getCityId(pointId))
-        		.stream().filter(p -> p.getPointId().equals(pointId))
-        		.findFirst().orElse(new Point());
     }
     
     /**
@@ -410,7 +359,7 @@ public class PointHandler {
      * @return point ricercato
      */
     private Point searchPoint (String cityId,Position positon) {
-        return this.points.get(cityId).stream()
+        return this.pointRepository.findByCityId(cityId).stream()
         		.filter(p -> p.getPos().equals(positon))
         		.findFirst().orElse(new Point());
     }
@@ -452,13 +401,12 @@ public class PointHandler {
     		return false;
     	if(post.getType() == PostType.CONTEST)
     		this.contributes.removeContest(post.getPostId());
-    	Point point = searchPointFromPost(post.getPostId());
+    	Point point = this.pointRepository.findById(post.getPointId()).get();
     	point.getPosts().remove(post);
-    	this.postRepository.delete(post);
     	if(point.getPosts().isEmpty()) {
-    		this.points.get(point.getCityId()).remove(point);
         	this.pointRepository.delete(point);
-    	}
+    	} else this.pointRepository.save(point);
+    	this.postRepository.delete(post);
     	this.mediator.removeFromAllGroups(post.getPostId());
     	return true;
     }
@@ -471,8 +419,8 @@ public class PointHandler {
      * @return true se il post e' prime, false altrimenti
      */
 	private boolean isPrime(Post post) {
-		Position posCity = this.mediator.getCity(post.getCityID()).getPos();
-		Point point = searchPoint(post.getCityID(), posCity);
+		Position posCity = this.mediator.getCity(post.getCityId()).getPos();
+		Point point = searchPoint(post.getCityId(), posCity);
 		return post.getPostId().equals(point.getPointId()+".0");
 	}
 	
@@ -484,7 +432,7 @@ public class PointHandler {
 	 */
 	public List<Post> getPosts(List<String> postIds){
 		String cityId = idManager.getCityId(postIds.get(0));
-		return this.points.get(cityId).stream()
+		return this.pointRepository.findByCityId(cityId).stream()
 				.map(p -> p.getPosts()).flatMap(List::stream).
 				filter(post -> postIds.contains(post.getPostId()))
 			    .collect(Collectors.toList());
@@ -514,6 +462,8 @@ public class PointHandler {
 		if(post == null || post.isPublished())
 			return false;
 		post.setPublished(true);
+		post.setPublicationTime(LocalDateTime.now());
+        postRepository.save(post);
 		return true;
 	}
 	
@@ -577,7 +527,8 @@ public class PointHandler {
 				true, PostType.SOCIAL, winnercontent, null, null);
 		editPost(edit);
 		post.setAuthor(winnerId);
-		this.postRepository.save(post);
+		Point point = pointRepository.findById(post.getPointId()).get();
+		this.pointRepository.save(point);
 		return true;
 	}
 	
@@ -588,12 +539,13 @@ public class PointHandler {
 	public void checkEndingPosts() {
 		LocalDateTime date = LocalDateTime.now();
 		List<Post> toDelete = new ArrayList<>();
-		StreamSupport.stream(postRepository.findAll().spliterator(), true)
-				.filter(po -> ! po.isPersistence())
-				.filter(po -> po.getType() == PostType.EVENT)
-				.forEach(po -> {
-					if(po.getEndTime().isBefore(date))
-						toDelete.add(po); });
+		StreamSupport.stream(pointRepository.findAll().spliterator(), true)
+				.map(poi -> poi.getPosts()).forEach( l -> l.stream()
+				.filter(pos -> ! pos.isPersistence())
+				.filter(pos -> pos.getType() == PostType.EVENT)
+				.forEach(pos -> {
+					if(pos.getEndTime().isBefore(date))
+						toDelete.add(pos); }));
 		toDelete.forEach(po -> deletePost(po));
 	}
 	

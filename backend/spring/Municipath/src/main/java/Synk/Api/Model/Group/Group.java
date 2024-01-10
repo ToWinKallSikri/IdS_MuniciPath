@@ -26,6 +26,7 @@ public class Group {
 	private boolean persistence;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private LocalDateTime publicationTime;
     @ElementCollection
     @Fetch(FetchMode.JOIN)
     private List<String> posts;
@@ -46,6 +47,7 @@ public class Group {
 		this.startTime = start;
 		this.endTime = end;
 		this.posts = posts;
+	    this.publicationTime = LocalDateTime.now();
 	}
 
     
@@ -59,8 +61,6 @@ public class Group {
 	public void setPublished(boolean published) {
 		this.published = published;
 	}
-
-
 
 	public String getId() {
 		return id;
@@ -121,8 +121,6 @@ public class Group {
 	public void setCityId(String cityId) {
 		this.cityId = cityId;
 	}
-	
-
 
 	public void setPosts(List<String> posts) {
 		this.posts = posts;
@@ -134,6 +132,18 @@ public class Group {
 	public void removePost(String post) {
 		this.posts.remove(post);
 	}
+	
+	public LocalDateTime getPublicationTime() {
+		return publicationTime;
+	}
+
+
+
+	public void setPublicationTime(LocalDateTime publicationTime) {
+		this.publicationTime = publicationTime;
+	}
+
+
 
 	public boolean isGroup() {
 		return this.posts.size() > 1;

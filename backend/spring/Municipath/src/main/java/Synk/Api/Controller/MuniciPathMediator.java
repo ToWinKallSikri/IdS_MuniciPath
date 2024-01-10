@@ -69,6 +69,17 @@ public class MuniciPathMediator {
 		return this.city.canPublish(cityId, author);
 	}
 	
+
+	/**
+	 * metodo per vedere se in un dato comune, un utente e' moderatore o curatore
+	 * @param cityId
+	 * @param author
+	 * @return
+	 */
+	public boolean isTheStaff(String cityId, String author) {
+		return this.city.isTheStaff(cityId, author);
+	}
+	
 	/**
 	 * metodo per aggiungere un pending di creazione al pending handler
 	 * @param id id del contenuto da inserire
@@ -153,7 +164,6 @@ public class MuniciPathMediator {
 	 * @param pos posizione del comune
 	 */
 	public void createPostForNewCity(String id, String cityName, String curator, Position pos) {
-        this.point.addNewCity(id);
         this.point.createPost("Comune di "+cityName, PostType.INSTITUTIONAL, "",
         		curator, pos, id, new ArrayList<>(), null, null, true);
 	}

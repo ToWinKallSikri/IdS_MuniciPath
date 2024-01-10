@@ -310,6 +310,7 @@ public class GroupHandler {
 		if(group == null || group.isPublished())
 			return false;
 		group.setPublished(true);
+		group.setPublicationTime(LocalDateTime.now());
 		this.groupRepository.save(group);
 		return true;
 	}

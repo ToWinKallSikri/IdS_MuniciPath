@@ -20,17 +20,18 @@ import jakarta.persistence.Transient;
 @Entity
 public class Post {
 	
-	
+
+    @Id
+    private String postId;
+    private String pointId;
+    private String cityId;
     private String title;
 	@Enumerated(EnumType.STRING)
     private PostType type;
     private String author;
     @Embedded
     private Position pos;
-    private String cityID;
     private String text;
-    @Id
-    private String postId;
     @ElementCollection
     @Fetch(FetchMode.JOIN)
     private List<String> multimediaData;
@@ -41,17 +42,20 @@ public class Post {
     private String meteo;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private LocalDateTime publicationTime;
     private boolean persistence;
+    private boolean ofCity;
+    private int viewsCount;
 
     public Post(String title, PostType type, String text, String author, Position pos,
             String cityID, String postId, List<String> data, boolean published,
-            LocalDateTime start, LocalDateTime end, boolean persistence) {
+            LocalDateTime start, LocalDateTime end, boolean persistence, boolean ofCity) {
 	    this.title = title;
 	    this.type = type;
 	    this.author = author;
 	    this.text = text;
 	    this.pos = pos;
-	    this.cityID = cityID;
+	    this.cityId = cityID;
 	    this.postId = postId;
 	    this.multimediaData = data;
 	    this.published = published;
@@ -59,6 +63,9 @@ public class Post {
 	    this.endTime = end;
 	    this.persistence = persistence;
 	    this.groups = new ArrayList<>();
+	    this.ofCity = ofCity;
+	    this.viewsCount = 0;
+	    this.publicationTime = LocalDateTime.now();
 	}
 	
 	public Post() {}
@@ -113,14 +120,6 @@ public class Post {
         this.pos = pos;
     }
 
-    public String getCityID() {
-        return cityID;
-    }
-
-    public void setCityID(String cityID) {
-        this.cityID = cityID;
-    }
-
     public String getPostId() {
         return postId;
     }
@@ -173,7 +172,6 @@ public class Post {
 		this.meteo = meteo;
 	}
 	
-	
 
 	public List<String> getGroups() {
 		return groups;
@@ -181,6 +179,55 @@ public class Post {
 
 	public void setGroups(List<String> groups) {
 		this.groups = groups;
+	}
+	
+
+	public String getPointId() {
+		return pointId;
+	}
+
+	public void setPointId(String pointId) {
+		this.pointId = pointId;
+	}
+
+	public void setMultimediaData(List<String> multimediaData) {
+		this.multimediaData = multimediaData;
+	}
+
+	public String getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(String cityId) {
+		this.cityId = cityId;
+	}
+
+	public boolean isOfCity() {
+		return ofCity;
+	}
+
+	public void setOfCity(boolean ofCity) {
+		this.ofCity = ofCity;
+	}
+
+	public int getViewsCount() {
+		return viewsCount;
+	}
+
+	public void setViewsCount(int viewsCount) {
+		this.viewsCount = viewsCount;
+	}
+	
+	public LocalDateTime getPublicationTime() {
+		return publicationTime;
+	}
+
+	public void setPublicationTime(LocalDateTime publicationTime) {
+		this.publicationTime = publicationTime;
+	}
+
+	public void addOneView () {
+		this.viewsCount++;
 	}
 
 	@Override

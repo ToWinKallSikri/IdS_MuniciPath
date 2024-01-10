@@ -680,8 +680,7 @@ public class MuniciPathController {
     private boolean checkStaff(String username, String cityId) {
 		if(username == null || cityId == null)
 			return false;
-    	Role role = this.getRole(username, cityId);
-    	return role == Role.CURATOR || role == Role.MODERATOR;
+    	return this.ch.isTheStaff(cityId, username);
     }
 
 	/**

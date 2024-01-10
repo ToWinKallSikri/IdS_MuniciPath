@@ -61,24 +61,6 @@ public class PointHandlerTests {
 	void testInitialization() {
 		assertDoesNotThrow(() -> new PointHandler());
 	}
-	
-	@Test
-	void testCityCreation() {
-		String id = "" + ("tokyo"+12345).hashCode(), user = "naruto";
-		assertTrue(poh.addNewCity(id));
-		assertFalse(poh.addNewCity(id));
-		assertDoesNotThrow(() -> poh.deleteCityPoints(id));
-		assertTrue(poh.addNewCity(id));
-		assertFalse(poh.addNewCity(id));
-		poh.deleteCityPoints(id);
-		uh.addUser(user, "password");
-		uh.userValidation(user);
-		ch.createCity("tokyo", 12345, user, new Position(1, 2));
-		List<Point> list = poh.getPoints(id, user);
-		assertFalse(list.isEmpty());
-		ch.deleteCity(id);
-		uh.removeUser(user);
-	}
 
 	@Test
 	void testPostCreation() {

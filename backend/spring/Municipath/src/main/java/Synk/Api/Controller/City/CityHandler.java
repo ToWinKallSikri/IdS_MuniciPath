@@ -161,6 +161,17 @@ public class CityHandler {
 		Role role = getAuthorization(author, cityId).getRole();
 		return role == Role.CURATOR || role == Role.CONTR_AUTH || role == Role.MODERATOR;
 	}
+	
+	/**
+	 * Metodo per controllare se un utente e' moderatore o curatore in una determinata città
+	 * @param cityId, l'id della città in cui si vuole postare
+	 * @param author, l'username dell'utente che vuole postare
+	 * @return true se l'utente può pubblicare, false altrimenti
+	 */
+	public boolean isTheStaff(String cityId, String author) {
+		Role role = getAuthorization(author, cityId).getRole();
+		return role == Role.CURATOR || role == Role.MODERATOR;
+	}
 
 	/**
 	 * Metodo per ottenere la "licenza" di un utente in una determinata città
