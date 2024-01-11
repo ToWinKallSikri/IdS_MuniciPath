@@ -26,7 +26,7 @@ import Synk.Api.Model.Post.Contribute.Contribute;
 public class PostHandler {
 	
 	/**
-	 * il servizio meteo e il medietor, 
+	 * il servizio meteo e il mediator,
 	 * che collega la classe con
 	 * gli altri handler
 	 */
