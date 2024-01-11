@@ -7,9 +7,10 @@ import java.util.List;
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Group.GroupHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
-import Synk.Api.Controller.Post.PointHandler;
+import Synk.Api.Controller.Post.PostHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.City.City;
+import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
@@ -21,7 +22,7 @@ import Synk.Api.Model.Post.PostType;
  */
 public class MuniciPathMediator {
 	
-	private PointHandler point;
+	private PostHandler point;
 	private UserHandler user;
 	private CityHandler city;
 	private GroupHandler group;
@@ -29,7 +30,7 @@ public class MuniciPathMediator {
 	private IdentifierManager idManager = new IdentifierManager();
 	
 	
-	public void setPoint(PointHandler point) {
+	public void setPoint(PostHandler point) {
 		this.point = point;
 	}
 	
@@ -67,6 +68,32 @@ public class MuniciPathMediator {
 	 */
 	public boolean canPublish(String cityId, String author) {
 		return this.city.canPublish(cityId, author);
+	}
+	
+	/**
+	 * prende il ruolo e ne ricava un numero 
+	 * che rapprensenta quanto
+	 * è autorizzato in quel comune.
+	 * @param cityId
+	 * @param author
+	 * @return un intero che rappresenta il grado del suo permesso.
+	 */
+	public int getRoleLevel(String cityId, String author) {
+		Role role = this.city.getRole(author, cityId);
+		switch(role) {
+			case CURATOR: 
+				return 5;
+			case MODERATOR: 
+				return 4;
+			case CONTR_AUTH: 
+				return 3;
+			case CONTR_NOT_AUTH: 
+				return 2;
+			case TOURIST: 
+				return 1;
+			default:
+				return 0;
+		}
 	}
 	
 

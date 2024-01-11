@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
-import Synk.Api.Controller.Post.PointHandler;
+import Synk.Api.Controller.Post.PostHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.Post.Position;
@@ -33,7 +33,7 @@ public class GroupHandlerTests {
 	@Autowired
     private UserHandler uh;
 	@Autowired
-    private PointHandler poh;
+    private PostHandler poh;
 	@Autowired
     private GroupHandler gh;
 	@Autowired

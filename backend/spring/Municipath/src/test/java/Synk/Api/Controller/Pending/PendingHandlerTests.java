@@ -2,7 +2,7 @@ package Synk.Api.Controller.Pending;
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Group.GroupHandler;
-import Synk.Api.Controller.Post.PointHandler;
+import Synk.Api.Controller.Post.PostHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.Role.Role;
@@ -30,7 +30,7 @@ public class PendingHandlerTests {
 	@Autowired
     private UserHandler uh;
 	@Autowired
-    private PointHandler poh;
+    private PostHandler poh;
 	@Autowired
     private GroupHandler gh;
 	@Autowired

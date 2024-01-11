@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Group.GroupHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
-import Synk.Api.Controller.Post.PointHandler;
+import Synk.Api.Controller.Post.PostHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.Role.Role;
@@ -33,7 +33,7 @@ import Synk.Api.Model.User.User;
 public class MuniciPathController {
 	
 	
-    private PointHandler poh;
+    private PostHandler poh;
 	private UserHandler uh;
     private CityHandler ch;
     private GroupHandler gh;
@@ -42,7 +42,7 @@ public class MuniciPathController {
     private MuniciPathMediator mediator;
     
     
-    public MuniciPathController(PointHandler poh, UserHandler uh, CityHandler ch, GroupHandler gh, PendingHandler peh){
+    public MuniciPathController(PostHandler poh, UserHandler uh, CityHandler ch, GroupHandler gh, PendingHandler peh){
     	this.mediator = new MuniciPathMediator();
         this.idManager = new IdentifierManager();
     	this.uh = uh;

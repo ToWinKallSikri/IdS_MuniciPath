@@ -46,37 +46,19 @@ public class Post {
     private boolean persistence;
     private boolean ofCity;
     private int viewsCount;
-
-    public Post(String title, PostType type, String text, String author, Position pos,
-            String cityID, String postId, List<String> data, boolean published,
-            LocalDateTime start, LocalDateTime end, boolean persistence, boolean ofCity) {
-	    this.title = title;
-	    this.type = type;
-	    this.author = author;
-	    this.text = text;
-	    this.pos = pos;
-	    this.cityId = cityID;
-	    this.postId = postId;
-	    this.multimediaData = data;
-	    this.published = published;
-	    this.startTime = start;
-	    this.endTime = end;
-	    this.persistence = persistence;
+    
+	public Post() {
 	    this.groups = new ArrayList<>();
-	    this.ofCity = ofCity;
 	    this.viewsCount = 0;
 	    this.publicationTime = LocalDateTime.now();
 	}
-	
-	public Post() {}
 
 
     public List<String> getMultimediaData() {
 		return multimediaData;
 	}
 
-
-	public void setMultimediaData(ArrayList<String> multimediaData) {
+	public void setMultimediaData(List<String> multimediaData) {
 		this.multimediaData = multimediaData;
 	}
 
@@ -188,10 +170,6 @@ public class Post {
 
 	public void setPointId(String pointId) {
 		this.pointId = pointId;
-	}
-
-	public void setMultimediaData(List<String> multimediaData) {
-		this.multimediaData = multimediaData;
 	}
 
 	public String getCityId() {
