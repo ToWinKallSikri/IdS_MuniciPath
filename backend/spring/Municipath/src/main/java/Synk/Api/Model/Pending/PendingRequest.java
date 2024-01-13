@@ -7,6 +7,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import Synk.Api.Model.Post.PostType;
+import Synk.Api.View.Model.ProtoPost;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -41,7 +42,7 @@ public class PendingRequest {
 	private boolean sorted;
 
 	/**
-	 * Booleano che indica se il post/gruppo messo in pending è persistente o meno, dopo la scadenza
+	 * Booleano che indica se il post/gruppo messo in pending è persistente o meno  dopo la scadenza
 	 */
 	private boolean persistence;
 
@@ -52,7 +53,7 @@ public class PendingRequest {
 	private PostType type;
 
 	/**
-	 * Contenuti multimediali (Lista di ID di posts, nel caso dei gruppi), del post/gruppo messo in pending
+	 * Contenuti multimediali (Lista di ID di posts  nel caso dei gruppi)  del post/gruppo messo in pending
 	 */
     @ElementCollection
     @Fetch(FetchMode.JOIN)
@@ -70,7 +71,7 @@ public class PendingRequest {
 
 	/**
 	 * Costruttore della classe PendingRequest
-	 * @param id, stringa che corrisponde all' Id della richiesta
+	 * @param id stringa che corrisponde all' Id della richiesta
 	 */
 	public PendingRequest(String id) {
 		this.id = id;
@@ -79,16 +80,16 @@ public class PendingRequest {
 
 	/**
 	 * Costruttore della richiesta in caso di un gruppo
-	 * @param id, stringa che corrisponde all' Id della richiesta (corrisponde all' Id del gruppo)
-	 * @param title, stringa che corrisponde al titolo della richiesta
-	 * @param sorted, booleano che indica se il gruppo messo in pending è un itinerario o meno
-	 * @param persistence, booleano che indica se il gruppo messo in pending è persistente o meno, dopo la scadenza
-	 * @param data, post che compongono il gruppo
-	 * @param start, data di inizio del gruppo
-	 * @param end, data di fine del gruppo
+	 * @param id stringa che corrisponde all' Id della richiesta (corrisponde all' Id del gruppo)
+	 * @param title stringa che corrisponde al titolo della richiesta
+	 * @param sorted booleano che indica se il gruppo messo in pending è un itinerario o meno
+	 * @param persistence booleano che indica se il gruppo messo in pending è persistente o meno  dopo la scadenza
+	 * @param data post che compongono il gruppo
+	 * @param start data di inizio del gruppo
+	 * @param end data di fine del gruppo
 	 */
-	public PendingRequest(String id, String title, boolean sorted,
-			boolean persistence, List<String> data, LocalDateTime start, LocalDateTime end) {
+	public PendingRequest(String id, String title , boolean sorted ,
+			boolean persistence , List<String> data , LocalDateTime start , LocalDateTime end) {
 		this.id = id;
 		this.title = title;
 		this.isNew = false;
@@ -101,30 +102,23 @@ public class PendingRequest {
 
 	/**
 	 * Costruttore della richiesta in caso di un post
-	 * @param id, stringa che corrisponde all' Id della richiesta (corrisponde all' Id del post)
-	 * @param title, stringa che corrisponde al titolo del post
-	 * @param text, stringa che corrisponde alla descrizione del post
-	 * @param persistence, booleano che indica se il post messo in pending è persistente o meno, dopo la scadenza
-	 * @param type, enum che indica il tipo di post messo in pending
-	 * @param data, contenuti multimediali del post
-	 * @param start, data di inizio del post
-	 * @param end, data di fine del post
+	 * @param id stringa che corrisponde all' Id della richiesta (corrisponde all' Id del post)
+	 * @param data dati del post
 	 */
-	public PendingRequest(String id, String title, String text, boolean persistence,
-			PostType type, List<String> data, LocalDateTime start, LocalDateTime end) {
+	public PendingRequest(String id , ProtoPost data) {
 		this.id = id;
-		this.title = title;
-		this.text = text;
+		this.title = data.title;
+		this.text = data.text;
 		this.isNew = false;
-		this.persistence = persistence;
-		this.type = type;
-		this.data = data;
-		this.startTime = start;
-		this.endTime = end;
+		this.persistence = data.persistence;
+		this.type = data.type;
+		this.data = data.multimediaData;
+		this.startTime = data.startTime;
+		this.endTime = data.endTime;
 	}
 
 	/**
-	 * Costruttore vuoto della classe PendingRequest, necessario per la JPA
+	 * Costruttore vuoto della classe PendingRequest  necessario per la JPA
 	 */
 	public PendingRequest() {}
 
@@ -138,7 +132,7 @@ public class PendingRequest {
 
 	/**
 	 * Metodo che setta l' Id della richiesta
-	 * @param id, stringa che corrisponde all' Id della richiesta
+	 * @param id stringa che corrisponde all' Id della richiesta
 	 */
 	public void setId(String id) {
 		this.id = id;
@@ -154,7 +148,7 @@ public class PendingRequest {
 
 	/**
 	 * Metodo che setta il titolo della richiesta
-	 * @param title, stringa che corrisponde al titolo della richiesta
+	 * @param title  stringa che corrisponde al titolo della richiesta
 	 */
 	public void setTitle(String title) {
 		this.title = title;
@@ -170,7 +164,7 @@ public class PendingRequest {
 
 	/**
 	 * Metodo che setta il testo della richiesta
-	 * @param text, stringa che corrisponde al testo della richiesta
+	 * @param text  stringa che corrisponde al testo della richiesta
 	 */
 	public void setText(String text) {
 		this.text = text;
@@ -188,7 +182,7 @@ public class PendingRequest {
 	/**
 	 * Metodo che setta un booleano che indica se la richiesta in pending è per un post/gruppo nuovo o per
 	 * l'aggiornamento di uno già esistente
-	 * @param isNew, booleano che indica se la richiesta in pending è per un post/gruppo nuovo o meno
+	 * @param isNew  booleano che indica se la richiesta in pending è per un post/gruppo nuovo o meno
 	 */
 	public void setNew(boolean isNew) {
 		this.isNew = isNew;
@@ -204,23 +198,23 @@ public class PendingRequest {
 
 	/**
 	 * Metodo che setta un booleano che indica se il gruppo messo in pending è un itinerario o meno
-	 * @param sorted, booleano che indica se il gruppo messo in pending è un itinerario o meno
+	 * @param sorted  booleano che indica se il gruppo messo in pending è un itinerario o meno
 	 */
 	public void setSorted(boolean sorted) {
 		this.sorted = sorted;
 	}
 
 	/**
-	 * Metodo che ritorna un booleano che indica se il post/gruppo messo in pending è persistente o meno, dopo la scadenza
-	 * @return un booleano che indica se il post/gruppo messo in pending è persistente o meno, dopo la scadenza
+	 * Metodo che ritorna un booleano che indica se il post/gruppo messo in pending è persistente o meno  dopo la scadenza
+	 * @return un booleano che indica se il post/gruppo messo in pending è persistente o meno  dopo la scadenza
 	 */
 	public boolean isPersistence() {
 		return persistence;
 	}
 
 	/**
-	 * Metodo che setta un booleano che indica se il post/gruppo messo in pending è persistente o meno, dopo la scadenza
-	 * @param persistence, booleano che indica se il post/gruppo messo in pending è persistente o meno, dopo la scadenza
+	 * Metodo che setta un booleano che indica se il post/gruppo messo in pending è persistente o meno  dopo la scadenza
+	 * @param persistence  booleano che indica se il post/gruppo messo in pending è persistente o meno  dopo la scadenza
 	 */
 	public void setPersistence(boolean persistence) {
 		this.persistence = persistence;
@@ -236,16 +230,16 @@ public class PendingRequest {
 
 	/**
 	 * Metodo che setta un enum che indica il tipo di post messo in pending
-	 * @param type, enum che indica il tipo di post messo in pending
+	 * @param type  enum che indica il tipo di post messo in pending
 	 */
 	public void setType(PostType type) {
 		this.type = type;
 	}
 
 	/**
-	 * Metodo che ritorna i contenuti multimediali (Lista di ID di posts, nel caso dei gruppi),
+	 * Metodo che ritorna i contenuti multimediali (Lista di ID di posts  nel caso dei gruppi) 
 	 * del post/gruppo messo in pending
-	 * @return una lista di stringhe che corrisponde ai contenuti multimediali (Lista di ID di posts, nel caso dei gruppi),
+	 * @return una lista di stringhe che corrisponde ai contenuti multimediali (Lista di ID di posts  nel caso dei gruppi) 
 	 * del post/gruppo messo in pending
 	 */
 	public List<String> getData() {
@@ -253,9 +247,9 @@ public class PendingRequest {
 	}
 
 	/**
-	 * Metodo che setta i contenuti multimediali (Lista di ID di posts, nel caso dei gruppi),
+	 * Metodo che setta i contenuti multimediali (Lista di ID di posts  nel caso dei gruppi) 
 	 * del post/gruppo messo in pending
-	 * @param data, lista di stringhe che corrisponde ai contenuti multimediali (Lista di ID di posts, nel caso dei gruppi),
+	 * @param data  lista di stringhe che corrisponde ai contenuti multimediali (Lista di ID di posts  nel caso dei gruppi) 
 	 * del post/gruppo messo in pending
 	 */
 	public void setData(List<String> data) {
@@ -272,7 +266,7 @@ public class PendingRequest {
 
 	/**
 	 * Metodo che setta la data di inizio del post/gruppo messo in pending
-	 * @param start, LocalDateTime che corrisponde alla data di inizio del post/gruppo messo in pending
+	 * @param start  LocalDateTime che corrisponde alla data di inizio del post/gruppo messo in pending
 	 */
 	public void setStartTime(LocalDateTime start) {
 		this.startTime = start;
@@ -288,7 +282,7 @@ public class PendingRequest {
 
 	/**
 	 * Metodo che setta la data di fine del post/gruppo messo in pending
-	 * @param end, LocalDateTime che corrisponde alla data di fine del post/gruppo messo in pending
+	 * @param end  LocalDateTime che corrisponde alla data di fine del post/gruppo messo in pending
 	 */
 	public void setEndTime(LocalDateTime end) {
 		this.endTime = end;

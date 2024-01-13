@@ -7,7 +7,7 @@ import java.util.List;
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Group.GroupHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
-import Synk.Api.Controller.Post.PostHandler;
+import Synk.Api.Controller.Post.PointHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.Role.Role;
@@ -15,6 +15,7 @@ import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
+import Synk.Api.View.Model.ProtoPost;
 
 /**
  * classe che implementa il pattern
@@ -22,7 +23,7 @@ import Synk.Api.Model.Post.PostType;
  */
 public class MuniciPathMediator {
 	
-	private PostHandler point;
+	private PointHandler point;
 	private UserHandler user;
 	private CityHandler city;
 	private GroupHandler group;
@@ -30,7 +31,7 @@ public class MuniciPathMediator {
 	private IdentifierManager idManager = new IdentifierManager();
 	
 	
-	public void setPoint(PostHandler point) {
+	public void setPoint(PointHandler point) {
 		this.point = point;
 	}
 	
@@ -118,17 +119,10 @@ public class MuniciPathMediator {
 	/**
 	 * metodo per aggiungere un pending di modifica post al pending handler
 	 * @param postId id del post
-	 * @param title nuovo titolo
-	 * @param type nuovo tipo
-	 * @param text nuovo testo
-	 * @param data nuovi contenuti multimediali
-	 * @param start nuovo momento di inizio
-	 * @param end nuovo momento di fine
-	 * @param persistence nuova persistenza
+	 * @param data dati del post
 	 */
-	public void addPostPending(String postId, String title, PostType type, String text,
-			List<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
-		this.pending.addPostRequest(postId, title, type, text, data, start, end, persistence);
+	public void addPostPending(String postId, ProtoPost data) {
+		this.pending.addPostRequest(postId, data);
 	}
 	
 	/**
@@ -191,8 +185,14 @@ public class MuniciPathMediator {
 	 * @param pos posizione del comune
 	 */
 	public void createPostForNewCity(String id, String cityName, String curator, Position pos) {
-        this.point.createPost("Comune di "+cityName, PostType.INSTITUTIONAL, "",
-        		curator, pos, id, new ArrayList<>(), null, null, true);
+		ProtoPost post = new ProtoPost();
+		post.multimediaData = new ArrayList<>();
+		post.persistence = true;
+		post.title = "Comune di "+cityName;
+		post.multimediaData = new ArrayList<>();
+		post.type = PostType.INSTITUTIONAL;
+		post.text = "";
+        this.point.createPost(curator, pos, id, post);
 	}
 	
 	/**
@@ -302,4 +302,5 @@ public class MuniciPathMediator {
 	public void deletePendingPost(String pendingId) {
 		this.point.deletePost(pendingId);
 	}
+
 }

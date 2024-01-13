@@ -1,11 +1,11 @@
 package Synk.Api.View;
 
-import Synk.Api.Model.Post.PostType;
 import Synk.Api.Model.Post.Contribute.Contribute;
 import Synk.Api.Model.User.User;
+import Synk.Api.View.Model.ProtoPost;
+import Synk.Api.View.Model.WebPost;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import Synk.Api.Controller.MuniciPathController;
 import Synk.Api.Model.City.Role.Role;
@@ -370,16 +370,12 @@ public class RestController {
 	}
 
 	@PostMapping(value="/api/v1/city/{cityId}/posts/createPost")
-	public ResponseEntity<Object> createPost(@RequestHeader(name="auth") String token,
-											 @RequestParam("title") String title, @RequestParam("type") String type,
-											 @RequestParam("text") String text, @RequestParam("pos") Position pos,
-											 @RequestParam("data") List<MultipartFile> data, @RequestParam("start") LocalDateTime start,
-											 @RequestParam("end") LocalDateTime end, @RequestParam("persistence") boolean persistence,
-											 @PathVariable("cityId") String cityId)  {
+	public ResponseEntity<Object> createPost(@RequestHeader(name="auth") String token, @RequestParam("pos") Position pos,
+											 @RequestParam("data") WebPost data, @PathVariable("cityId") String cityId)  {
 		String username = getUsernameFromToken(token);
-		List<String> list = data.stream().map(f -> this.fh.getName(f)).toList();
-		PostType postType = PostType.safeValueOf(type);
-		if(this.controller.createPost(title, postType, text, username, pos, cityId, list, start, end, persistence)) {
+		List<String> list = data.getData().stream().map(f -> this.fh.getName(f)).toList();
+		ProtoPost post = data.buildProtoPost(list);
+		if(this.controller.createPost(username, pos, cityId, post)) {
 			return new ResponseEntity<Object>("Post creato.", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Object>("Creazione fallita.", HttpStatus.BAD_REQUEST);
@@ -388,14 +384,11 @@ public class RestController {
 
 	@PutMapping(value="/api/v1/city/{cityId}/posts/{postId}/editPost")
 	public ResponseEntity<Object> editPost(@RequestHeader(name="auth") String token, @PathVariable("postId") String postId,
-										   @RequestParam("title") String title, @RequestParam("type") String type,
-										   @RequestParam("text") String text, @RequestParam("data") List<MultipartFile> data,
-										   @RequestParam("start") LocalDateTime start, @RequestParam("end") LocalDateTime end,
-										   @RequestParam("persistence") boolean persistence, @PathVariable("cityId") String cityId) {
+			 								@RequestParam("data") WebPost data, @PathVariable("cityId") String cityId) {
 		String username = getUsernameFromToken(token);
-		PostType postType = PostType.safeValueOf(type);
-		List<String> list = data.stream().map(f -> this.fh.getName(f)).toList();
-		if(this.controller.editPost(postId, title, postType, text, username, cityId, list, start, end, persistence)) {
+		List<String> list = data.getData().stream().map(f -> this.fh.getName(f)).toList();
+		ProtoPost post = data.buildProtoPost(list);
+		if(this.controller.editPost(postId, username, cityId, post)) {
 			return new ResponseEntity<Object>("Post modificato.", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Object>("Modifica fallita.", HttpStatus.BAD_REQUEST);
@@ -404,14 +397,11 @@ public class RestController {
 
 	@PutMapping(value="/api/v1/city/{cityId}/staff/posts/{postId}/editPost")
 	public ResponseEntity<Object> editPostFromStaff(@RequestHeader(name="auth") String token, @PathVariable("postId") String postId,
-			   										@RequestParam("title") String title, @RequestParam("type") String type,
-			   										@RequestParam("text") String text, @RequestParam("data") List<MultipartFile> data,
-			   										@RequestParam("start") LocalDateTime start, @RequestParam("end") LocalDateTime end,
-			   										@RequestParam("persistence") boolean persistence, @PathVariable("cityId") String cityId) {
+													@RequestParam("data") WebPost data, @PathVariable("cityId") String cityId) {
 		String username = getUsernameFromToken(token);
-		PostType postType = PostType.safeValueOf(type);
-		List<String> list = data.stream().map(f -> this.fh.getName(f)).toList();
-		if(this.controller.editPostFromStaff(username, postId, title, postType, text, list, start, end, persistence)) {
+		List<String> list = data.getData().stream().map(f -> this.fh.getName(f)).toList();
+		ProtoPost post = data.buildProtoPost(list);
+		if(this.controller.editPostFromStaff(postId, username, post)) {
 			return new ResponseEntity<Object>("Post modificato.", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Object>("Modifica fallita.", HttpStatus.BAD_REQUEST);

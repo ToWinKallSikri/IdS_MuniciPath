@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Controller.Group.GroupHandler;
-import Synk.Api.Controller.Post.PostHandler;
+import Synk.Api.Controller.Post.PointHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.Role.Role;
@@ -29,7 +29,7 @@ public class CityHandlerTests {
 	@Autowired
     private UserHandler uh;
 	@Autowired
-    private PostHandler ph;
+    private PointHandler ph;
 	@Autowired
     private GroupHandler gh;
 	

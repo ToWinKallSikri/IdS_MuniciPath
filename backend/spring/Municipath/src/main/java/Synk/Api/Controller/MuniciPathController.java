@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Group.GroupHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
-import Synk.Api.Controller.Post.PostHandler;
+import Synk.Api.Controller.Post.PointHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.Role.Role;
@@ -19,10 +19,10 @@ import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
-import Synk.Api.Model.Post.PostType;
 import Synk.Api.Model.Post.Contribute.Contribute;
 import Synk.Api.Model.Post.Point;
 import Synk.Api.Model.User.User;
+import Synk.Api.View.Model.ProtoPost;
 
 /**
  * questa classe funge da maschera per il lato controller
@@ -33,7 +33,7 @@ import Synk.Api.Model.User.User;
 public class MuniciPathController {
 	
 	
-    private PostHandler poh;
+    private PointHandler poh;
 	private UserHandler uh;
     private CityHandler ch;
     private GroupHandler gh;
@@ -42,7 +42,7 @@ public class MuniciPathController {
     private MuniciPathMediator mediator;
     
     
-    public MuniciPathController(PostHandler poh, UserHandler uh, CityHandler ch, GroupHandler gh, PendingHandler peh){
+    public MuniciPathController(PointHandler poh, UserHandler uh, CityHandler ch, GroupHandler gh, PendingHandler peh){
     	this.mediator = new MuniciPathMediator();
         this.idManager = new IdentifierManager();
     	this.uh = uh;
@@ -330,70 +330,49 @@ public class MuniciPathController {
 		return this.gh.viewGroups(groupIds);
 	}
 
+	
+    
 	/**
-	 * Metodo per creare un nuovo post
-	 * @param title, titolo del post
-	 * @param type, tipo del post
-	 * @param text, descrizione del post
-	 * @param author, autore del post
-	 * @param pos, posizione del post
-	 * @param cityId, id del comune
-	 * @param data, contenuti multimediali del post
-	 * @param start, momento di inizio
-	 * @param end, momento di fine
-	 * @param persistence, booleano che indica se il post e' persistente o meno dopo la scadenza
+	 * metodo per creare un post
+	 * @param username nome utente
+	 * @param pos posizione
+	 * @param cityId id del comune
+	 * @param post dati del post
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
-    public boolean createPost(String title, PostType type, String text, String author, Position pos,
-            String cityId, List<String> list, LocalDateTime start, LocalDateTime end, boolean persistence) {
-    	if(title == null || type == null || text == null || author == null 
-    			|| pos == null || cityId == null || list == null)
+	public boolean createPost(String username, Position pos, String cityId, ProtoPost post) {
+		if(username == null || pos == null || cityId == null || post == null)
     		return false;
-    	return this.poh.createPost(title, type, text, author, pos, cityId, list, start, end, persistence);
-    }
+    	return this.poh.createPost(username, pos, cityId, post);
+	}
 
 	/**
 	 * Metodo per modificare un post
-	 * @param postId, id del post da modificare
-	 * @param title, titolo del post
-	 * @param type, tipo del post
-	 * @param text, descrizione del post
-	 * @param author, autore del post
-	 * @param cityId, id del comune
-	 * @param data, contenuti multimediali del post
-	 * @param start, momento di inizio
-	 * @param end, momento di fine
-	 * @param persistence, booleano che indica se il post e' persistente o meno, dopo la scadenza
+	 * @param postId id del post da modificare
+	 * @param author autore del post
+	 * @param cityId id del comune
+	 * @param data info del post
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
-    public boolean editPost(String postId, String title, PostType type, String text,
-    		String author, String cityId, List<String> list, LocalDateTime start, LocalDateTime end, boolean persistence) {
-    	if(postId == null || title == null || type == null || text == null 
-    			|| author == null ||  cityId == null || list == null)
+    public boolean editPost(String postId, String author, String cityId, ProtoPost data) {
+    	if(postId == null || author == null || cityId == null ||  data == null)
     		return false;
-        return this.poh.editPost(postId, title, type, text, author, cityId, list, start, end, persistence);
+        return this.poh.editPost(postId, author, cityId, data);
     }
 
 	/**
 	 * Metodo per modificare un post da parte dell'amministratore del comune
-	 * @param username, username dell'utente che esegue l'operazione
-	 * @param postId, id del post da modificare
-	 * @param title, titolo del post
-	 * @param type, tipo del post
-	 * @param text, descrizione del post
-	 * @param data, contenuti multimediali del post
-	 * @param start, momento di inizio
-	 * @param end, momento di fine
-	 * @param persistence, booleano che indica se il post e' persistente o meno, dopo la scadenza
+	 * @param username username dell'utente che esegue l'operazione
+	 * @param postId id del post da modificare
+	 * @param data dati del post
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
-    public boolean editPostFromStaff(String username, String postId, String title, PostType type, String text,
-    		List<String> list, LocalDateTime start, LocalDateTime end, boolean persistence) {
+    public boolean editPostFromStaff(String username, String postId, ProtoPost data) {
 		if(username == null || postId == null || (!checkStaff(username, idManager.getCityId(postId))))
 			return false;
-    	if(title == null || type == null || text == null || list == null)
+    	if(data == null)
     		return false;
-        return this.poh.editPost(postId, title, type, text, list, start, end, persistence);
+        return this.poh.editPost(postId, data);
     }
 
 	/**

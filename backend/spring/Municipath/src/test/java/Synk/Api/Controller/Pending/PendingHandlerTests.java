@@ -2,12 +2,13 @@ package Synk.Api.Controller.Pending;
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Group.GroupHandler;
-import Synk.Api.Controller.Post.PostHandler;
+import Synk.Api.Controller.Post.PointHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.PostType;
+import Synk.Api.View.Model.ProtoPost;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +31,7 @@ public class PendingHandlerTests {
 	@Autowired
     private UserHandler uh;
 	@Autowired
-    private PostHandler poh;
+    private PointHandler poh;
 	@Autowired
     private GroupHandler gh;
 	@Autowired
@@ -67,8 +68,13 @@ public class PendingHandlerTests {
 		List<String> empty = new ArrayList<>();
 		Position pos = new Position(10, 10);
 		ch.setRole("sasuke", id, Role.CONTR_NOT_AUTH);
-		poh.createPost("urlo da battaglia", PostType.HEALTHandWELLNESS,
-				"aaaaaaaaa", "sasuke", pos, id, empty, null, null, true);
+		ProtoPost data1 = new ProtoPost();
+		data1.title = "urlo da battaglia";
+		data1.text = "aaaaaaaaa";
+		data1.type = PostType.HEALTHandWELLNESS;
+		data1.persistence = true;
+		data1.multimediaData = empty;
+		poh.createPost("sasuke", pos, id, data1);
 		assertTrue(this.peh.getAllRequest(id).size() == 1);
 		String pendingId = peh.getAllRequest(id).get(0).getId();
 		peh.judge(pendingId, true, "");
@@ -91,8 +97,13 @@ public class PendingHandlerTests {
 		List<String> empty = new ArrayList<>();
 		Position pos = new Position(10, 10);
 		ch.setRole("sasuke", id, Role.CONTR_NOT_AUTH);
-		poh.createPost("urlo da battaglia", PostType.HEALTHandWELLNESS,
-				"aaaaaaaaa", "sasuke", pos, id, empty, null, null, true);
+		ProtoPost data1 = new ProtoPost();
+		data1.title = "urlo da battaglia";
+		data1.text = "aaaaaaaaa";
+		data1.type = PostType.HEALTHandWELLNESS;
+		data1.persistence = true;
+		data1.multimediaData = empty;
+		poh.createPost("sasuke", pos, id, data1);
 		assertTrue(this.peh.getAllRequest(id).size() == 1);
 		String pendingId = peh.getAllRequest(id).get(0).getId();
 		peh.judge(pendingId, false, "");
@@ -114,12 +125,22 @@ public class PendingHandlerTests {
 		List<String> empty = new ArrayList<>();
 		Position pos = new Position(10, 10);
 		ch.setRole("sasuke", id, Role.CONTR_NOT_AUTH);
-		poh.createPost("urlo da battaglia", PostType.HEALTHandWELLNESS,
-				"aaaaaaaaa", "sasuke", pos, id, empty, null, null, true);
+		ProtoPost data1 = new ProtoPost();
+		data1.title = "urlo da battaglia";
+		data1.text = "aaaaaaaaa";
+		data1.type = PostType.HEALTHandWELLNESS;
+		data1.persistence = true;
+		data1.multimediaData = empty;
+		poh.createPost("sasuke", pos, id, data1);
 		String pendingId = peh.getAllRequest(id).get(0).getId();
 		peh.judge(pendingId, true, "");
-		poh.editPost(pendingId, "Urlo da Battaglia!", PostType.SOCIAL,
-				"AAAAAAAAAA", "sasuke", id, empty, null, null, true);
+		ProtoPost data2 = new ProtoPost();
+		data2.title = "Urlo da Battaglia!";
+		data2.text = "AAAAAAAAAA";
+		data2.type = PostType.SOCIAL;
+		data2.persistence = true;
+		data2.multimediaData = empty;
+		poh.editPost(pendingId, "sasuke", id, data2);
 		assertEquals(this.poh.getPost(pendingId).getText(), "aaaaaaaaa");
 		assertEquals(this.poh.getPost(pendingId).getType(), PostType.HEALTHandWELLNESS);
 		assertEquals(this.poh.getPost(pendingId).getTitle(), "urlo da battaglia");
@@ -147,9 +168,27 @@ public class PendingHandlerTests {
 		Position pos = new Position(10, 10);
 		Position pos2 = new Position(11, 10);
 		Position pos3 = new Position(12, 10);
-		poh.createPost("statua", PostType.TOURISTIC, "è bella.", user, pos, id, empty, null, null, true);
-		poh.createPost("lago", PostType.TOURISTIC, "è sporco.", user, pos2, id, empty, null, null, true);
-		poh.createPost("trattoria", PostType.HEALTHandWELLNESS, "si mangia.", user, pos3, id, empty, null, null, true);
+		ProtoPost data1 = new ProtoPost();
+		data1.title = "statua";
+		data1.text = "è bella.";
+		data1.type = PostType.TOURISTIC;
+		data1.persistence = true;
+		data1.multimediaData = empty;
+		poh.createPost(user, pos, id, data1);
+		ProtoPost data2 = new ProtoPost();
+		data2.title = "lago";
+		data2.text = "è sporco.";
+		data2.type = PostType.TOURISTIC;
+		data2.persistence = true;
+		data2.multimediaData = empty;
+		poh.createPost(user, pos2, id, data2);
+		ProtoPost data3 = new ProtoPost();
+		data3.title = "trattoria";
+		data3.text = "si mangia.";
+		data3.type = PostType.HEALTHandWELLNESS;
+		data3.persistence = true;
+		data3.multimediaData = empty;
+		poh.createPost(user, pos3, id, data3);
 		City city = ch.getCity(id);
 		List<String> postIds = this.poh.getPoints(id, user).stream()
 				.filter(p -> !p.getPos().equals(city.getPos()))
@@ -159,7 +198,13 @@ public class PendingHandlerTests {
 		peh.judge(id+".g.0", true, "");
 		assertFalse(poh.getPost(postIds.get(0)).getGroups().isEmpty());
 		Position pos4 = new Position(13, 10);
-		poh.createPost("piazza nuovo", PostType.SOCIAL, "c'è un bel panorama.", user, pos4, id, empty, null, null, true);
+		ProtoPost data4 = new ProtoPost();
+		data4.title = "piazza nuovo";
+		data4.text = "c'è un bel panorama.";
+		data4.type = PostType.SOCIAL;
+		data4.persistence = true;
+		data4.multimediaData = empty;
+		poh.createPost(user, pos4, id, data4);
 		List<String> postIds2 = this.poh.getPoints(id, user).stream()
 				.filter(p -> !p.getPos().equals(city.getPos()))
 				.map(p -> p.getPosts().get(0).getPostId()).toList();

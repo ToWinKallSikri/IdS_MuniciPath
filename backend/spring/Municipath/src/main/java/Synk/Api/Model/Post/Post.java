@@ -9,6 +9,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import Synk.Api.Model.Pending.PendingRequest;
+import Synk.Api.View.Model.ProtoPost;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -251,16 +252,15 @@ public class Post {
 	 * @param end nuovo momento di fine
 	 * @param persistence se e' persistente
 	 */
-    public void updateInfo(String title, PostType type, String text,
-    		List<String> data, LocalDateTime start, LocalDateTime end, boolean persistence) {
-        this.title = title;
-        this.type = type;
-        this.text = text;
+    public void updateInfo(ProtoPost data) {
+        this.title = data.title;
+        this.type = data.type;
+        this.text = data.text;
         this.multimediaData.clear();
-        this.multimediaData.addAll(data);
-        this.startTime = start;
-        this.endTime = end;
-        this.persistence = persistence;
+        this.multimediaData.addAll(data.multimediaData);
+        this.startTime = data.startTime;
+        this.endTime = data.endTime;
+        this.persistence = data.persistence;
     }
     
     /**
