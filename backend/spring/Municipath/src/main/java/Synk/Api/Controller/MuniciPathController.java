@@ -1,6 +1,5 @@
 package Synk.Api.Controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -22,6 +21,7 @@ import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.Contribute.Contribute;
 import Synk.Api.Model.Post.Point;
 import Synk.Api.Model.User.User;
+import Synk.Api.View.Model.ProtoGroup;
 import Synk.Api.View.Model.ProtoPost;
 
 /**
@@ -228,66 +228,48 @@ public class MuniciPathController {
 	
 	/**
 	 * metodo per creare un gruppo di post
-	 * @param title titolo del gruppo
 	 * @param author autore del gruppo
-	 * @param sorted se il gruppo e' ordinato o meno
 	 * @param cityId id del comune
-	 * @param postIds identificatori dei post
-	 * @param start momento di inizio
-	 * @param end momento di fine
-	 * @param persistence se e' persistente
+	 * @param data dati dell'insieme
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
-	public boolean createGroup(String title, String author, boolean sorted, String cityId,
-			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
-		if(title == null || author == null || cityId == null || postIds == null)
+	public boolean createGroup(String author, String cityId, ProtoGroup data) {
+		if(author == null || cityId == null || data == null)
 			return false;
-		return this.gh.createGroup(title, author, sorted, cityId, postIds, start, end, persistence);
+		return this.gh.createGroup(author, cityId, data);
 	}
 	
 	/**
 	 * metodo per modificare un gruppo
 	 * @param groupId id del gruppo
-	 * @param title nuovo titolo del gruppo
 	 * @param author autore del gruppo
-	 * @param sorted se il gruppo ora e' ordinato
-	 * @param postIds nuovi id dei post
-	 * @param start nuovo momento di inizio
-	 * @param end nuovo momento di fine
-	 * @param persistence se e' persistente
+	 * @param data dati del gruppo
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
-	public boolean editGroup(String groupId, String title, String author, boolean sorted,
-			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
-		if(groupId == null || title == null || author == null || postIds == null)
+	public boolean editGroup(String groupId, String author, ProtoGroup data) {
+		if(groupId == null || author == null || data == null)
 			return false;
-		return this.gh.editGroup(groupId, title, author, sorted, postIds, start, end, persistence);
+		return this.gh.editGroup(groupId, author, data);
 	}
 	
 	/**
 	 * metodo per modificare un gruppo da parte del comune
 	 * @param username username dell'utente che esegue l'operazione
 	 * @param groupId id del gruppo
-	 * @param title nuovo titolo del gruppo
-	 * @param sorted se il gruppo ora e' ordinato
-	 * @param postIds nuovi id dei post
-	 * @param start nuovo momento di inizio
-	 * @param end nuovo momento di fine
-	 * @param persistence se e' persistente
+	 * @param data dati dell'insieme
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
-	public boolean editGroupFromStaff(String username, String groupId, String title, boolean sorted,
-			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
-		if(username == null || groupId == null ||  title == null 
-				|| postIds == null || (!checkStaff(username, idManager.getCityId(groupId))))
+	public boolean editGroupFromStaff(String username, String groupId, ProtoGroup data) {
+		if(username == null || groupId == null ||  data == null 
+				|| (!checkStaff(username, idManager.getCityId(groupId))))
 			return false;
-		return this.gh.editGroup(groupId, title, sorted, postIds, start, end, persistence);
+		return this.gh.editGroup(groupId, data);
 	}
 
 	/**
 	 * metodo per rimuovere un gruppo
-	 * @param author,  autore del gruppo
-	 * @param groupId, id del gruppo
+	 * @param author  autore del gruppo
+	 * @param groupId id del gruppo
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
 	public boolean removeGroup(String author, String groupId) {

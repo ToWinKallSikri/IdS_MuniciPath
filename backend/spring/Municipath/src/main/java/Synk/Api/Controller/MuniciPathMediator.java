@@ -1,7 +1,6 @@
 package Synk.Api.Controller;
 
 import java.util.ArrayList;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import Synk.Api.Controller.City.CityHandler;
@@ -15,6 +14,7 @@ import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
+import Synk.Api.View.Model.ProtoGroup;
 import Synk.Api.View.Model.ProtoPost;
 
 /**
@@ -128,16 +128,10 @@ public class MuniciPathMediator {
 	/**
 	 * metodo per aggiungere un pending di modifica group al pending handler
 	 * @param groupId id del gruppo
-	 * @param title nuovo titolo
-	 * @param sorted se ora e' ordinato
-	 * @param postIds nuovi posts
-	 * @param start nuovo momento di inizio
-	 * @param end nuovo momento di fine
-	 * @param persistence se ora e' persistente
+	 * @param data dati del group
 	 */
-	public void addGroupPending(String groupId, String title, boolean sorted, List<String> postIds, 
-			LocalDateTime start, LocalDateTime end, boolean persistence) {
-		this.pending.addGroupRequest(groupId, title, sorted, postIds, start, end, persistence);
+	public void addGroupPending(String groupId, ProtoGroup data) {
+		this.pending.addGroupRequest(groupId, data);
 	}
 	
 	/**
@@ -186,12 +180,12 @@ public class MuniciPathMediator {
 	 */
 	public void createPostForNewCity(String id, String cityName, String curator, Position pos) {
 		ProtoPost post = new ProtoPost();
-		post.multimediaData = new ArrayList<>();
-		post.persistence = true;
-		post.title = "Comune di "+cityName;
-		post.multimediaData = new ArrayList<>();
-		post.type = PostType.INSTITUTIONAL;
-		post.text = "";
+		post.setMultimediaData(new ArrayList<>());
+		post.setPersistence(true);
+		post.setTitle("Comune di "+cityName);
+		post.setMultimediaData(new ArrayList<>());
+		post.setType(PostType.INSTITUTIONAL);
+		post.setText("");
         this.point.createPost(curator, pos, id, post);
 	}
 	
@@ -244,7 +238,7 @@ public class MuniciPathMediator {
 	 * @return lista di gruppi di cui il post fa parte
 	 */
 	public List<String> viewGroupFrom(Post post, String username) {
-		return this.group.viewGroupFrom(post.getPostId(), username);
+		return this.group.viewGroupFrom(post.getId(), username);
 	}
 	
 	/**

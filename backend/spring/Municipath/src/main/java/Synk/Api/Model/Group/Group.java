@@ -2,19 +2,24 @@ package Synk.Api.Model.Group;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import Synk.Api.Model.MetaData;
+import Synk.Api.Model.Pending.PendingRequest;
+import Synk.Api.View.Model.ProtoGroup;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "groups")
-public class Group {
+public class Group implements MetaData {
 	
 	@Id
 	private String id;
@@ -32,28 +37,27 @@ public class Group {
     private List<String> posts;
     private boolean ofCity;
     private int viewsCount;
+    @Transient
+    private float vote;
     
-    public Group() {}
-    
-    
-	
-    public Group(String id, String title, String cityId, String author, boolean sorted,
-    		boolean published, boolean persistence, LocalDateTime start, 
-    		LocalDateTime end, List<String> posts, boolean ofCity) {
-		this.id = id;
-		this.title = title;
+    public Group(String id, String cityId, String author, boolean publish, boolean ofCity, ProtoGroup data) {
+    	this.id = id;
+		this.title = data.getTitle();
 		this.author = author;
 		this.cityId = cityId;
-		this.sorted = sorted;
-		this.published = published;
-		this.persistence = persistence;
-		this.startTime = start;
-		this.endTime = end;
-		this.posts = posts;
+		this.sorted = data.isSorted();
+		this.published = publish;
+		this.persistence = data.isPersistence();
+		this.startTime = data.getStartTime();
+		this.endTime = data.getEndTime();
+		this.posts = makeNewList(data.getPosts());
 	    this.ofCity = ofCity;
 	    this.viewsCount = 0;
 	    this.publicationTime = LocalDateTime.now();
-	}
+	    this.vote = 0;
+    }
+    
+    public Group () {}
 
     
 
@@ -173,13 +177,39 @@ public class Group {
 		return this.posts.size() > 1;
 	}
 
-	public void edit(String title, boolean sorted, List<String> posts, LocalDateTime start, LocalDateTime end, boolean persistence) {
-		this.title = title;
-		this.sorted = sorted;
-		this.posts = posts;
-		this.startTime = start;
-		this.endTime = end;
-		this.persistence = persistence;
+	public float getVote() {
+		return vote;
+	}
+
+	public void setVote(float vote) {
+		this.vote = vote;
+	}
+	
+	
+
+	public void edit(ProtoGroup data) {
+		this.title = data.getTitle();
+		this.sorted = data.isSorted();
+		this.posts = makeNewList(data.getPosts());
+		this.startTime = data.getStartTime();
+		this.endTime = data.getEndTime();
+		this.persistence = data.isPersistence();
+	}
+
+
+	public void edit(PendingRequest request) {
+		this.title = request.getTitle();
+		this.sorted = request.isSorted();
+		this.posts = makeNewList(request.getData());
+		this.startTime = request.getStartTime();
+		this.endTime = request.getEndTime();
+		this.persistence = request.isPersistence();
+	}
+	
+	private List<String> makeNewList(List<String> oldList){
+		List<String> newList = new ArrayList<>();
+		newList.addAll(oldList);
+		return newList;
 	}
 
 }

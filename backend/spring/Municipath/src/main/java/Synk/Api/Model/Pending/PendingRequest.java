@@ -7,6 +7,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import Synk.Api.Model.Post.PostType;
+import Synk.Api.View.Model.ProtoGroup;
 import Synk.Api.View.Model.ProtoPost;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -81,23 +82,17 @@ public class PendingRequest {
 	/**
 	 * Costruttore della richiesta in caso di un gruppo
 	 * @param id stringa che corrisponde all' Id della richiesta (corrisponde all' Id del gruppo)
-	 * @param title stringa che corrisponde al titolo della richiesta
-	 * @param sorted booleano che indica se il gruppo messo in pending è un itinerario o meno
-	 * @param persistence booleano che indica se il gruppo messo in pending è persistente o meno  dopo la scadenza
-	 * @param data post che compongono il gruppo
-	 * @param start data di inizio del gruppo
-	 * @param end data di fine del gruppo
+	 * @param data dati del group
 	 */
-	public PendingRequest(String id, String title , boolean sorted ,
-			boolean persistence , List<String> data , LocalDateTime start , LocalDateTime end) {
+	public PendingRequest(String id, ProtoGroup data) {
 		this.id = id;
-		this.title = title;
+		this.title = data.getTitle();
 		this.isNew = false;
-		this.sorted = sorted;
-		this.persistence = persistence;
-		this.data = data;
-		this.startTime = start;
-		this.endTime = end;
+		this.sorted = data.isSorted();
+		this.persistence = data.isPersistence();
+		this.data = data.getPosts();
+		this.startTime = data.getStartTime();
+		this.endTime = data.getEndTime();
 	}
 
 	/**
@@ -107,20 +102,21 @@ public class PendingRequest {
 	 */
 	public PendingRequest(String id , ProtoPost data) {
 		this.id = id;
-		this.title = data.title;
-		this.text = data.text;
+		this.title = data.getTitle();
+		this.text = data.getText();
 		this.isNew = false;
-		this.persistence = data.persistence;
-		this.type = data.type;
-		this.data = data.multimediaData;
-		this.startTime = data.startTime;
-		this.endTime = data.endTime;
+		this.persistence = data.isPersistence();
+		this.type = data.getType();
+		this.data = data.getMultimediaData();
+		this.startTime = data.getStartTime();
+		this.endTime = data.getEndTime();
 	}
 
 	/**
 	 * Costruttore vuoto della classe PendingRequest  necessario per la JPA
 	 */
 	public PendingRequest() {}
+
 
 	/**
 	 * Metodo che ritorna l' Id della richiesta

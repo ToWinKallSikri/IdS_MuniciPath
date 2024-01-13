@@ -2,7 +2,6 @@ package Synk.Api.Controller.Group;
 
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -16,6 +15,7 @@ import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Group.GroupRepository;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Post;
+import Synk.Api.View.Model.ProtoGroup;
 
 @Service
 public class GroupHandler {
@@ -97,29 +97,22 @@ public class GroupHandler {
 	
 	/**
 	 * metodo per creare un gruppo
-	 * @param title titolo del gruppo
 	 * @param author autore del gruppo
-	 * @param sorted true se e' un itinerario, false se e' un'esperienza
 	 * @param cityId id del comune
-	 * @param postIds id dei post che compongono il gruppo
-	 * @param start momento di inizio
-	 * @param end momento di fine
-	 * @param persistence se e' persistente dopo la fine
+	 * @param data dati dell'insieme
 	 * @return true se la creazione e' andata a buon fine, false altrimenti
 	 */
-	public boolean createGroup(String title, String author, boolean sorted, String cityId,
-			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
-		if(!this.mediator.isAuthorizedToPost(cityId, author))
+	public boolean createGroup(String author, String cityId, ProtoGroup data) {
+		int level = this.mediator.getRoleLevel(cityId, author);
+		if(level < 2)
 			return false;
-		List<Post> posts = this.mediator.getPostsIfAllExists(postIds);
-		if(posts == null || posts.size() < 1 || (!checkTiming(start, end, persistence)))
+		List<Post> posts = this.mediator.getPostsIfAllExists(data.getPosts());
+		if(posts == null || posts.size() < 1 || 
+				(!checkTiming(data.getStartTime(), data.getEndTime(), data.isPersistence())))
 			return false;
-		boolean publish = this.mediator.canPublish(cityId, author);
 		String id = getId(cityId);
-    	boolean ofCity = this.mediator.isTheStaff(cityId, author);
-		Group group = new Group(id, title, cityId, author,
-				sorted, publish, persistence, start, end, postIds, ofCity);
-		if(!publish)
+		Group group = new Group(id, cityId, author, level > 2, level > 3, data);
+		if(level == 2)
 			this.mediator.addPending(id);
 		this.groupRepository.save(group);
 		return true;
@@ -128,51 +121,40 @@ public class GroupHandler {
 	/**
 	 * metodo per modificare un gruppo
 	 * @param groupId id del gruppo
-	 * @param title nuovo titolo del gruppo
 	 * @param author autore del gruppo
-	 * @param sorted se deve diventare ordinato o meno
-	 * @param postIds nuovi postIds
-	 * @param start nuovo momento di inizio
-	 * @param end nuovo momento di fine
-	 * @param persistence se adesso e' persistente
+	 * @param data nuovi dati del group
 	 * @return true se la modifica e' andata a buon fine, false altrimenti
 	 */
-	public boolean editGroup(String groupId, String title, String author, boolean sorted,
-			List<String> postIds, LocalDateTime start, LocalDateTime end, boolean persistence) {
+	public boolean editGroup(String groupId, String author, ProtoGroup data) {
 		Group group = viewGroup(groupId);
-		if(!(group != null && group.getAuthor().equals(author) && checkTiming(start, end, persistence)))
+		if(!(group != null && group.getAuthor().equals(author) && 
+				checkTiming(data.getStartTime(), data.getEndTime(), data.isPersistence())))
 			return false;
-		List<Post> posts = this.mediator.getPostsIfAllExists(postIds);
+		List<Post> posts = this.mediator.getPostsIfAllExists(data.getPosts());
 		if(posts == null || posts.size() < 1)
 			return false;
 		if(mediator.canPublish(idManager.getCityId(groupId), author)) {
-			group.edit(title, sorted, postIds, start, end, persistence);
+			group.edit(data);
 			groupRepository.save(group);
 		}
-		else mediator.addGroupPending(groupId, title, sorted, postIds, start, end, persistence);
+		else mediator.addGroupPending(groupId, data);
 		return true;
 	}
 	
 	/**
 	 * metodo per modificare un gruppo da parte del comune
 	 * @param groupId id del gruppo
-	 * @param title nuovo titolo
-	 * @param sorted se adesso e' ordinato
-	 * @param postIds i nuovi id dei posts
-	 * @param start nuovo momento di inizio
-	 * @param end nuovo momento di fine
-	 * @param persistence se adesso e' persistente
+	 * @param data nuovi dati del group
 	 * @return true se la modifica e' andata a buon fine, false altrimenti
 	 */
-	public boolean editGroup(String groupId, String title, boolean sorted, List<String> postIds,
-			LocalDateTime start, LocalDateTime end, boolean persistence) {
+	public boolean editGroup(String groupId, ProtoGroup data) {
 		Group group = viewGroup(groupId);
-		if(!(group != null && checkTiming(start, end, persistence)))
+		if(!(group != null && checkTiming(data.getStartTime(), data.getEndTime(), data.isPersistence())))
 			return false;
-		List<Post> posts = this.mediator.getPostsIfAllExists(postIds);
+		List<Post> posts = this.mediator.getPostsIfAllExists(data.getPosts());
 		if(posts == null || posts.size() < 1)
 			return false;
-		group.edit(title, sorted, postIds, start, end, persistence);
+		group.edit(data);
 		groupRepository.save(group);
 		return true;
 	}
@@ -182,13 +164,11 @@ public class GroupHandler {
 	 * viene chiamato dal medietor, chiamato
 	 * a sua volta dal pending handler
 	 * @param request pending di modifica accettato
-	 * @return true se la modifica e' andata a buon fine, false altrimenti
 	 */
-	public boolean editGroup(PendingRequest request) {
-		List<String> list = new ArrayList<>();
-		list.addAll(request.getData());
-		return editGroup(request.getId(), request.getTitle(), request.isSorted(),
-				list, request.getStartTime(), request.getEndTime(), request.isPersistence());
+	public void editGroup(PendingRequest request) {
+		Group group = viewGroup(request.getId());
+		group.edit(request);
+		groupRepository.save(group);
 	}
 	
 	/**

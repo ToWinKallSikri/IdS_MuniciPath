@@ -90,7 +90,7 @@ public class PointHandler {
         point.getPosts().add(newPost);
     	this.pointRepository.save(point);
         if(level == 2)
-        	this.mediator.addPending(newPost.getPostId());
+        	this.mediator.addPending(newPost.getId());
         return true;
 	}
 	
@@ -103,11 +103,11 @@ public class PointHandler {
 	 * @return builder pronto a produrre il post
 	 */
 	private PostBuilder buildingPost(String author, Position pos, int level, ProtoPost post) {
-		PostBuilder builder = getRightBuilder(post.type);
+		PostBuilder builder = getRightBuilder(post.getType());
 		builder.initializePost();
-    	builder.setData(post.title, post.text, post.multimediaData);
-    	builder.setDetails(author, pos, level > 3, post.type);
-    	builder.setSpecialDetails(level > 2, post.startTime, post.endTime, post.persistence);
+    	builder.setData(post.getTitle(), post.getText(), post.getMultimediaData());
+    	builder.setDetails(author, pos, level > 3, post.getType());
+    	builder.setSpecialDetails(level > 2, post.getStartTime(), post.getEndTime(), post.isPersistence());
     	return builder;
 	}
 	
@@ -129,15 +129,15 @@ public class PointHandler {
      * @param data dati aggiornati del post
      */
 	public boolean editPost(String postId, String author, String cityId, ProtoPost data) {
-    	PostBuilder builder = getRightBuilder(data.type);
+    	PostBuilder builder = getRightBuilder(data.getType());
     	boolean published = this.mediator.canPublish(cityId, author);
-    	if(!builder.correctPost(published, data.startTime, data.endTime, data.persistence))
+    	if(!builder.correctPost(published, data.getStartTime(), data.getEndTime(), data.isPersistence()))
     		return false;
     	Post post = this.getPost(postId);
 		if(post == null || (!post.getAuthor().equals(author)) || isPrime(post))
     		return false;
     	if(published) {
-            checkContest(post.getPostId(), post.getType(), data.type);
+            checkContest(post.getId(), post.getType(), data.getType());
     		post.updateInfo(data);
             postRepository.save(post);
     	}
@@ -152,13 +152,13 @@ public class PointHandler {
 	 * @return true se la modifica e' andata a buon fine, false altrimenti
 	 */
 	public boolean editPost(String postId, ProtoPost data) {
-		PostBuilder builder = getRightBuilder(data.type);
-    	if(!builder.correctPost(true, data.startTime, data.endTime, data.persistence))
+		PostBuilder builder = getRightBuilder(data.getType());
+    	if(!builder.correctPost(true, data.getStartTime(), data.getEndTime(), data.isPersistence()))
     		return false;
     	Post post = this.getPost(postId);
     	if(post == null || isPrime(post))
     		return false;
-        checkContest(post.getPostId(), post.getType(), data.type);
+        checkContest(post.getId(), post.getType(), data.getType());
     	post.updateInfo(data);
         postRepository.save(post);
         return true;
@@ -172,7 +172,7 @@ public class PointHandler {
 	 */
     public void editPost(PendingRequest request) {
     	Post post = getPost(request.getId());
-        checkContest(post.getPostId(), post.getType(), request.getType());
+        checkContest(post.getId(), post.getType(), request.getType());
     	post.updateInfo(request);
         postRepository.save(post);
     }
@@ -360,14 +360,14 @@ public class PointHandler {
     	if(isPrime(post))
     		return false;
     	if(post.getType() == PostType.CONTEST)
-    		this.contributes.removeContest(post.getPostId());
+    		this.contributes.removeContest(post.getId());
     	Point point = this.pointRepository.findById(post.getPointId()).get();
     	point.getPosts().remove(post);
     	if(point.getPosts().isEmpty()) {
         	this.pointRepository.delete(point);
     	} else this.pointRepository.save(point);
     	this.postRepository.delete(post);
-    	this.mediator.removeFromAllGroups(post.getPostId());
+    	this.mediator.removeFromAllGroups(post.getId());
     	return true;
     }
     
@@ -381,7 +381,7 @@ public class PointHandler {
 	private boolean isPrime(Post post) {
 		Position posCity = this.mediator.getCity(post.getCityId()).getPos();
 		Point point = searchPoint(post.getCityId(), posCity);
-		return post.getPostId().equals(point.getPointId()+".0");
+		return post.getId().equals(point.getPointId()+".0");
 	}
 	
 	/**
@@ -394,7 +394,7 @@ public class PointHandler {
 		String cityId = idManager.getCityId(postIds.get(0));
 		return this.pointRepository.findByCityId(cityId).stream()
 				.map(p -> p.getPosts()).flatMap(List::stream).
-				filter(post -> postIds.contains(post.getPostId()))
+				filter(post -> postIds.contains(post.getId()))
 			    .collect(Collectors.toList());
 	}
 	
@@ -483,7 +483,7 @@ public class PointHandler {
 		List<String> winnercontent = this.contributes.declareWinner(contestId, winnerId);
 		if(winnercontent == null)
 			return false;
-		showWinner(post.getPostId(), post.getTitle(), winnercontent);
+		showWinner(post.getId(), post.getTitle(), winnercontent);
 		post.setAuthor(winnerId);
 		Point point = pointRepository.findById(post.getPointId()).get();
 		this.pointRepository.save(point);
@@ -492,11 +492,11 @@ public class PointHandler {
 	
 	private void showWinner(String postId, String title, List<String> content) {
 		ProtoPost data = new ProtoPost();
-		data.title = title;
-		data.text = "";
-		data.persistence = true;
-		data.type = PostType.SOCIAL;
-		data.multimediaData = content;
+		data.setTitle(title);
+		data.setText("");
+		data.setPersistence(true);
+		data.setType(PostType.SOCIAL);
+		data.setMultimediaData(content);
 		PendingRequest edit = new PendingRequest(postId, data);
 		editPost(edit);
 	}

@@ -1,6 +1,5 @@
 package Synk.Api.Controller.Pending;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -11,6 +10,7 @@ import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Model.Pending.PendingRepository;
 import Synk.Api.Model.Pending.PendingRequest;
+import Synk.Api.View.Model.ProtoGroup;
 import Synk.Api.View.Model.ProtoPost;
 
 @Service
@@ -60,16 +60,10 @@ public class PendingHandler {
 	/**
 	 * Metodo per aggiungere un nuovo gruppo in pending
 	 * @param groupId l'id del gruppo
-	 * @param title il titolo del gruppo
-	 * @param sorted indica se il gruppo è un itinerario o meno
-	 * @param postIds gli id dei post che compongono il gruppo
-	 * @param start l'eventuale data di inizio del gruppo a tempo
-	 * @param end l'eventuale data di fine del gruppo a tempo
-	 * @param persistence indica la persistenza del gruppo dopo la scadenza
+	 * @param data dati di un gruppo
 	 */
-	public void addGroupRequest(String groupId, String title, boolean sorted, List<String> postIds, 
-			LocalDateTime start, LocalDateTime end, boolean persistence) {
-		this.pendingRepository.save(new PendingRequest(groupId, title, sorted, persistence, postIds, start, end));
+	public void addGroupRequest(String groupId, ProtoGroup data) {
+		this.pendingRepository.save(new PendingRequest(groupId, data));
 	}
 
 	/**
@@ -118,6 +112,7 @@ public class PendingHandler {
 	public PendingRequest getRequest(String requestId) {
 		return this.pendingRepository.findById(requestId).orElse(null);
 	}
+
 
 
 	

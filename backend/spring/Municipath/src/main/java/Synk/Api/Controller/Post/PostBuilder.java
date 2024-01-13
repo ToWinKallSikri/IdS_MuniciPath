@@ -28,7 +28,7 @@ public abstract class PostBuilder {
 	 * @param cityId id del comune
 	 */
 	public void setIds(String postId, String pointId, String cityId) {
-		this.post.setPostId(postId);
+		this.post.setId(postId);
 		this.post.setPointId(pointId);
 		this.post.setCityId(cityId);
 	}

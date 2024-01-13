@@ -8,6 +8,7 @@ import java.util.List;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import Synk.Api.Model.MetaData;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.View.Model.ProtoPost;
 import jakarta.persistence.ElementCollection;
@@ -19,11 +20,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 
 @Entity
-public class Post {
+public class Post implements MetaData {
 	
 
     @Id
-    private String postId;
+    private String id;
     private String pointId;
     private String cityId;
     private String title;
@@ -47,11 +48,14 @@ public class Post {
     private boolean persistence;
     private boolean ofCity;
     private int viewsCount;
+    @Transient
+    private float vote;
     
 	public Post() {
 	    this.groups = new ArrayList<>();
 	    this.viewsCount = 0;
 	    this.publicationTime = LocalDateTime.now();
+	    this.vote = 0;
 	}
 
 
@@ -103,12 +107,12 @@ public class Post {
         this.pos = pos;
     }
 
-    public String getPostId() {
-        return postId;
+    public String getId() {
+        return id;
     }
 
-    public void setPostId(String postId) {
-        this.postId = postId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public LocalDateTime getStartTime() {
@@ -209,11 +213,21 @@ public class Post {
 		this.viewsCount++;
 	}
 
+	public float getVote() {
+		return vote;
+	}
+
+
+	public void setVote(float vote) {
+		this.vote = vote;
+	}
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((postId == null) ? 0 : postId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -224,10 +238,10 @@ public class Post {
 		if (!(obj instanceof Post))
 			return false;
 		Post other = (Post) obj;
-		if (postId == null) {
-			if (other.postId != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!postId.equals(other.postId))
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}
@@ -244,23 +258,17 @@ public class Post {
 	/**
 	 * dati i seguenti parametri, li
 	 * usa per aggiornare il post
-	 * @param title nuovo titolo
-	 * @param type nuovo tipo
-	 * @param text nuovo testo
-	 * @param data nuovi contenuti
-	 * @param start nuovo momento di inizio
-	 * @param end nuovo momento di fine
-	 * @param persistence se e' persistente
+	 * @param data nuovi dati del post
 	 */
     public void updateInfo(ProtoPost data) {
-        this.title = data.title;
-        this.type = data.type;
-        this.text = data.text;
+        this.title = data.getTitle();
+        this.type = data.getType();
+        this.text = data.getText();
         this.multimediaData.clear();
-        this.multimediaData.addAll(data.multimediaData);
-        this.startTime = data.startTime;
-        this.endTime = data.endTime;
-        this.persistence = data.persistence;
+        this.multimediaData.addAll(data.getMultimediaData());
+        this.startTime = data.getStartTime();
+        this.endTime = data.getEndTime();
+        this.persistence = data.isPersistence();
     }
     
     /**
