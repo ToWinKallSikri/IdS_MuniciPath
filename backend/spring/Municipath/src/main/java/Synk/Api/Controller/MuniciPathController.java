@@ -127,6 +127,17 @@ public class MuniciPathController {
     		search = "";
     	return ch.getCities(search);
     }
+    
+    /**
+     * metodo per cercare un comune tramite il suo id
+     * @param cityId id del comune
+     * @return il comune se l'ha trovato, null altrimenti
+     */
+	public City getCity(String cityId) {
+		if(cityId == null)
+			return null;
+		return ch.getCity(cityId);
+	}
 	
     /**
      * imposta il ruolo di un utente rispetto ad un dato comune
@@ -242,52 +253,30 @@ public class MuniciPathController {
 	/**
 	 * metodo per modificare un gruppo
 	 * @param groupId id del gruppo
-	 * @param author autore del gruppo
+	 * @param username username dell'utente
 	 * @param data dati del gruppo
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
-	public boolean editGroup(String groupId, String author, ProtoGroup data) {
-		if(groupId == null || author == null || data == null)
+	public boolean editGroup(String groupId, String username, ProtoGroup data) {
+		if(groupId == null || username == null || data == null)
 			return false;
-		return this.gh.editGroup(groupId, author, data);
-	}
-	
-	/**
-	 * metodo per modificare un gruppo da parte del comune
-	 * @param username username dell'utente che esegue l'operazione
-	 * @param groupId id del gruppo
-	 * @param data dati dell'insieme
-	 * @return true se l'operazione e' andata a buon fine, false altrimenti
-	 */
-	public boolean editGroupFromStaff(String username, String groupId, ProtoGroup data) {
-		if(username == null || groupId == null ||  data == null 
-				|| (!checkStaff(username, idManager.getCityId(groupId))))
-			return false;
-		return this.gh.editGroup(groupId, data);
+		if(checkStaff(username, idManager.getCityId(groupId)))
+			return this.gh.editGroup(groupId, data);
+		return this.gh.editGroup(groupId, username, data);
 	}
 
 	/**
 	 * metodo per rimuovere un gruppo
-	 * @param author  autore del gruppo
+	 * @param username  username dell'utente
 	 * @param groupId id del gruppo
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
-	public boolean removeGroup(String author, String groupId) {
-		if(author == null || groupId == null)
+	public boolean removeGroup(String username, String groupId) {
+		if(username == null || groupId == null)
 			return false;
-		return this.gh.removeGroup(author, groupId);
-	}
-
-	/**
-	 * metodo per rimuovere un gruppo da parte dell'amministratore del comune
-	 * @param username username dell'utente che esegue l'operazione
-	 * @param groupId id del gruppo da rimuovere
-	 * @return true se l'operazione e' andata a buon fine, false altrimenti
-	 */
-	public boolean removeGroupFromStaff(String username, String groupId) {
-		if(username == null || groupId == null || (!checkStaff(username, idManager.getCityId(groupId))))
-			return false;
-		return this.gh.removeGroup(groupId);
+		if(checkStaff(username, idManager.getCityId(groupId)))
+			return this.gh.removeGroup(groupId);
+		return this.gh.removeGroup(username, groupId);
 	}
 
 	/**
@@ -331,30 +320,17 @@ public class MuniciPathController {
 	/**
 	 * Metodo per modificare un post
 	 * @param postId id del post da modificare
-	 * @param author autore del post
+	 * @param username nome utente dell'utente
 	 * @param cityId id del comune
 	 * @param data info del post
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
-    public boolean editPost(String postId, String author, String cityId, ProtoPost data) {
-    	if(postId == null || author == null || cityId == null ||  data == null)
+    public boolean editPost(String postId, String username, String cityId, ProtoPost data) {
+    	if(postId == null || username == null || cityId == null ||  data == null)
     		return false;
-        return this.poh.editPost(postId, author, cityId, data);
-    }
-
-	/**
-	 * Metodo per modificare un post da parte dell'amministratore del comune
-	 * @param username username dell'utente che esegue l'operazione
-	 * @param postId id del post da modificare
-	 * @param data dati del post
-	 * @return true se l'operazione e' andata a buon fine, false altrimenti
-	 */
-    public boolean editPostFromStaff(String username, String postId, ProtoPost data) {
-		if(username == null || postId == null || (!checkStaff(username, idManager.getCityId(postId))))
-			return false;
-    	if(data == null)
-    		return false;
-        return this.poh.editPost(postId, data);
+    	if(checkStaff(username, cityId))
+    		return this.poh.editPost(postId, data);
+        return this.poh.editPost(postId, username, cityId, data);
     }
 
 	/**
@@ -407,26 +383,16 @@ public class MuniciPathController {
 
 	/**
 	 * Metodo per eliminare un certo post, in base al suo id
-	 * @param postId, id del post da eliminare
-	 * @param author, autore del post (si puo' eliminare solo un post di cui si e' autori)
+	 * @param postId id del post da eliminare
+	 * @param username username dell'utente
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
-    public boolean deletePost (String postId, String author) {
-    	if(postId == null || author == null)
+    public boolean deletePost (String postId, String username) {
+    	if(postId == null || username == null)
     		return false;
-    	return this.poh.deletePost(postId, author);
-    }
-
-	/**
-	 * Metodo per eliminare un certo post, in base al suo id, da parte dell'amministratore del comune
-	 * @param username, username dell'utente che esegue l'operazione
-	 * @param postId, id del post da eliminare
-	 * @return true se l'operazione e' andata a buon fine, false altrimenti
-	 */
-	public boolean deletePostFromStaff (String username, String postId) {
-		if(username == null || postId == null || (!checkStaff(username, idManager.getCityId(postId))))
-			return false;
-    	return this.poh.deletePost(postId);
+    	if(checkStaff(username, idManager.getCityId(postId)))
+    		return this.poh.deletePost(postId);
+    	return this.poh.deletePost(postId, username);
     }
 
 	/**
