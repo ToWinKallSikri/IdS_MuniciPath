@@ -6,7 +6,7 @@ import java.util.stream.StreamSupport;
 
 
 import Synk.Api.Controller.MuniciPathMediator;
-import Synk.Api.Model.User.NotificationHandler;
+import Synk.Api.Controller.User.Notification.NotificationHandler;
 import Synk.Api.Model.User.User;
 import Synk.Api.Model.User.UserRepository;
 
@@ -238,6 +238,54 @@ public class UserHandler {
 	public void send(String username, String message) {
 		if(usernameExists(username))
 			this.notifications.send(username, message);
+	}
+	
+	public void notify(String author, String message, String contentId, String reciver) {
+		
+	}
+	
+	public void notifyEvent(String author, String message, String contentId) {
+		
+	}
+	
+	public boolean followContributor(String username, String contributor) {
+		return false;
+	}
+	
+	public boolean unfollowContributor(String username, String contributor) {
+		return false;
+	}
+	
+	public boolean followCity(String username, String cityId) {
+		return false;
+	}
+	
+	public boolean unfollowCity(String username, String cityId) {
+		return false;
+	}
+	
+	public boolean follow(String username, String contentId) {
+		return false;
+	}
+	
+	public boolean unfollow(String username, String contentId) {
+		return false;
+	}
+	
+	public boolean alreadyFollowing(String username, String contentId) {
+		return false;
+	}
+	
+	public boolean alreadyFollowingCity(String username, String cityId) {
+		return false;
+	}
+	
+	public boolean alreadyFollowingContributor(String username, String contributor) {
+		return false;
+	}
+	
+	public List<String> getAllFollowed(String username){
+		return null;
 	}
     
 }

@@ -1,13 +1,13 @@
 package Synk.Api.Model.Feedback;
 
 public class Feedback {
-    private String Id;
+    private String id;
     private String username;
     private String contentId;
     private float vote;
 
     public Feedback(String Id, String username, String contentId, float vote) {
-        this.Id = Id;
+        this.id = Id;
         this.username = username;
         this.contentId = contentId;
         this.vote = vote;
@@ -17,11 +17,11 @@ public class Feedback {
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getUsername() {

@@ -85,7 +85,6 @@ public class RestController {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
 
 
 	@DeleteMapping(value="/api/v1/manager/removeUser")
