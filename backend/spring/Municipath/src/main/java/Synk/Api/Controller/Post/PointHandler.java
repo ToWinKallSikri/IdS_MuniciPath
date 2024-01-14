@@ -35,6 +35,7 @@ public class PointHandler {
     private MuniciPathMediator mediator;
     private IdentifierManager idManager;
     private PostBuilder normalBuilder, eventBuilder, contestBuilder;
+    private PostValidator validator;
     
     /**
      * beans iniettati per la persistenza
@@ -57,6 +58,7 @@ public class PointHandler {
         normalBuilder = new NormalPostBuilder();
         eventBuilder = new EventPostBuilder();
         contestBuilder = new ContestPostBuilder();
+        validator = new PostValidator();
     }
     
     /**
@@ -131,7 +133,7 @@ public class PointHandler {
 	public boolean editPost(String postId, String author, String cityId, ProtoPost data) {
     	PostBuilder builder = getRightBuilder(data.getType());
     	boolean published = this.mediator.canPublish(cityId, author);
-    	if(!builder.correctPost(published, data.getStartTime(), data.getEndTime(), data.isPersistence()))
+    	if(!validator.correctPost(builder, published, data.getStartTime(), data.getEndTime(), data.isPersistence()))
     		return false;
     	Post post = this.getPost(postId);
 		if(post == null || (!post.getAuthor().equals(author)) || isPrime(post))
@@ -153,7 +155,7 @@ public class PointHandler {
 	 */
 	public boolean editPost(String postId, ProtoPost data) {
 		PostBuilder builder = getRightBuilder(data.getType());
-    	if(!builder.correctPost(true, data.getStartTime(), data.getEndTime(), data.isPersistence()))
+    	if(!validator.correctPost(builder, true, data.getStartTime(), data.getEndTime(), data.isPersistence()))
     		return false;
     	Post post = this.getPost(postId);
     	if(post == null || isPrime(post))

@@ -80,22 +80,6 @@ public abstract class PostBuilder {
 	 */
 	public abstract boolean correctPost();
 	
-	
-	/**
-	 * metodo che verifica se un dato post e'
-	 * stato correttamente compilato
-	 * @param publ
-	 * @param start
-	 * @param end
-	 * @param pers
-	 * @return true se il post e' stato correttamente compilato
-	 */
-	public boolean correctPost(boolean publ, LocalDateTime start, LocalDateTime end, boolean pers) {
-		this.initializePost();
-		this.setSpecialDetails(publ, start, end, pers);
-		return this.correctPost();
-	}
-	
 	/**
 	 * metodo per l'emissione finale del post
 	 * @return il post creato
