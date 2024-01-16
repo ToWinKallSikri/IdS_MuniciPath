@@ -5,7 +5,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import Synk.Api.Controller.Report.ReportHandler;
+import Synk.Api.Controller.SavedContent.SavedContentHandler;
 import Synk.Api.Model.Report.Report;
+import Synk.Api.Model.SavedContent.SavedContent;
 import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.City.CityHandler;
@@ -42,6 +44,7 @@ public class MuniciPathController {
     private GroupHandler gh;
     private PendingHandler peh;
     private ReportHandler rph;
+    private SavedContentHandler sch;
     private FeedbackHandler fh;
     private IdentifierManager idManager;
     private MuniciPathMediator mediator;
@@ -743,7 +746,30 @@ public class MuniciPathController {
 			return null;
 		return this.uh.getAllFollowed(username);
 	}
-    
+
+    public int getNumberOfPartecipants(String contentId){
+        if(contentId == null)
+            return  0;
+        return this.sch.getPartecipants(contentId).size();
+    }
+
+    public boolean saveSavedContent(String username, String contentId) {
+        if(this.isLimited(username, this.idManager.getCityId(contentId)))
+            return false;
+       return this.sch.saveSavedContent(username, contentId);
+    }
+
+    public boolean removeSavedContent(String username, String contentId) {
+        if(this.isLimited(username, this.idManager.getCityId(contentId)))
+            return false;
+        return this.sch.removeSavedContent(username, contentId);
+    }
+
+    public List<String> getSavedContent(String username) {
+        if(username == null)
+            return null;
+       return this.sch.getSavedContent(username);
+    }
     
     
 }
