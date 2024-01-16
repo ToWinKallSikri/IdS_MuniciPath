@@ -1,12 +1,6 @@
 package Synk.Api.Controller.User.Notification;
 
-import Synk.Api.Controller.IdentifierManager;
-import Synk.Api.Controller.MuniciPathMediator;
-import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.User.Notification.Notification;
-import org.joda.time.DateTime;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +8,8 @@ public class NotificationHandler {
 
     private List<Notification> notifies;
 
-    private IdentifierManager idManager;
-
-    private UserHandler userHandler;
-
     public NotificationHandler() {
         this.notifies = new ArrayList<>();
-        this.idManager = new IdentifierManager();
     }
 
 	

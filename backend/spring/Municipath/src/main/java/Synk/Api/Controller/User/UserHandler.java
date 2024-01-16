@@ -241,15 +241,6 @@ public class UserHandler {
 		return this.userRepository.existsById(username);
 	}
 
-	/**
-	 * Metodo per inviare una notifica a un utente
-	 * @param username, lo username dell'utente a cui inviare la notifica
-	 * @param message, il messaggio da inviare nella notifica
-	 */
-	public void send(String username, String message) {
-		//TODO
-	}
-
 	public void notify(String author, String message, String contentId, String reciever) {
         if(!(this.usernameExists(author)) && (this.usernameExists(reciever)) && (this.mediator.contentExist(contentId)))
             return;

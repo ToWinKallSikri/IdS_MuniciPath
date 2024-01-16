@@ -7,7 +7,6 @@ import java.util.List;
 import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Model.Report.Report;
-import org.joda.time.DateTime;
 
 public class ReportHandler {
 

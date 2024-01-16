@@ -258,14 +258,6 @@ public class MuniciPathMediator {
 		return idManager.isGroup(pendingId) ? group.getAuthor(pendingId) : point.getAuthor(pendingId);
 	}
 	
-	/**
-	 * metodo per inviare un messaggio ad un dato utente
-	 * @param username destinatario del messaggio
-	 * @param message messaggio da inviare
-	 */
-	public void send(String username, String message) {
-		this.user.send(username, message);
-	}
 	
 	/**
 	 * metodo per gestire una richiesta in pending di gruppo approvata
@@ -329,8 +321,6 @@ public class MuniciPathMediator {
     public void send(String author, String contentId, String message, String reciver) {
 		this.user.notify(author, contentId, message, reciver);
 	}
-	
-	
 
 	public String getNameOfCity(String cityId) {
 		City city = this.city.getCity(cityId);
