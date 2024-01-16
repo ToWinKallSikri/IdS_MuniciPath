@@ -246,6 +246,19 @@ public class UserHandler {
         notificationHandler.notifyEvent(author, message, contentId, l1);
     }
 
+	public void notifyCreation(MetaData data) {
+		List<String> list;
+		String author;
+		if(data.isOfCity()) {
+			list = this.followHandler.getAllCityFollowers(data.getCityId());
+			author = this.mediator.getNameOfCity(data.getCityId());
+		} else {
+			list = this.followHandler.getAllContributorFollowers(data.getAuthor());
+			author = data.getAuthor();
+		}
+        notificationHandler.notifyEvent(author, "Un nuovo contenuto è stato pubblicato!", data.getId(), list);
+	}
+
 	
 	public boolean followContributor(String username, String contributor) {
 		if(!(this.usernameExists(username) && this.usernameExists(contributor)))

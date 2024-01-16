@@ -93,9 +93,10 @@ public class PointHandler {
     	this.pointRepository.save(point);
         if(level == 2)
         	this.mediator.addPending(newPost.getId());
+        else this.mediator.notifyCreation(newPost);
         return true;
 	}
-	
+
 	/**
 	 * metodo che inserisce le corrette informazioni dentro ad un post
 	 * @param author autore del post
@@ -431,6 +432,7 @@ public class PointHandler {
 		post.setPublished(true);
 		post.setPublicationTime(LocalDateTime.now());
         postRepository.save(post);
+        this.mediator.notifyCreation(post);
 		return true;
 	}
 	

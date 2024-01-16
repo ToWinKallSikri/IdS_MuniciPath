@@ -326,4 +326,8 @@ public class MuniciPathMediator {
 		City city = this.city.getCity(cityId);
 		return city == null ? null : city.getName();
 	}
+
+	public void notifyCreation(MetaData data) {
+		this.user.notifyCreation(data);
+	}
 }

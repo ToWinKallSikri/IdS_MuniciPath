@@ -89,5 +89,14 @@ public class FollowHandler {
 				.filter(f -> f.getUsername().equals(username))
 				.map(f -> f.getFollowed()).toList();
 	}
+
+	public List<String> getAllCityFollowers(String cityId) {
+		return null;
+	}
+
+	public List<String> getAllContributorFollowers(String author) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
