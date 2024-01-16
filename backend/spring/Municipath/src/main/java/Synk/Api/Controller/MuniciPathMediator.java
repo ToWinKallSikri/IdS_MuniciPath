@@ -325,4 +325,15 @@ public class MuniciPathMediator {
     public List<String> getPartecipants(String contentId) {
         return null;
     }
+    
+    public void send(String author, String contentId, String message, String reciver) {
+		this.user.notify(author, contentId, message, reciver);
+	}
+	
+	
+
+	public String getNameOfCity(String cityId) {
+		City city = this.city.getCity(cityId);
+		return city == null ? null : city.getName();
+	}
 }

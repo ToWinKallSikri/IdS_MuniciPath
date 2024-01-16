@@ -89,7 +89,8 @@ public class PendingHandler {
 				this.mediator.deletePendingGroup(pendingId);
 			else this.mediator.deletePendingPost(pendingId);
 		}
-		this.mediator.send(username, response+outcome);
+		String name = this.mediator.getNameOfCity(this.idManager.getCityId(pendingId));
+		this.mediator.send(name ,pendingId, response+outcome, username);
 		this.pendingRepository.delete(request);
 		return true;
 	}

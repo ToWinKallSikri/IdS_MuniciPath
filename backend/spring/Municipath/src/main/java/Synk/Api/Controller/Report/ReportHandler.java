@@ -20,7 +20,7 @@ public class ReportHandler {
         this.identifierManager = new IdentifierManager();
     }
 
-    private void SetMediator (MuniciPathMediator mediator) {
+    public void SetMediator (MuniciPathMediator mediator) {
         this.mediator = mediator;
     }
 
