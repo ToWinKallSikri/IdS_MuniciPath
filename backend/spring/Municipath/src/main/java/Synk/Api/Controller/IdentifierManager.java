@@ -49,6 +49,10 @@ public class IdentifierManager {
     public String getContentId(String id) {
     	return id.split("\\.")[2];
     }
+
+	public boolean isCityFollowing(String id) {
+		return id.split("\\.")[1].equals("c");
+	}
 	
 	
 }

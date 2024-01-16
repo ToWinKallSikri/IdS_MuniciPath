@@ -3,15 +3,18 @@ package Synk.Api.Controller.User.Follow;
 import java.util.ArrayList;
 import java.util.List;
 
+import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Model.MetaData;
 import Synk.Api.Model.User.Follow.Follow;
 
 public class FollowHandler {
 	
 	private List<Follow> follows;
+	private IdentifierManager idManager;
 	
 	public FollowHandler() {
 		this.follows = new ArrayList<>();
+		this.idManager = new IdentifierManager();
 	}
 	
 	public boolean followContributor(String username, String contributor) {
@@ -91,12 +94,15 @@ public class FollowHandler {
 	}
 
 	public List<String> getAllCityFollowers(String cityId) {
-		return null;
+		return this.follows.stream().filter(f -> f.getFollowed().equals(cityId))
+				.filter(f -> this.idManager.isCityFollowing(f.getId()))
+				.map(f -> f.getUsername()).toList();
 	}
 
 	public List<String> getAllContributorFollowers(String author) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.follows.stream().filter(f -> f.getFollowed().equals(author))
+				.filter(f -> !this.idManager.isCityFollowing(f.getId()))
+				.map(f -> f.getUsername()).toList();
 	}
 	
 }
