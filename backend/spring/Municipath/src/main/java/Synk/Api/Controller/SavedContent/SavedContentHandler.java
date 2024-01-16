@@ -12,17 +12,17 @@ public class SavedContentHandler {
 
     private List<SavedContent> savedContents;
 
-    public void setMediator(MuniciPathMediator mediator) {
-        this.mediator = mediator;
-    }
-
     public SavedContentHandler() {
         this.savedContents = new ArrayList<>();
     }
 
+    public void setMediator(MuniciPathMediator mediator) {
+        this.mediator = mediator;
+    }
+
     public List<String> getPartecipants(String contentId){
-        return savedContents.stream().
-                filter(s -> s.getContentId().equals(contentId))
+        return savedContents.stream()
+        		.filter(s -> s.getContentId().equals(contentId))
                 .map(SavedContent::getUsername).toList();
     }
 

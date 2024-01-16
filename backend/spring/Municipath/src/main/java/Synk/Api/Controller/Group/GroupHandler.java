@@ -156,6 +156,8 @@ public class GroupHandler {
 			return false;
 		group.edit(data);
 		groupRepository.save(group);
+        String cityName = this.mediator.getNameOfCity(group.getCityId());
+        this.mediator.send(cityName, group.getId(), "Il tuo insieme è stato modificato dal comune.", group.getAuthor());
 		return true;
 	}
 	
@@ -195,6 +197,8 @@ public class GroupHandler {
 		if(group == null)
 			return false;
 		this.groupRepository.delete(group);
+        String cityName = this.mediator.getNameOfCity(group.getCityId());
+        this.mediator.send(cityName, group.getId(), "Il tuo insieme è stato eliminato dal comune.", group.getAuthor());
 		return true;
 	}
 

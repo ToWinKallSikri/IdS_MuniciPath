@@ -163,6 +163,8 @@ public class PointHandler {
         checkContest(post.getId(), post.getType(), data.getType());
     	post.updateInfo(data);
         postRepository.save(post);
+        String cityName = this.mediator.getNameOfCity(post.getCityId());
+        this.mediator.send(cityName, post.getId(), "Il tuo post è stato modificato dal comune.", post.getAuthor());
         return true;
     }
     
@@ -338,6 +340,8 @@ public class PointHandler {
     	Post post = getPost(postId);
     	if(!(post != null && post.getAuthor().equals(author)))
     		return false;
+    	if(isPrime(post))
+    		return false;
     	return deletePost(post);
     }
     
@@ -349,8 +353,10 @@ public class PointHandler {
      */
     public boolean deletePost (String postId) {
     	Post post = getPost(postId);
-    	if(post == null)
+    	if(post == null || isPrime(post))
     		return false;
+        String cityName = this.mediator.getNameOfCity(post.getCityId());
+        this.mediator.send(cityName, post.getId(), "Il tuo post è stato eliminato dal comune.", post.getAuthor());
     	return deletePost(post);
     }
     
@@ -360,8 +366,6 @@ public class PointHandler {
      * @return true se il post e' stato eliminato. false altrimenti
      */
     private boolean deletePost(Post post) {
-    	if(isPrime(post))
-    		return false;
     	if(post.getType() == PostType.CONTEST)
     		this.contributes.removeContest(post.getId());
     	Point point = this.pointRepository.findById(post.getPointId()).get();
