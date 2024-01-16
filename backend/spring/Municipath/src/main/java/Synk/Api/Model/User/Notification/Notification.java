@@ -1,26 +1,25 @@
 package Synk.Api.Model.User.Notification;
 
-import org.joda.time.DateTime;
+import java.time.LocalDateTime;
 
 public class Notification {
 
     private String author;
-    private DateTime date;
+    private LocalDateTime date;
     private String text;
     private String contentId;
     private boolean isRead;
     private String receiver;
     private String Id;
 
-    public Notification(String author, DateTime date, String text, String contentId, boolean isRead,
-                        String receiver, String Id) {
+    public Notification(String author, String text, String contentId, String receiver) {
         this.author = author;
-        this.date = date;
+        this.date = LocalDateTime.now();
         this.text = text;
         this.contentId = contentId;
-        this.isRead = isRead;
+        this.isRead = false;
         this.receiver = receiver;
-        this.Id = Id;
+        this.Id = contentId + "." + date.getNano();
     }
 
     public Notification() {
@@ -34,11 +33,11 @@ public class Notification {
         this.author = author;
     }
 
-    public DateTime getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(DateTime date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

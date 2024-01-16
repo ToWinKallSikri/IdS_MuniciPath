@@ -1,19 +1,19 @@
 package Synk.Api.Model.Report;
 
-import org.joda.time.DateTime;
+import java.time.LocalDateTime;
 
 public class Report {
 	
 	private String author;
-    private DateTime date;
+    private LocalDateTime date;
     private String text;
     private String contentId;
     private boolean isRead;
     private String cityId;
     private String Id;
     
-	public Report(String author, DateTime date, String text, String contentId,
-										boolean isRead, String cityId, String id) {
+	public Report(String author, LocalDateTime date, String text, String contentId,
+                  boolean isRead, String cityId, String id) {
 		this.author = author;
 		this.date = date;
 		this.text = text;
@@ -33,11 +33,11 @@ public class Report {
 		this.author = author;
 	}
 
-	public DateTime getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	public void setDate(DateTime date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 

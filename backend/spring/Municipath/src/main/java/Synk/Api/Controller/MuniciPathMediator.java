@@ -322,4 +322,7 @@ public class MuniciPathMediator {
 		return this.point.getPost(contentId);
 	}
 
+    public List<String> getPartecipants(String contentId) {
+        return null;
+    }
 }
