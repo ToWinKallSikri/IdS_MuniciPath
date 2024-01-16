@@ -253,6 +253,7 @@ public class GroupHandler {
 		if(group == null)
 			return null;
 		group.addOneView();
+		group.setVote(this.mediator.getVoteOf(groupId));
 		this.groupRepository.save(group);
 		return group;
 	}

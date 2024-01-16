@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Synk.Api.Controller.City.CityHandler;
+import Synk.Api.Controller.Feedback.FeedbackHandler;
 import Synk.Api.Controller.Group.GroupHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
 import Synk.Api.Controller.Post.PointHandler;
@@ -28,6 +29,7 @@ public class MuniciPathMediator {
 	private CityHandler city;
 	private GroupHandler group;
 	private PendingHandler pending;
+	private FeedbackHandler feedback;
 	private IdentifierManager idManager = new IdentifierManager();
 	
 	
@@ -49,6 +51,10 @@ public class MuniciPathMediator {
 	
 	public void setPending(PendingHandler pending) {
 		this.pending = pending;
+	}
+	
+	public void setFeedback(FeedbackHandler feedback) {
+		this.feedback = feedback;
 	}
 	
 	/**
@@ -295,6 +301,10 @@ public class MuniciPathMediator {
 	 */
 	public void deletePendingPost(String pendingId) {
 		this.point.deletePost(pendingId);
+	}
+
+	public float getVoteOf(String id) {
+		return this.feedback.getFeedback(id);
 	}
 
 }

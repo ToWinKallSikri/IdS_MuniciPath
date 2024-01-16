@@ -239,6 +239,7 @@ public class PointHandler {
     private Post updatePost(Post post, String username) {
     	post.setMeteo(this.weather.getWeather(post.getPos(), post.getMeteoDate()));
     	post.setGroups(this.mediator.viewGroupFrom(post, username));
+    	post.setVote(this.mediator.getVoteOf(post.getId()));
     	return post;
     }
     
