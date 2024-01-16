@@ -9,6 +9,7 @@ import Synk.Api.Controller.Group.GroupHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
 import Synk.Api.Controller.Post.PointHandler;
 import Synk.Api.Controller.User.UserHandler;
+import Synk.Api.Model.MetaData;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.Pending.PendingRequest;
@@ -308,9 +309,17 @@ public class MuniciPathMediator {
 	}
 
 	public boolean contentExist(String contentId) {
+		return getMetaData(contentId) != null;
+	}
+
+	public boolean checkCity(String cityId) {
+		return this.city.getCity(cityId) != null;
+	}
+
+	public MetaData getMetaData(String contentId) {
 		if(this.idManager.isGroup(contentId))
-			return this.group.viewGroup(contentId) != null;
-		return this.point.getPost(contentId) != null;
+			return this.group.viewGroup(contentId);
+		return this.point.getPost(contentId);
 	}
 
 }

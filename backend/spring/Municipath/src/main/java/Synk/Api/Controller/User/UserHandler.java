@@ -6,7 +6,9 @@ import java.util.stream.StreamSupport;
 
 
 import Synk.Api.Controller.MuniciPathMediator;
+import Synk.Api.Controller.User.Follow.FollowHandler;
 import Synk.Api.Controller.User.Notification.NotificationHandler;
+import Synk.Api.Model.MetaData;
 import Synk.Api.Model.User.User;
 import Synk.Api.Model.User.UserRepository;
 
@@ -37,6 +39,8 @@ public class UserHandler {
 	 */
 	@Autowired
 	private UserRepository userRepository;
+	
+	private FollowHandler followHandler;
 
 	/**
 	 * Costruttore della classe UserHandler, per gli oggetti "notifications" e "encoder"
@@ -44,6 +48,7 @@ public class UserHandler {
     public UserHandler() {
         this.notifications = new NotificationHandler();
         this.encoder = new BCryptPasswordEncoder();
+        this.followHandler = new FollowHandler();
     }
 
 	/**
@@ -249,43 +254,68 @@ public class UserHandler {
 	}
 	
 	public boolean followContributor(String username, String contributor) {
-		return false;
+		if(!(this.usernameExists(username) && this.usernameExists(contributor)))
+			return false;
+		return this.followHandler.followContributor(username, contributor);
 	}
 	
 	public boolean unfollowContributor(String username, String contributor) {
-		return false;
+		return this.followHandler.unfollowContributor(username, contributor);
 	}
 	
 	public boolean followCity(String username, String cityId) {
-		return false;
+		if(!this.usernameExists(username))
+			return false;
+		if(!this.mediator.checkCity(cityId))
+			return false;
+		return this.followHandler.followCity(username, cityId);
 	}
 	
 	public boolean unfollowCity(String username, String cityId) {
-		return false;
+		return this.followHandler.followCity(username, cityId);
 	}
 	
 	public boolean follow(String username, String contentId) {
-		return false;
+		if(!this.usernameExists(username))
+			return false;
+		MetaData meta = this.mediator.getMetaData(contentId);
+		if(meta == null) 
+			return false;
+		return this.followHandler.follow(username, meta);
 	}
 	
 	public boolean unfollow(String username, String contentId) {
-		return false;
+		MetaData meta = this.mediator.getMetaData(contentId);
+		if(meta == null) 
+			return false;
+		return this.followHandler.unfollow(username, meta);
 	}
 	
 	public boolean alreadyFollowing(String username, String contentId) {
-		return false;
+		MetaData meta = this.mediator.getMetaData(contentId);
+		if(meta == null) 
+			return false;
+		return this.followHandler.alreadyFollowing(username, meta);
 	}
 	
 	public boolean alreadyFollowingCity(String username, String cityId) {
-		return false;
+		if(!this.usernameExists(username))
+			return false;
+		if(!this.mediator.checkCity(cityId))
+			return false;
+		return this.followHandler.alreadyFollowingCity(username, cityId);
 	}
 	
 	public boolean alreadyFollowingContributor(String username, String contributor) {
-		return false;
+		if(!(this.usernameExists(username) && this.usernameExists(contributor)))
+			return false;
+		return this.followHandler.alreadyFollowingContributor(username, contributor);
 	}
 	
 	public List<String> getAllFollowed(String username){
-		return null;
+		if(!this.usernameExists(username))
+			return null;
+		return this.followHandler.getAllFollowed(username);
 	}
     
 }

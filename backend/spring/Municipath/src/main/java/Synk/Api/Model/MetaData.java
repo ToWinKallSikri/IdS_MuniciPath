@@ -15,5 +15,7 @@ public interface MetaData {
 	public int getViewsCount();
 	
 	public float getVote();
+	
+	public boolean isOfCity();
     
 }
