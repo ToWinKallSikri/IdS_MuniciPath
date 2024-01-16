@@ -39,7 +39,7 @@ public class SavedContentHandler {
         if (!(mediator.usernameExists(username) && mediator.contentExist(contentId)))
             return false;
         SavedContent s1 = new SavedContent(username, contentId);
-        if(!(savedContents.stream().anyMatch(s -> s.getId().equals(s1.getId()))))
+        if(savedContents.stream().noneMatch(s -> s.getId().equals(s1.getId())))
             return false;
         return savedContents.remove(s1);
 	}

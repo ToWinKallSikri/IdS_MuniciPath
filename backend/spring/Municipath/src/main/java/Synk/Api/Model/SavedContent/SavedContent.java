@@ -5,8 +5,8 @@ public class SavedContent {
     private String username;
     private String contentId;
 
-    public SavedContent(String Id, String username, String contentId) {
-        this.Id = Id;
+    public SavedContent(String username, String contentId) {
+        this.Id = username + "." + contentId;
         this.username = username;
         this.contentId = contentId;
     }
