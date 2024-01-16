@@ -30,7 +30,7 @@ public class ReportHandler {
         String Id = username + "." + contentId;
         if(reports.stream().anyMatch(r -> (r.getId()).equals(Id)))
             return false;
-		Report r1 = new Report(username, LocalDateTime.now(), motivation, contentId, false, cityId, Id);
+		Report r1 = new Report(username, motivation, contentId, cityId);
         return reports.add(r1);
 	}
 	

@@ -6,11 +6,9 @@ import java.util.stream.StreamSupport;
 
 
 import Synk.Api.Controller.MuniciPathMediator;
-import Synk.Api.Controller.SavedContent.SavedContentHandler;
 import Synk.Api.Controller.User.Follow.FollowHandler;
 import Synk.Api.Controller.User.Notification.NotificationHandler;
 import Synk.Api.Model.MetaData;
-import Synk.Api.Model.SavedContent.SavedContent;
 import Synk.Api.Model.User.User;
 import Synk.Api.Model.User.UserRepository;
 
@@ -20,11 +18,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserHandler {
-
-	/**
-	 * Oggetto NotificatioHandler, utilizzato per gestire le notifiche
-	 */
-    private NotificationHandler notifications;
 
 	/**
 	 * Oggetto mediator, utilizzato per far comunicare i vari handler fra di loro
@@ -46,13 +39,11 @@ public class UserHandler {
 
     private NotificationHandler notificationHandler;
 
-    private SavedContentHandler savedContentHandler;
-
 	/**
 	 * Costruttore della classe UserHandler, per gli oggetti "notifications" e "encoder"
 	 */
     public UserHandler() {
-        this.notifications = new NotificationHandler();
+        this.notificationHandler = new NotificationHandler();
         this.encoder = new BCryptPasswordEncoder();
         this.followHandler = new FollowHandler();
     }

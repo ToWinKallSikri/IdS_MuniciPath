@@ -10,17 +10,16 @@ public class Report {
     private String contentId;
     private boolean isRead;
     private String cityId;
-    private String Id;
+    private String id;
     
-	public Report(String author, LocalDateTime date, String text, String contentId,
-                  boolean isRead, String cityId, String id) {
+	public Report(String author, String text, String contentId,String cityId) {
 		this.author = author;
-		this.date = date;
+		this.date = LocalDateTime.now();
 		this.text = text;
 		this.contentId = contentId;
-		this.isRead = isRead;
+		this.isRead = false;
 		this.cityId = cityId;
-		Id = id;
+		this.id = author + "." + contentId;;
 	}
 	
 	public Report() { }
@@ -74,11 +73,11 @@ public class Report {
 	}
 
 	public String getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(String id) {
-		Id = id;
+		this.id = id;
 	}
     
 }

@@ -9,6 +9,7 @@ import Synk.Api.Model.Report.Report;
 import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.City.CityHandler;
+import Synk.Api.Controller.Feedback.FeedbackHandler;
 import Synk.Api.Controller.Group.GroupHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
 import Synk.Api.Controller.Post.PointHandler;
@@ -41,6 +42,7 @@ public class MuniciPathController {
     private GroupHandler gh;
     private PendingHandler peh;
     private ReportHandler rph;
+    private FeedbackHandler fh;
     private IdentifierManager idManager;
     private MuniciPathMediator mediator;
     
@@ -638,10 +640,20 @@ public class MuniciPathController {
 		return checkStaff(username, idManager.getCityId(contentId))
 				|| checkAuthor(username, contentId);
 	}
+	
+	public boolean isLimited(String username, String cityId) {
+		if (username == null || cityId == null)
+            return true;
+		return this.getRole(username, cityId) == Role.LIMITED;
+	}
+	
+	//---------------------------DA QUI E' TUTTA GIUNGLA--------------------------------
 
     public boolean reportContent(String username, String contentId, String motivation) {
         if (username == null || contentId == null)
             return false;
+        if(this.isLimited(username, this.idManager.getCityId(contentId)))
+        	return false;
         return rph.reportContent(username, contentId, motivation);
     }
 
@@ -650,4 +662,88 @@ public class MuniciPathController {
             return null;
         return rph.getReports(cityId);
     }
+    
+    public boolean valute(String username, String contentId, int vote) {
+		if(username == null || contentId == null)
+			return false;
+		if(this.isLimited(username, this.idManager.getCityId(contentId)))
+        	return false;
+		return this.fh.valute(username, contentId, vote);
+	}
+    
+    public void notifyEvent(String author, String message, String contentId) {
+		if(author == null || message == null || contentId == null)
+			return;
+		this.uh.notifyEvent(author, message, contentId);
+    }
+
+	
+	public boolean followContributor(String username, String contributor) {
+		if(username == null || contributor == null)
+			return false;
+		return this.uh.followContributor(username, contributor);
+	}
+	
+	public boolean unfollowContributor(String username, String contributor) {
+		if(username == null || contributor == null)
+			return false;
+		return this.uh.unfollowContributor(username, contributor);
+	}
+	
+	public boolean followCity(String username, String cityId) {
+		if(username == null || cityId == null)
+			return false;
+		if(this.isLimited(username, cityId))
+        	return false;
+		return this.uh.followCity(username, cityId);
+	}
+	
+	public boolean unfollowCity(String username, String cityId) {
+		if(username == null || cityId == null)
+			return false;
+		if(this.isLimited(username, cityId))
+        	return false;
+		return this.uh.unfollowCity(username, cityId);
+	}
+	
+	public boolean follow(String username, String contentId) {
+		if(username == null || contentId == null)
+			return false;
+		if(this.isLimited(username, this.idManager.getCityId(contentId)))
+        	return false;
+		return this.uh.follow(username, contentId);
+	}
+	
+	public boolean unfollow(String username, String contentId) {
+		if(username == null || contentId == null)
+			return false;
+		return this.uh.unfollow(username, contentId);
+	}
+	
+	public boolean alreadyFollowing(String username, String contentId) {
+		if(username == null || contentId == null)
+			return false;
+		return this.uh.alreadyFollowing(username, contentId);
+	}
+	
+	public boolean alreadyFollowingCity(String username, String cityId) {
+		if(username == null || cityId == null)
+			return false;
+		return this.uh.alreadyFollowingCity(username, cityId);
+	}
+	
+	public boolean alreadyFollowingContributor(String username, String contributor) {
+		if(username == null || contributor == null)
+			return false;
+		return this.uh.followContributor(username, contributor);
+	}
+	
+	public List<String> getAllFollowed(String username){
+		if(username == null)
+			return null;
+		return this.uh.getAllFollowed(username);
+	}
+    
+    
+    
 }
