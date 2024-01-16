@@ -112,8 +112,11 @@ public class GroupHandler {
 			return false;
 		String id = getId(cityId);
 		Group group = new Group(id, cityId, author, level > 2, level > 3, data);
-		if(level == 2)
-			this.mediator.addPending(id);
+		if(level == 2) {
+            this.mediator.addPending(id);
+        } else {
+            this.mediator.notifyCreation(group);
+        }
 		this.groupRepository.save(group);
 		return true;
 	}
@@ -303,6 +306,7 @@ public class GroupHandler {
 		group.setPublished(true);
 		group.setPublicationTime(LocalDateTime.now());
 		this.groupRepository.save(group);
+        this.mediator.notifyCreation(group);
 		return true;
 	}
 	
