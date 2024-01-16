@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import Synk.Api.Controller.Report.ReportHandler;
+import Synk.Api.Model.Report.Report;
 import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.City.CityHandler;
@@ -38,6 +40,7 @@ public class MuniciPathController {
     private CityHandler ch;
     private GroupHandler gh;
     private PendingHandler peh;
+    private ReportHandler rph;
     private IdentifierManager idManager;
     private MuniciPathMediator mediator;
     
@@ -630,8 +633,21 @@ public class MuniciPathController {
 	 * @return un booleano che indica se l'utente ha i permessi o meno
 	 */
 	public boolean havePowerWithIt(String username, String contentId) {
+        if (username == null || contentId == null)
+            return false;
 		return checkStaff(username, idManager.getCityId(contentId))
 				|| checkAuthor(username, contentId);
 	}
-    
+
+    public boolean reportContent(String username, String contentId, String motivation) {
+        if (username == null || contentId == null)
+            return false;
+        return rph.reportContent(username, contentId, motivation);
+    }
+
+    public List<Report> getReports(String cityId, String username){
+        if (cityId == null || username == null || (!this.checkStaff(username, cityId)))
+            return null;
+        return rph.getReports(cityId);
+    }
 }
