@@ -6,9 +6,11 @@ import java.util.stream.StreamSupport;
 
 
 import Synk.Api.Controller.MuniciPathMediator;
+import Synk.Api.Controller.SavedContent.SavedContentHandler;
 import Synk.Api.Controller.User.Follow.FollowHandler;
 import Synk.Api.Controller.User.Notification.NotificationHandler;
 import Synk.Api.Model.MetaData;
+import Synk.Api.Model.SavedContent.SavedContent;
 import Synk.Api.Model.User.User;
 import Synk.Api.Model.User.UserRepository;
 
@@ -41,6 +43,10 @@ public class UserHandler {
 	private UserRepository userRepository;
 	
 	private FollowHandler followHandler;
+
+    private NotificationHandler notificationHandler;
+
+    private SavedContentHandler savedContentHandler;
 
 	/**
 	 * Costruttore della classe UserHandler, per gli oggetti "notifications" e "encoder"
@@ -241,17 +247,23 @@ public class UserHandler {
 	 * @param message, il messaggio da inviare nella notifica
 	 */
 	public void send(String username, String message) {
-		if(usernameExists(username))
-			this.notifications.send(username, message);
+		//TODO
 	}
-	
-	public void notify(String author, String message, String contentId, String reciver) {
-		
+
+	public void notify(String author, String message, String contentId, String reciever) {
+        if(!(this.usernameExists(author)) && (this.usernameExists(reciever)) && (this.mediator.contentExist(contentId)))
+            return;
+        notificationHandler.notify(author,message,contentId,reciever);
 	}
 	
 	public void notifyEvent(String author, String message, String contentId) {
-		
-	}
+		if (!(this.usernameExists(author) && (mediator.contentExist(contentId)) &&
+                (mediator.getMetaData(contentId).getAuthor().equals(author))))
+            return;
+        List<String> l1 = mediator.getPartecipants(contentId);
+        notificationHandler.notifyEvent(author, message, contentId, l1);
+    }
+
 	
 	public boolean followContributor(String username, String contributor) {
 		if(!(this.usernameExists(username) && this.usernameExists(contributor)))
