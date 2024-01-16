@@ -307,4 +307,10 @@ public class MuniciPathMediator {
 		return this.feedback.getFeedback(id);
 	}
 
+	public boolean contentExist(String contentId) {
+		if(this.idManager.isGroup(contentId))
+			return this.group.viewGroup(contentId) != null;
+		return this.point.getPost(contentId) != null;
+	}
+
 }

@@ -1,10 +1,18 @@
 package Synk.Api.Controller.User.Follow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Synk.Api.Model.MetaData;
+import Synk.Api.Model.User.Follow.Follow;
 
 public class FollowHandler {
+	
+	private List<Follow> follows;
+	
+	public FollowHandler() {
+		this.follows = new ArrayList<>();
+	}
 
 	public boolean followContributor(String username, String contributor) {
 		return false;
