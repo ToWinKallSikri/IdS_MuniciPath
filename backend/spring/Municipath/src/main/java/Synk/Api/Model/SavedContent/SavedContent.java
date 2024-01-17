@@ -1,6 +1,12 @@
 package Synk.Api.Model.SavedContent;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class SavedContent {
+
+    @Id
 	private String Id;
     private String username;
     private String contentId;
