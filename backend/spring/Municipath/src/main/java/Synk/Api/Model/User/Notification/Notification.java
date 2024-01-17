@@ -1,7 +1,11 @@
 package Synk.Api.Model.User.Notification;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.time.LocalDateTime;
 
+@Entity
 public class Notification {
 
     private String author;
@@ -10,6 +14,7 @@ public class Notification {
     private String contentId;
     private boolean isRead;
     private String receiver;
+    @Id
     private String Id;
 
     public Notification(String author, String text, String contentId, String receiver) {

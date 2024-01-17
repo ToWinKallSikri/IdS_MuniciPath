@@ -1,21 +1,21 @@
 package Synk.Api.Controller.User.Notification;
 
 import Synk.Api.Model.User.Notification.Notification;
-import java.util.ArrayList;
+import Synk.Api.Model.User.Notification.NotificationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
 public class NotificationHandler {
 
-    private List<Notification> notifies;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
-    public NotificationHandler() {
-        this.notifies = new ArrayList<>();
-    }
-
-	
 	public void notify(String author, String message, String contentId, String reciver) {
         Notification n1 = new Notification(author, message, contentId, reciver);
-        notifies.add(n1);
+        notificationRepository.save(n1);
 	}
 	
 	public void notifyEvent(String author, String message, String contentId, List<String> receivers) {
@@ -26,22 +26,20 @@ public class NotificationHandler {
     }
 	
 	public List<Notification> getMyMessages(String username){
-		return this.notifies.stream()
-				.filter(n-> n.getReceiver().equals(username)).toList();
+		return this.notificationRepository.findByUsername(username);
 	}
 	
 	public Notification getMyMessage(String username, String id) {
-		Notification msg = this.getMyMessages(username).stream()
-				.filter(n -> n.getId().equals(id))
-				.findFirst().orElse(null);
+		Notification msg = notificationRepository.findById(id).orElse(null);
 		if(msg != null) {
 			msg.setRead(true);
+            notificationRepository.save(msg);
 		}
 		return msg;
 	}
 
 
 	public void deleteUser(String username) {
-		this.notifies.removeAll(getMyMessages(username));
+		this.notificationRepository.deleteAll(getMyMessages(username));
 	}
 }
