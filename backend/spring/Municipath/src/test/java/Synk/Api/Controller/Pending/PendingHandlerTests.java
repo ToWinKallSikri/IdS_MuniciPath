@@ -1,5 +1,4 @@
 package Synk.Api.Controller.Pending;
-import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Group.GroupHandler;
 import Synk.Api.Controller.Post.PointHandler;
@@ -8,9 +7,9 @@ import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.PostType;
-import Synk.Api.View.Model.ProtoGroup;
-import Synk.Api.View.Model.ProtoPost;
-import jakarta.annotation.PostConstruct;
+import Synk.Api.ViewModel.ProtoGroup;
+import Synk.Api.ViewModel.ProtoPost;
+
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 
@@ -37,21 +36,6 @@ public class PendingHandlerTests {
     private GroupHandler gh;
 	@Autowired
 	private PendingHandler peh;
-
-	@PostConstruct
-	public void init() {
-		MuniciPathMediator mediator = new MuniciPathMediator();
-		ch.setMediator(mediator);
-		poh.setMediator(mediator);
-		uh.setMediator(mediator);
-		gh.setMediator(mediator);
-		peh.setMediator(mediator);
-		mediator.setCity(ch);
-		mediator.setPoint(poh);
-		mediator.setUser(uh);
-		mediator.setGroup(gh);
-		mediator.setPending(peh);
-	}
 
 	@Test
 	void testInitialization() {

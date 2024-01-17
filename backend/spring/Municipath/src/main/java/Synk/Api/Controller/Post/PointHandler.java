@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Controller.MuniciPathMediator;
-import Synk.Api.Controller.Contribute.ContributeHandler;
+import Synk.Api.Controller.Post.Contribute.ContributeHandler;
 import Synk.Api.Controller.WeatherService.WeatherForecastProxy;
 import Synk.Api.Controller.WeatherService.WeatherService;
 import Synk.Api.Model.Pending.PendingRequest;
@@ -21,7 +21,7 @@ import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostRepository;
 import Synk.Api.Model.Post.PostType;
 import Synk.Api.Model.Post.Contribute.Contribute;
-import Synk.Api.View.Model.ProtoPost;
+import Synk.Api.ViewModel.ProtoPost;
 
 @Service
 public class PointHandler {
@@ -376,6 +376,7 @@ public class PointHandler {
     	} else this.pointRepository.save(point);
     	this.postRepository.delete(post);
     	this.mediator.removeFromAllGroups(post.getId());
+    	this.mediator.removeAllFeedbackOf(post.getId());
     	return true;
     }
     

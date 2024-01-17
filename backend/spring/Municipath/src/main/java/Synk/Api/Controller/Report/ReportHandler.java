@@ -1,15 +1,19 @@
 package Synk.Api.Controller.Report;
 
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Model.Report.Report;
 
+@Service
 public class ReportHandler {
-
+	
+	
     private MuniciPathMediator mediator;
     private List<Report> reports;
     private IdentifierManager identifierManager;
@@ -19,7 +23,7 @@ public class ReportHandler {
         this.identifierManager = new IdentifierManager();
     }
 
-    public void SetMediator (MuniciPathMediator mediator) {
+    public void setMediator (MuniciPathMediator mediator) {
         this.mediator = mediator;
     }
 
@@ -36,6 +40,12 @@ public class ReportHandler {
 	
 	public List<Report> getReports(String cityId){
 		return reports.stream().filter(r -> (r.getCityId()).equals(cityId)).toList();
+	}
+	
+	public void deleteAllReportOf(String cityId) {
+		List<Report> list = this.reports.stream()
+				.filter(r -> r.getCityId().equals(cityId)).toList();
+		this.reports.removeAll(list);
 	}
 	
 }

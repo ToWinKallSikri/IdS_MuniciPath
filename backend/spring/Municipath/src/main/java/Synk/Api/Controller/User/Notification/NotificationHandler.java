@@ -24,4 +24,24 @@ public class NotificationHandler {
             notify(author, message, contentId, s);
         }
     }
+	
+	public List<Notification> getMyMessages(String username){
+		return this.notifies.stream()
+				.filter(n-> n.getReceiver().equals(username)).toList();
+	}
+	
+	public Notification getMyMessage(String username, String id) {
+		Notification msg = this.getMyMessages(username).stream()
+				.filter(n -> n.getId().equals(id))
+				.findFirst().orElse(null);
+		if(msg != null) {
+			msg.setRead(true);
+		}
+		return msg;
+	}
+
+
+	public void deleteUser(String username) {
+		this.notifies.removeAll(getMyMessages(username));
+	}
 }

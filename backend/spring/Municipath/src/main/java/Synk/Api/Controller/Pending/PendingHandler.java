@@ -10,8 +10,8 @@ import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Model.Pending.PendingRepository;
 import Synk.Api.Model.Pending.PendingRequest;
-import Synk.Api.View.Model.ProtoGroup;
-import Synk.Api.View.Model.ProtoPost;
+import Synk.Api.ViewModel.ProtoGroup;
+import Synk.Api.ViewModel.ProtoPost;
 
 @Service
 public class PendingHandler {

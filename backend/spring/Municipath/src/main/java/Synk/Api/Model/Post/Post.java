@@ -10,7 +10,7 @@ import org.hibernate.annotations.FetchMode;
 
 import Synk.Api.Model.MetaData;
 import Synk.Api.Model.Pending.PendingRequest;
-import Synk.Api.View.Model.ProtoPost;
+import Synk.Api.ViewModel.ProtoPost;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

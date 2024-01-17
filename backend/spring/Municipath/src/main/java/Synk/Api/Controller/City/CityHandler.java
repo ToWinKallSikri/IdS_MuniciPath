@@ -20,6 +20,7 @@ public class CityHandler {
 	/**
 	 * Oggetto mediator, utilizzato per far comunicare i vari handler fra di loro
 	 */
+	
     private MuniciPathMediator mediator;
 
 	/**
@@ -96,9 +97,10 @@ public class CityHandler {
 	 * @return una lista contenente tutte le città che iniziano con la stringa passata come parametro
 	 */
 	public List<City> getCities(String search) {
+		String cityName = search == null ? "" : search;
     	return StreamSupport.stream(cityRepository.findAll().spliterator(), true)
     			.filter(c -> (c.getName()+c.getCap()).toLowerCase()
-    					.startsWith(search.toLowerCase())).toList();
+    					.startsWith(cityName.toLowerCase())).toList();
     }
 
 	/**

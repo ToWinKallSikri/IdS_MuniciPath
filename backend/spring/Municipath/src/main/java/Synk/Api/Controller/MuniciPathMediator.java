@@ -3,11 +3,15 @@ package Synk.Api.Controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Feedback.FeedbackHandler;
 import Synk.Api.Controller.Group.GroupHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
 import Synk.Api.Controller.Post.PointHandler;
+import Synk.Api.Controller.Report.ReportHandler;
+import Synk.Api.Controller.SavedContent.SavedContentHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.MetaData;
 import Synk.Api.Model.City.City;
@@ -16,13 +20,15 @@ import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
-import Synk.Api.View.Model.ProtoGroup;
-import Synk.Api.View.Model.ProtoPost;
+import Synk.Api.ViewModel.ProtoGroup;
+import Synk.Api.ViewModel.ProtoPost;
+import jakarta.annotation.PostConstruct;
 
 /**
  * classe che implementa il pattern
  * mediator per gli handler del progetto
  */
+@Service
 public class MuniciPathMediator {
 	
 	private PointHandler point;
@@ -31,9 +37,36 @@ public class MuniciPathMediator {
 	private GroupHandler group;
 	private PendingHandler pending;
 	private FeedbackHandler feedback;
-	private IdentifierManager idManager = new IdentifierManager();
+	private IdentifierManager idManager;
+	private ReportHandler report;
+	private SavedContentHandler saved;
 	
+	MuniciPathMediator(PointHandler point, UserHandler user, CityHandler city, ReportHandler report,
+			GroupHandler group, PendingHandler pending, FeedbackHandler feedback, SavedContentHandler saved){
+		this.point = point;
+		this.user = user;
+		this.city = city;
+		this.group = group;
+		this.pending = pending;
+		this.feedback = feedback;
+		this.report = report;
+		this.saved = saved;
+		this.idManager = new IdentifierManager();
+	}
 	
+	@PostConstruct
+	public void inject() {
+		this.point.setMediator(this);
+		this.city.setMediator(this);
+		this.feedback.setMediator(this);
+		this.group.setMediator(this);
+		this.pending.setMediator(this);
+		this.report.setMediator(this);
+		this.user.setMediator(this);
+		this.saved.setMediator(this);
+	}
+	
+	/*
 	public void setPoint(PointHandler point) {
 		this.point = point;
 	}
@@ -56,7 +89,7 @@ public class MuniciPathMediator {
 	
 	public void setFeedback(FeedbackHandler feedback) {
 		this.feedback = feedback;
-	}
+	}*/
 	
 	/**
 	 * controlla se un dato autore può postare in un dato comune
@@ -214,6 +247,7 @@ public class MuniciPathMediator {
 	public void deleteCity(String cityId) {
     	this.user.discreditCurator(cityId);
     	this.point.deleteCityPoints(cityId);
+    	this.report.deleteAllReportOf(cityId);
 	}
 	
 	/**
@@ -319,7 +353,7 @@ public class MuniciPathMediator {
     }
     
     public void send(String author, String contentId, String message, String reciver) {
-		this.user.notify(author, contentId, message, reciver);
+		this.user.notify(author, message, contentId, reciver);
 	}
 
 	public String getNameOfCity(String cityId) {
@@ -330,4 +364,9 @@ public class MuniciPathMediator {
 	public void notifyCreation(MetaData data) {
 		this.user.notifyCreation(data);
 	}
+	
+	public void removeAllFeedbackOf(String contentId) {
+		this.feedback.removeAllFeedbackOf(contentId);
+	}
+	
 }

@@ -12,17 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Controller.City.CityHandler;
-import Synk.Api.Controller.Pending.PendingHandler;
 import Synk.Api.Controller.Post.PointHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.PostType;
-import Synk.Api.View.Model.ProtoGroup;
-import Synk.Api.View.Model.ProtoPost;
-import jakarta.annotation.PostConstruct;
+import Synk.Api.ViewModel.ProtoGroup;
+import Synk.Api.ViewModel.ProtoPost;
 
 
 @RunWith(SpringRunner.class)
@@ -38,23 +35,8 @@ public class GroupHandlerTests {
     private PointHandler poh;
 	@Autowired
     private GroupHandler gh;
-	@Autowired
-	private PendingHandler peh;
 
-	@PostConstruct
-	public void init() {
-		MuniciPathMediator mediator = new MuniciPathMediator();
-		ch.setMediator(mediator);
-		poh.setMediator(mediator);
-		uh.setMediator(mediator);
-		gh.setMediator(mediator);
-		peh.setMediator(mediator);
-		mediator.setCity(ch);
-		mediator.setPoint(poh);
-		mediator.setUser(uh);
-		mediator.setGroup(gh);
-		mediator.setPending(peh);
-	}
+//	
 
 	
 	@Test

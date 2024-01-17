@@ -1,13 +1,18 @@
 package Synk.Api.Controller.SavedContent;
 
 import Synk.Api.Controller.MuniciPathMediator;
+
 import Synk.Api.Model.SavedContent.SavedContent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SavedContentHandler {
+import org.springframework.stereotype.Service;
 
+@Service
+public class SavedContentHandler {
+	
+	
     private MuniciPathMediator mediator;
 
     private List<SavedContent> savedContents;

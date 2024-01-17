@@ -1,4 +1,4 @@
-package Synk.Api.View.Model;
+package Synk.Api.ViewModel;
 
 public class WebResponse {
 	

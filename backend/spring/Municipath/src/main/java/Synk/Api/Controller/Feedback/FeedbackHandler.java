@@ -3,9 +3,12 @@ package Synk.Api.Controller.Feedback;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Model.Feedback.Feedback;
 
+@Service
 public class FeedbackHandler {
 	
 	private List<Feedback> feedbacks;
@@ -47,6 +50,12 @@ public class FeedbackHandler {
 				.filter(f -> f.getContentId().equals(contentId)).toList();
 		float sum = list.stream().map(f -> f.getVote()).reduce((a,b) -> a + b).orElse(0f);
 		return sum == 0f ? 0f : sum/list.size();
+	}
+	
+	public void removeAllFeedbackOf(String contentId) {
+		List<Feedback> list = this.feedbacks.stream()
+				.filter(f -> f.getContentId().equals(contentId)).toList();
+		this.feedbacks.removeAll(list);
 	}
 	
 	

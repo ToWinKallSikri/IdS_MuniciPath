@@ -10,15 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import Synk.Api.Controller.MuniciPathMediator;
-import Synk.Api.Controller.Group.GroupHandler;
-import Synk.Api.Controller.Post.PointHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.City.Role.RoleRequest;
 import Synk.Api.Model.Post.Position;
-import jakarta.annotation.PostConstruct;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -28,23 +24,7 @@ public class CityHandlerTests {
     private CityHandler ch;
 	@Autowired
     private UserHandler uh;
-	@Autowired
-    private PointHandler ph;
-	@Autowired
-    private GroupHandler gh;
 	
-	@PostConstruct
-	public void init() {
-		MuniciPathMediator mediator = new MuniciPathMediator();
-		ch.setMediator(mediator);
-		ph.setMediator(mediator);
-		uh.setMediator(mediator);
-		gh.setMediator(mediator);
-		mediator.setCity(ch);
-		mediator.setPoint(ph);
-		mediator.setUser(uh);
-		mediator.setGroup(gh);
-	}
 	
 	@Test
 	void testInitialization() {

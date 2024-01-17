@@ -1,7 +1,7 @@
 package Synk.Api.View;
 
 import Synk.Api.Model.City.Role.Role;
-import Synk.Api.View.Model.WebResponse;
+import Synk.Api.ViewModel.WebResponse;
 
 public class WebResponseCreator {
 	

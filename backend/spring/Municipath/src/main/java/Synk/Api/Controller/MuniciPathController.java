@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import Synk.Api.Controller.Report.ReportHandler;
 import Synk.Api.Controller.SavedContent.SavedContentHandler;
 import Synk.Api.Model.Report.Report;
-import Synk.Api.Model.SavedContent.SavedContent;
 import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.City.CityHandler;
@@ -26,8 +25,9 @@ import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.Contribute.Contribute;
 import Synk.Api.Model.Post.Point;
 import Synk.Api.Model.User.User;
-import Synk.Api.View.Model.ProtoGroup;
-import Synk.Api.View.Model.ProtoPost;
+import Synk.Api.Model.User.Notification.Notification;
+import Synk.Api.ViewModel.ProtoGroup;
+import Synk.Api.ViewModel.ProtoPost;
 
 /**
  * questa classe funge da maschera per il lato controller
@@ -47,27 +47,15 @@ public class MuniciPathController {
     private SavedContentHandler sch;
     private FeedbackHandler fh;
     private IdentifierManager idManager;
-    private MuniciPathMediator mediator;
     
     
     public MuniciPathController(PointHandler poh, UserHandler uh, CityHandler ch, GroupHandler gh, PendingHandler peh){
-    	this.mediator = new MuniciPathMediator();
         this.idManager = new IdentifierManager();
     	this.uh = uh;
-		this.uh.setMediator(mediator);
         this.ch = ch;
-        this.ch.setMediator(mediator);
         this.gh = gh;
-        this.gh.setMediator(mediator);
         this.poh = poh;
-        this.poh.setMediator(mediator);
         this.peh = peh;
-        this.peh.setMediator(mediator);
-        mediator.setUser(uh);
-        mediator.setCity(ch);
-        mediator.setGroup(gh);
-        mediator.setPoint(poh);
-        mediator.setPending(peh);
         /*
          * parallelamente, elimino i post e i gruppi terminati
          * e non persistenti ogni 5 minuti.
@@ -771,5 +759,17 @@ public class MuniciPathController {
        return this.sch.getSavedContent(username);
     }
     
-    
+    public List<Notification> getMyMessages(String username){
+    	if(username == null)
+    		return null;
+		return this.uh.getMyMessages(username);
+	}
+	
+	public Notification getMyMessage(String username, String id) {
+		if(username == null)
+    		return null;
+		return this.uh.getMyMessage(username, id);
+	}
+	
+	
 }

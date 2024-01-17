@@ -11,6 +11,7 @@ import Synk.Api.Controller.User.Notification.NotificationHandler;
 import Synk.Api.Model.MetaData;
 import Synk.Api.Model.User.User;
 import Synk.Api.Model.User.UserRepository;
+import Synk.Api.Model.User.Notification.Notification;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -79,6 +80,8 @@ public class UserHandler {
 		if(!this.usernameExists(username)) 
 			return false;
 		this.userRepository.deleteById(username);
+		this.followHandler.deleteUser(username);
+		this.notificationHandler.deleteUser(username);
 		return true;
 	}
 
@@ -230,6 +233,18 @@ public class UserHandler {
 	 */
 	public boolean usernameExists(String username) {
 		return this.userRepository.existsById(username);
+	}
+	
+	public List<Notification> getMyMessages(String username){
+		if (!(this.usernameExists(username)))
+			return null;
+		return this.notificationHandler.getMyMessages(username);
+	}
+	
+	public Notification getMyMessage(String username, String id) {
+		if (!(this.usernameExists(username)))
+			return null;
+		return this.notificationHandler.getMyMessage(username, id);
 	}
 
 	public void notify(String author, String message, String contentId, String reciever) {

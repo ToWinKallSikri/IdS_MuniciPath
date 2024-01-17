@@ -1,4 +1,4 @@
-package Synk.Api.Controller.Contribute;
+package Synk.Api.Controller.Post.Contribute;
 
 import java.util.List;
 import java.util.stream.StreamSupport;

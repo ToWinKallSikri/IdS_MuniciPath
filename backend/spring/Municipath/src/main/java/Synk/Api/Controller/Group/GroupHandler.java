@@ -15,7 +15,7 @@ import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Group.GroupRepository;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Post;
-import Synk.Api.View.Model.ProtoGroup;
+import Synk.Api.ViewModel.ProtoGroup;
 
 @Service
 public class GroupHandler {
@@ -187,6 +187,7 @@ public class GroupHandler {
 		if(group == null || (!group.getAuthor().equals(author)))
 			return false;
 		this.groupRepository.delete(group);
+		this.mediator.removeAllFeedbackOf(groupId);
 		return true;
 	}
 	
@@ -202,7 +203,8 @@ public class GroupHandler {
 		this.groupRepository.delete(group);
         String cityName = this.mediator.getNameOfCity(group.getCityId());
         this.mediator.send(cityName, group.getId(), "Il tuo insieme è stato eliminato dal comune.", group.getAuthor());
-		return true;
+		this.mediator.removeAllFeedbackOf(groupId);
+        return true;
 	}
 
 	/**

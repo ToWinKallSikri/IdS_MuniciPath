@@ -104,5 +104,11 @@ public class FollowHandler {
 				.filter(f -> !this.idManager.isCityFollowing(f.getId()))
 				.map(f -> f.getUsername()).toList();
 	}
+
+	public void deleteUser(String username) {
+		List<Follow> list = this.follows.stream().filter(f -> f.getUsername().equals(username))
+				.filter(f -> this.idManager.isCityFollowing(f.getId())).toList();
+		this.follows.removeAll(list);
+	}
 	
 }
