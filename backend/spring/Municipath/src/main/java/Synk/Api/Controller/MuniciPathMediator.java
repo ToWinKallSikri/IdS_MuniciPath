@@ -10,7 +10,6 @@ import Synk.Api.Controller.Feedback.FeedbackHandler;
 import Synk.Api.Controller.Group.GroupHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
 import Synk.Api.Controller.Post.PointHandler;
-import Synk.Api.Controller.Report.ReportHandler;
 import Synk.Api.Controller.SavedContent.SavedContentHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.MetaData;
@@ -38,18 +37,16 @@ public class MuniciPathMediator {
 	private PendingHandler pending;
 	private FeedbackHandler feedback;
 	private IdentifierManager idManager;
-	private ReportHandler report;
 	private SavedContentHandler saved;
 	
-	MuniciPathMediator(PointHandler point, UserHandler user, CityHandler city, ReportHandler report,
-			GroupHandler group, PendingHandler pending, FeedbackHandler feedback, SavedContentHandler saved){
+	MuniciPathMediator(PointHandler point, UserHandler user, CityHandler city, GroupHandler group,
+						PendingHandler pending, FeedbackHandler feedback, SavedContentHandler saved){
 		this.point = point;
 		this.user = user;
 		this.city = city;
 		this.group = group;
 		this.pending = pending;
 		this.feedback = feedback;
-		this.report = report;
 		this.saved = saved;
 		this.idManager = new IdentifierManager();
 	}
@@ -61,7 +58,6 @@ public class MuniciPathMediator {
 		this.feedback.setMediator(this);
 		this.group.setMediator(this);
 		this.pending.setMediator(this);
-		this.report.setMediator(this);
 		this.user.setMediator(this);
 		this.saved.setMediator(this);
 	}
@@ -247,7 +243,6 @@ public class MuniciPathMediator {
 	public void deleteCity(String cityId) {
     	this.user.discreditCurator(cityId);
     	this.point.deleteCityPoints(cityId);
-    	this.report.deleteAllReportOf(cityId);
 	}
 	
 	/**

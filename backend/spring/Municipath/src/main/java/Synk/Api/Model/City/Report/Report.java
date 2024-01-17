@@ -1,7 +1,11 @@
-package Synk.Api.Model.Report;
+package Synk.Api.Model.City.Report;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Report {
 	
 	private String author;
@@ -10,6 +14,7 @@ public class Report {
     private String contentId;
     private boolean isRead;
     private String cityId;
+    @Id
     private String id;
     
 	public Report(String author, String text, String contentId,String cityId) {

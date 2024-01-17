@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import Synk.Api.Controller.Report.ReportHandler;
 import Synk.Api.Controller.SavedContent.SavedContentHandler;
-import Synk.Api.Model.Report.Report;
+
 import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.City.CityHandler;
@@ -16,6 +15,7 @@ import Synk.Api.Controller.Pending.PendingHandler;
 import Synk.Api.Controller.Post.PointHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.City.City;
+import Synk.Api.Model.City.Report.Report;
 import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.City.Role.RoleRequest;
 import Synk.Api.Model.Group.Group;
@@ -43,7 +43,6 @@ public class MuniciPathController {
     private CityHandler ch;
     private GroupHandler gh;
     private PendingHandler peh;
-    private ReportHandler rph;
     private SavedContentHandler sch;
     private FeedbackHandler fh;
     private IdentifierManager idManager;
@@ -645,14 +644,20 @@ public class MuniciPathController {
             return false;
         if(this.isLimited(username, this.idManager.getCityId(contentId)))
         	return false;
-        return rph.reportContent(username, contentId, motivation);
+        return ch.reportContent(username, contentId, motivation);
     }
 
-    public List<Report> getReports(String cityId, String username){
+    public List<Report> getReports(String username, String cityId){
         if (cityId == null || username == null || (!this.checkStaff(username, cityId)))
             return null;
-        return rph.getReports(cityId);
+        return ch.getReports(cityId);
     }
+	
+	public Report getReport(String username,String cityId, String reportId){
+		if (cityId == null || username == null || reportId == null || (!this.checkStaff(username, cityId)))
+            return null;
+        return ch.getReport(reportId);
+	}
     
     public boolean valute(String username, String contentId, int vote) {
 		if(username == null || contentId == null)

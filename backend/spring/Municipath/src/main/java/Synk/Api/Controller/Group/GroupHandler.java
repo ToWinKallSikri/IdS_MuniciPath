@@ -20,6 +20,9 @@ import Synk.Api.ViewModel.ProtoGroup;
 @Service
 public class GroupHandler {
 	
+
+	private final Integer CONTR_NOT_AUTH_LEVEL = 2;
+	private final Integer CONTR_AUTH_LEVEL = 3;
 	/**
 	 * mediatore tra i vari handler
 	 */
@@ -107,12 +110,12 @@ public class GroupHandler {
 		if(level < 2)
 			return false;
 		List<Post> posts = this.mediator.getPostsIfAllExists(data.getPosts());
-		if(posts == null || posts.size() < 1 || 
+		if(posts == null || posts.isEmpty() || 
 				(!checkTiming(data.getStartTime(), data.getEndTime(), data.isPersistence())))
 			return false;
 		String id = getId(cityId);
-		Group group = new Group(id, cityId, author, level > 2, level > 3, data);
-		if(level == 2) {
+		Group group = new Group(id, cityId, author, level > CONTR_NOT_AUTH_LEVEL, level > CONTR_AUTH_LEVEL, data);
+		if(level == CONTR_NOT_AUTH_LEVEL) {
             this.mediator.addPending(id);
         } else {
             this.mediator.notifyCreation(group);
@@ -134,7 +137,7 @@ public class GroupHandler {
 				checkTiming(data.getStartTime(), data.getEndTime(), data.isPersistence())))
 			return false;
 		List<Post> posts = this.mediator.getPostsIfAllExists(data.getPosts());
-		if(posts == null || posts.size() < 1)
+		if(posts == null || posts.isEmpty())
 			return false;
 		if(mediator.canPublish(idManager.getCityId(groupId), author)) {
 			group.edit(data);
@@ -155,7 +158,7 @@ public class GroupHandler {
 		if(!(group != null && checkTiming(data.getStartTime(), data.getEndTime(), data.isPersistence())))
 			return false;
 		List<Post> posts = this.mediator.getPostsIfAllExists(data.getPosts());
-		if(posts == null || posts.size() < 1)
+		if(posts == null || posts.isEmpty())
 			return false;
 		group.edit(data);
 		groupRepository.save(group);

@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Controller.MuniciPathMediator;
+import Synk.Api.Controller.City.Report.ReportHandler;
 import Synk.Api.Controller.City.Role.RoleHandler;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.CityRepository;
+import Synk.Api.Model.City.Report.Report;
 import Synk.Api.Model.City.Role.Licence;
 import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.City.Role.RoleRequest;
@@ -28,6 +30,8 @@ public class CityHandler {
 	 */
     @Autowired
     private  RoleHandler roleHandler;
+    @Autowired
+    private  ReportHandler reportHandler;
 
 	/**
 	 * Oggetto cityRepository, utilizzato per gestire la persistenza dei dati
@@ -138,6 +142,7 @@ public class CityHandler {
     		return false;
     	this.mediator.deleteCity(cityId);
     	this.roleHandler.removeCity(cityId);
+    	this.reportHandler.deleteAllReportOf(cityId);
     	this.cityRepository.delete(city);
     	return true;
     }
@@ -280,6 +285,22 @@ public class CityHandler {
 	 */
 	public boolean judge(String requestId, boolean outcome) {
 		return this.roleHandler.judge(requestId, outcome);
+	}
+	
+	public boolean reportContent(String username, String contentId, String motivation) {
+        if(!(mediator.usernameExists(username) && mediator.contentExist(contentId)))
+            return false;
+        return this.reportHandler.reportContent(username, contentId, motivation);
+	}
+	
+	public List<Report> getReports(String cityId){
+		if(!this.checkIfAlreadyExists(cityId))
+			return null;
+		return this.reportHandler.getReports(cityId);
+	}
+	
+	public Report getReport(String reportId){
+		return this.reportHandler.getReport(reportId);
 	}
 
 }

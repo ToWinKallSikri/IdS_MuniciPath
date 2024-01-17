@@ -25,7 +25,9 @@ import Synk.Api.ViewModel.ProtoPost;
 
 @Service
 public class PointHandler {
-	
+
+	private final Integer CONTR_NOT_AUTH_LEVEL = 2;
+	private final Integer CONTR_AUTH_LEVEL = 3;
 	/**
 	 * il servizio meteo e il mediator,
 	 * che collega la classe con
@@ -80,7 +82,7 @@ public class PointHandler {
      */
 	public boolean createPost(String author, Position pos, String cityId, ProtoPost post) {
 		int level = this.mediator.getRoleLevel(cityId, author);
-    	if(level < 2)
+    	if(level < CONTR_NOT_AUTH_LEVEL)
     		return false;
 		PostBuilder builder = buildingPost(author, pos, level, post);
     	if(!builder.correctPost())
@@ -91,7 +93,7 @@ public class PointHandler {
         postRepository.save(newPost);
         point.getPosts().add(newPost);
     	this.pointRepository.save(point);
-        if(level == 2)
+        if(level == CONTR_NOT_AUTH_LEVEL)
         	this.mediator.addPending(newPost.getId());
         else this.mediator.notifyCreation(newPost);
         return true;
@@ -109,8 +111,8 @@ public class PointHandler {
 		PostBuilder builder = getRightBuilder(post.getType());
 		builder.initializePost();
     	builder.setData(post.getTitle(), post.getText(), post.getMultimediaData());
-    	builder.setDetails(author, pos, level > 3, post.getType());
-    	builder.setSpecialDetails(level > 2, post.getStartTime(), post.getEndTime(), post.isPersistence());
+    	builder.setDetails(author, pos, level > CONTR_AUTH_LEVEL, post.getType());
+    	builder.setSpecialDetails(level > CONTR_NOT_AUTH_LEVEL, post.getStartTime(), post.getEndTime(), post.isPersistence());
     	return builder;
 	}
 	
