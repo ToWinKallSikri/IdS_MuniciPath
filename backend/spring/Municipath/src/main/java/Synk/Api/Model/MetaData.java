@@ -2,6 +2,8 @@ package Synk.Api.Model;
 
 import java.time.LocalDateTime;
 
+import Synk.Api.Model.Feedback.Score;
+
 public interface MetaData {
     
 	public String getId();
@@ -14,7 +16,7 @@ public interface MetaData {
 	
 	public int getViewsCount();
 	
-	public float getVote();
+	public Score getVote();
 	
 	public boolean isOfCity();
     

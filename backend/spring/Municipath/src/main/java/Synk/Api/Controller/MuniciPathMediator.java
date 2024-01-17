@@ -15,6 +15,7 @@ import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.MetaData;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.Role.Role;
+import Synk.Api.Model.Feedback.Score;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
@@ -325,7 +326,7 @@ public class MuniciPathMediator {
 		this.point.deletePost(pendingId);
 	}
 
-	public float getVoteOf(String id) {
+	public Score getVoteOf(String id) {
 		return this.feedback.getFeedback(id);
 	}
 

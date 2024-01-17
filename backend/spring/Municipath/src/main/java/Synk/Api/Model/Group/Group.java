@@ -9,6 +9,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import Synk.Api.Model.MetaData;
+import Synk.Api.Model.Feedback.Score;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.ViewModel.ProtoGroup;
 import jakarta.persistence.ElementCollection;
@@ -38,7 +39,7 @@ public class Group implements MetaData {
     private boolean ofCity;
     private int viewsCount;
     @Transient
-    private float vote;
+    private Score vote;
     
     public Group(String id, String cityId, String author, boolean publish, boolean ofCity, ProtoGroup data) {
     	this.id = id;
@@ -54,7 +55,7 @@ public class Group implements MetaData {
 	    this.ofCity = ofCity;
 	    this.viewsCount = 0;
 	    this.publicationTime = LocalDateTime.now();
-	    this.vote = 0;
+	    this.vote = null;
     }
     
     public Group () {}
@@ -177,11 +178,11 @@ public class Group implements MetaData {
 		return this.posts.size() > 1;
 	}
 
-	public float getVote() {
+	public Score getVote() {
 		return vote;
 	}
 
-	public void setVote(float vote) {
+	public void setVote(Score vote) {
 		this.vote = vote;
 	}
 	

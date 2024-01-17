@@ -6,6 +6,8 @@ import Synk.Api.Model.Analytics.Analytics;
 
 public class AnalyticsHandler {
 	
+	
+	
 	public Analytics getAnalytics(List<MetaData> list) {
 		return null;
 	}

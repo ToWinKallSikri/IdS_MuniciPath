@@ -3,6 +3,8 @@ package Synk.Api.Controller.Feedback;
 import java.util.List;
 
 import Synk.Api.Model.Feedback.FeedbackRepository;
+import Synk.Api.Model.Feedback.Score;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +43,10 @@ public class FeedbackHandler {
 		return true;
 	}
 	
-	public float getFeedback(String contentId) {
+	public Score getFeedback(String contentId) {
 		List<Feedback> list = this.feedbackRepository.findByContentId(contentId);
 		float sum = list.stream().map(f -> f.getVote()).reduce((a,b) -> a + b).orElse(0f);
-		return sum == 0f ? 0f : sum/list.size();
+		return sum == 0f ? null : new Score(sum/list.size(), list.size());
 	}
 	
 	public void removeAllFeedbackOf(String contentId) {
