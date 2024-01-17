@@ -46,7 +46,6 @@ public class UserHandler {
     public UserHandler() {
         this.notificationHandler = new NotificationHandler();
         this.encoder = new BCryptPasswordEncoder();
-        this.followHandler = new FollowHandler();
     }
 
 	/**
