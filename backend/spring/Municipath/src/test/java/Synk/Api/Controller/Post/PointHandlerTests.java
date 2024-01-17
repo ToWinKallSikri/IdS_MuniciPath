@@ -37,22 +37,6 @@ public class PointHandlerTests {
     private PendingHandler peh;
 	
 	
-//	@PostConstruct
-//	public void init() {
-//		MuniciPathMediator mediator = new MuniciPathMediator();
-//		ch.setMediator(mediator);
-//		poh.setMediator(mediator);
-//		uh.setMediator(mediator);
-//		gh.setMediator(mediator);
-//		peh.setMediator(mediator);
-//		mediator.setCity(ch);
-//		mediator.setPoint(poh);
-//		mediator.setUser(uh);
-//		mediator.setGroup(gh);
-//		mediator.setPending(peh);
-//	}
-	
-	
 	@Test
 	void testInitialization() {
 		assertDoesNotThrow(() -> new PointHandler());

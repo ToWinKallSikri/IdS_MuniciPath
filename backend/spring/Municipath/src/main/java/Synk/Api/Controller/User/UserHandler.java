@@ -63,6 +63,8 @@ public class UserHandler {
 	 * @return true se l'utente è stato creato, false altrimenti
 	 */
 	public boolean addUser(String username, String password) {
+		if(username == null || password == null)
+			return false;
 		if(usernameExists(username))
 			return false;
 		password = encoder.encode(password);
@@ -76,6 +78,8 @@ public class UserHandler {
 	 * @return true se l'utente è stato rimosso, false altrimenti
 	 */
 	public boolean removeUser(String username) {
+		if(username == null)
+			return false;
 		if(!this.usernameExists(username)) 
 			return false;
 		this.userRepository.deleteById(username);
@@ -91,6 +95,8 @@ public class UserHandler {
 	 * @return true se la password corrisponde, false altrimenti
 	 */
 	public boolean isThePassword(String username, String password) {
+		if(username == null || password == null)
+			return false;
 		User user = getConvalidatedUser(username);
 		if(user == null) 
 			return false;
@@ -104,6 +110,8 @@ public class UserHandler {
 	 * @return true se la password è stata cambiata, false altrimenti
 	 */
 	public boolean changePassword(String username, String password) {
+		if(username == null || password == null)
+			return false;
 		User user = getConvalidatedUser(username);
 		if(user == null) 
 			return false;
@@ -119,6 +127,8 @@ public class UserHandler {
 	 * @return true se l'utente è stato convalidato, false altrimenti
 	 */
 	public boolean userValidation(String username) {
+		if(username == null)
+			return false;
 		User user = getUser(username);
 		if(user == null || user.isConvalidated()) 
 			return false;
@@ -134,6 +144,8 @@ public class UserHandler {
 	 * @return true se l'autorizzazione è stata gestita, false altrimenti
 	 */
 	public boolean manageManager(String username, boolean auth) {
+		if(username == null)
+			return false;
 		User user = getConvalidatedUser(username);
 		if(user == null || user.isManager() == auth) 
 			return false;
@@ -148,6 +160,8 @@ public class UserHandler {
 	 * @return l'utente se esiste, null altrimenti
 	 */
 	public User getUser(String username) {
+		if(username == null)
+			return null;
     	return this.userRepository.findById(username).orElse(null);
     }
 
@@ -157,6 +171,8 @@ public class UserHandler {
 	 * @return l'utente se esiste ed è convalidato, null altrimenti
 	 */
 	public User getConvalidatedUser(String username) {
+		if(username == null)
+			return null;
     	User user = this.getUser(username);
     	return user != null && user.isConvalidated() ? user : null;
     }
@@ -176,6 +192,8 @@ public class UserHandler {
 	 * @return l'utente curatore se esiste, null altrimenti
 	 */
 	private User findCuratorOf(String cityId) {
+		if(cityId == null)
+			return null;
     	return StreamSupport.stream(userRepository.findAll().spliterator(), true)
 				.filter(u -> cityId.equals(u.getCityId())).findFirst().orElse(null);
     }
@@ -187,6 +205,8 @@ public class UserHandler {
 	 * @return true se il curatore è stato associato alla città, false altrimenti
 	 */
     public boolean matchCurator(String curator, String cityId) {
+		if(curator == null || cityId == null)
+			return false;
     	User user = getConvalidatedUser(curator);
     	if(user == null || user.isCurator())
     		return false;
@@ -202,6 +222,8 @@ public class UserHandler {
 	 * @return true se il curatore è stato cambiato, false altrimenti
 	 */
     public boolean changeCurator(String curator, String cityId) {
+		if(curator == null || cityId == null)
+			return false;
     	User _old = findCuratorOf(cityId), _new = getConvalidatedUser(curator);
     	if(_old == null || _new == null || _new.isCurator())
     		return false;
@@ -217,6 +239,8 @@ public class UserHandler {
 	 * @param cityId, l'id della città
 	 */
 	public void discreditCurator(String cityId) {
+		if(cityId == null)
+			return;
     	User curator = findCuratorOf(cityId);
     	if(curator != null) {
     		curator.setCityId(null);
@@ -231,28 +255,38 @@ public class UserHandler {
 	 * @return true se l'utente esiste, false altrimenti
 	 */
 	public boolean usernameExists(String username) {
+		if(username == null)
+			return false;
 		return this.userRepository.existsById(username);
 	}
 	
 	public List<Notification> getMyMessages(String username){
+		if(username == null)
+			return null;
 		if (!(this.usernameExists(username)))
 			return null;
 		return this.notificationHandler.getMyMessages(username);
 	}
 	
 	public Notification getMyMessage(String username, String id) {
+		if(username == null || id == null)
+			return null;
 		if (!(this.usernameExists(username)))
 			return null;
 		return this.notificationHandler.getMyMessage(username, id);
 	}
 
 	public void notify(String author, String message, String contentId, String reciever) {
+		if(author == null || message == null || contentId == null || reciever == null)
+			return;
         if(!(this.usernameExists(author)) && (this.usernameExists(reciever)) && (this.mediator.contentExist(contentId)))
             return;
         notificationHandler.notify(author,message,contentId,reciever);
 	}
 	
 	public void notifyEvent(String author, String message, String contentId) {
+		if(author == null || message == null || contentId == null)
+			return;
 		if (!(this.usernameExists(author) && (mediator.contentExist(contentId)) &&
                 (mediator.getMetaData(contentId).getAuthor().equals(author))))
             return;
@@ -261,6 +295,8 @@ public class UserHandler {
     }
 
 	public void notifyCreation(MetaData data) {
+		if(data == null)
+			return;
 		List<String> list;
 		String author;
 		if(data.isOfCity()) {
@@ -275,6 +311,8 @@ public class UserHandler {
 
 	
 	public boolean followContributor(String username, String contributor) {
+		if(username == null || contributor == null)
+			return false;
 		if(!(this.usernameExists(username) && this.usernameExists(contributor)))
 			return false;
 		return this.followHandler.followContributor(username, contributor);
@@ -285,6 +323,8 @@ public class UserHandler {
 	}
 	
 	public boolean followCity(String username, String cityId) {
+		if(username == null || cityId == null)
+			return false;
 		if(!this.usernameExists(username))
 			return false;
 		if(!this.mediator.checkCity(cityId))
@@ -293,10 +333,14 @@ public class UserHandler {
 	}
 	
 	public boolean unfollowCity(String username, String cityId) {
+		if(username == null || cityId == null)
+			return false;
 		return this.followHandler.followCity(username, cityId);
 	}
 	
 	public boolean follow(String username, String contentId) {
+		if(username == null || contentId == null)
+			return false;
 		if(!this.usernameExists(username))
 			return false;
 		MetaData meta = this.mediator.getMetaData(contentId);
@@ -306,6 +350,8 @@ public class UserHandler {
 	}
 	
 	public boolean unfollow(String username, String contentId) {
+		if(username == null || contentId == null)
+			return false;
 		MetaData meta = this.mediator.getMetaData(contentId);
 		if(meta == null) 
 			return false;
@@ -313,6 +359,8 @@ public class UserHandler {
 	}
 	
 	public boolean alreadyFollowing(String username, String contentId) {
+		if(username == null || contentId == null)
+			return false;
 		MetaData meta = this.mediator.getMetaData(contentId);
 		if(meta == null) 
 			return false;
@@ -320,6 +368,8 @@ public class UserHandler {
 	}
 	
 	public boolean alreadyFollowingCity(String username, String cityId) {
+		if(username == null || cityId == null)
+			return false;
 		if(!this.usernameExists(username))
 			return false;
 		if(!this.mediator.checkCity(cityId))
@@ -328,12 +378,16 @@ public class UserHandler {
 	}
 	
 	public boolean alreadyFollowingContributor(String username, String contributor) {
+		if(username == null || contributor == null)
+			return false;
 		if(!(this.usernameExists(username) && this.usernameExists(contributor)))
 			return false;
 		return this.followHandler.alreadyFollowingContributor(username, contributor);
 	}
 	
 	public List<String> getAllFollowed(String username){
+		if(username == null)
+			return null;
 		if(!this.usernameExists(username))
 			return null;
 		return this.followHandler.getAllFollowed(username);

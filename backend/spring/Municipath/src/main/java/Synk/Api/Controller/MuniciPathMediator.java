@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import Synk.Api.Controller.Analysis.AnalysisHandler;
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Feedback.FeedbackHandler;
 import Synk.Api.Controller.Group.GroupHandler;
@@ -40,9 +41,11 @@ public class MuniciPathMediator {
 	private FeedbackHandler feedback;
 	private IdentifierManager idManager;
 	private SavedContentHandler saved;
+	private AnalysisHandler analysis;
 	
-	MuniciPathMediator(PointHandler point, UserHandler user, CityHandler city, GroupHandler group,
-						PendingHandler pending, FeedbackHandler feedback, SavedContentHandler saved){
+	MuniciPathMediator(PointHandler point, UserHandler user, CityHandler city,
+						GroupHandler group, PendingHandler pending, FeedbackHandler feedback,
+						SavedContentHandler saved, AnalysisHandler analysis){
 		this.point = point;
 		this.user = user;
 		this.city = city;
@@ -50,6 +53,7 @@ public class MuniciPathMediator {
 		this.pending = pending;
 		this.feedback = feedback;
 		this.saved = saved;
+		this.analysis = analysis;
 		this.idManager = new IdentifierManager();
 	}
 	
@@ -62,6 +66,7 @@ public class MuniciPathMediator {
 		this.pending.setMediator(this);
 		this.user.setMediator(this);
 		this.saved.setMediator(this);
+		this.analysis.setMediator(this);
 	}
 	
 	/*

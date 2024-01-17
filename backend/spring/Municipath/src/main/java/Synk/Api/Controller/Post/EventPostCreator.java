@@ -3,11 +3,11 @@ package Synk.Api.Controller.Post;
 import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
 
-public class ContestPostBuilder extends PostBuilder {
+public class EventPostCreator extends PostCreator {
 
 	@Override
 	public boolean correctPost() {
-		return this.post.getType() == PostType.CONTEST && checkTiming(this.post) && this.post.isPersistence();
+		return this.post.getType() == PostType.EVENT && checkTiming(this.post);
 	}
 	
 	/**
@@ -16,7 +16,8 @@ public class ContestPostBuilder extends PostBuilder {
 	 * @return true se sono corrette per questo tipo di creator, false altrimenti
 	 */
 	private boolean checkTiming(Post post) {
-		return this.post.getStartTime() == null && this.post.getEndTime() != null;
+		return this.post.getStartTime() != null && this.post.getEndTime() != null
+				&& this.post.getStartTime().plusHours(1).isBefore(this.post.getEndTime());
 	}
 
 }

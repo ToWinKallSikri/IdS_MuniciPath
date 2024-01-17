@@ -3,7 +3,7 @@ package Synk.Api.Controller.Post;
 import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
 
-public class NormalPostBuilder extends PostBuilder {
+public class NormalPostCreator extends PostCreator {
 
 	@Override
 	public boolean correctPost() {

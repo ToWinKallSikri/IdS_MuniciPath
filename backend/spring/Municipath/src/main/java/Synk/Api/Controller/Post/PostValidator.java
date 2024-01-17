@@ -14,7 +14,7 @@ public class PostValidator {
 	 * @param pers
 	 * @return true se il post e' stato correttamente compilato
 	 */
-	public boolean correctPost(PostBuilder builder, boolean publ, LocalDateTime start, 
+	public boolean correctPost(PostCreator builder, boolean publ, LocalDateTime start, 
 														LocalDateTime end, boolean pers) {
 		builder.initializePost();
 		builder.setSpecialDetails(publ, start, end, pers);

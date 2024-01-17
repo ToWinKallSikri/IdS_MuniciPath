@@ -7,7 +7,7 @@ import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
 
-public abstract class PostBuilder {
+public abstract class PostCreator {
 	
 	/**
 	 * post che viene creato da questa clsse

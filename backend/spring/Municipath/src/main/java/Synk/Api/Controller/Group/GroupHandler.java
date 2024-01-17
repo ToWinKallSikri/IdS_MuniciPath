@@ -2,7 +2,6 @@ package Synk.Api.Controller.Group;
 
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Controller.MuniciPathMediator;
-import Synk.Api.Model.MetaData;
 import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Group.GroupRepository;
 import Synk.Api.Model.Pending.PendingRequest;
@@ -108,12 +106,13 @@ public class GroupHandler {
 	 * @return true se la creazione e' andata a buon fine, false altrimenti
 	 */
 	public boolean createGroup(String author, String cityId, ProtoGroup data) {
+		if(author == null || cityId == null || data == null)
+			return false;
 		int level = this.mediator.getRoleLevel(cityId, author);
-		if(level < 2)
+		if(level < 2 || (!checkTiming(data.getStartTime(), data.getEndTime(), data.isPersistence())))
 			return false;
 		List<Post> posts = this.mediator.getPostsIfAllExists(data.getPosts());
-		if(posts == null || posts.isEmpty() || 
-				(!checkTiming(data.getStartTime(), data.getEndTime(), data.isPersistence())))
+		if(posts == null || posts.size() < 2 )
 			return false;
 		String id = getId(cityId);
 		Group group = new Group(id, cityId, author, level > CONTR_NOT_AUTH_LEVEL, level > CONTR_AUTH_LEVEL, data);
@@ -134,6 +133,8 @@ public class GroupHandler {
 	 * @return true se la modifica e' andata a buon fine, false altrimenti
 	 */
 	public boolean editGroup(String groupId, String author, ProtoGroup data) {
+		if(groupId == null || author == null || data == null)
+			return false;
 		Group group = viewGroup(groupId);
 		if(!(group != null && group.getAuthor().equals(author) && 
 				checkTiming(data.getStartTime(), data.getEndTime(), data.isPersistence())))
@@ -188,6 +189,8 @@ public class GroupHandler {
 	 * @return true se la rimozione e' andata a buon fine, false altrimenti
 	 */
 	public boolean removeGroup(String author, String groupId) {
+		if(author == null || groupId == null)
+			return false;
 		Group group = viewGroup(groupId);
 		if(group == null || (!group.getAuthor().equals(author)))
 			return false;
@@ -202,6 +205,8 @@ public class GroupHandler {
 	 * @return true se la rimozione e' andata a buon fine, false altrimenti
 	 */
 	public boolean removeGroup(String groupId) {
+		if(groupId == null)
+			return false;
 		Group group = viewGroup(groupId);
 		if(group == null)
 			return false;
@@ -250,6 +255,8 @@ public class GroupHandler {
 	 * @return lista di gruppi
 	 */
 	public List<Group> viewGroups(List<String> groupIds) {
+		if(groupIds == null)
+			return null;
 		return getStreamOfAll()
 				.filter(g -> groupIds.contains(g.getId()))
 				.toList();
@@ -264,6 +271,8 @@ public class GroupHandler {
 	 * @return dati per le analisi
 	 */
 	public List<Group> viewGroups(String cityId, LocalDateTime from) {
+		if(cityId == null || from == null)
+			return null;
 		return this.groupRepository.findByCityId(cityId).stream()
 				.filter(g -> g.getPublicationTime().isAfter(from)).toList();
 	}
@@ -274,6 +283,8 @@ public class GroupHandler {
 	 * @return gruppo ricercato se esiste, altrimenti null
 	 */
 	public Group viewGroup(String groupId) {
+		if(groupId == null)
+			return null;
 		Group group = getStreamOfAll()
 				.filter(g -> g.getId().equals(groupId))
 				.findFirst().orElse(null);
@@ -320,6 +331,8 @@ public class GroupHandler {
 	 * @return true se il gruppo e' stato pubblicato, false altrimenti
 	 */
 	public boolean approveGroup(String groupId) {
+		if(groupId == null)
+			return false;
 		Group group = viewGroup(groupId);
 		if(group == null || group.isPublished())
 			return false;
@@ -350,6 +363,8 @@ public class GroupHandler {
 	 * @return l'username dell'autore se esiste, null altrimenti
 	 */
 	public String getAuthor(String groupId) {
+		if(groupId == null)
+			return "";
 		Group group = this.viewGroup(groupId);
 		return group == null ? null : group.getAuthor();
 	}

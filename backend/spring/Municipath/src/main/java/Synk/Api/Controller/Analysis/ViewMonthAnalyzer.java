@@ -1,8 +1,8 @@
-package Synk.Api.Controller.Analytics;
+package Synk.Api.Controller.Analysis;
 
 import Synk.Api.Model.MetaData;
 
-public class TopFiveContributorMonthAnalyzer implements TopFiveMonthAnalyzer {
+public class ViewMonthAnalyzer implements NumberMonthAnalyzer {
 
 	@Override
 	public void StartAnalysis() {
@@ -17,9 +17,9 @@ public class TopFiveContributorMonthAnalyzer implements TopFiveMonthAnalyzer {
 	}
 
 	@Override
-	public String[] getResult() {
+	public long getResult() {
 		// TODO Auto-generated method stub
-		return null;
+		return 0;
 	}
 
 }

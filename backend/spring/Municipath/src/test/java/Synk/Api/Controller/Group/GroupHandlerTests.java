@@ -36,8 +36,6 @@ public class GroupHandlerTests {
 	@Autowired
     private GroupHandler gh;
 
-//	
-
 	
 	@Test
 	void testInitialization() {

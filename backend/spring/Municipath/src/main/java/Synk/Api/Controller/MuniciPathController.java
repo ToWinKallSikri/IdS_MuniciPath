@@ -8,12 +8,14 @@ import Synk.Api.Controller.SavedContent.SavedContentHandler;
 
 import org.springframework.stereotype.Service;
 
+import Synk.Api.Controller.Analysis.AnalysisHandler;
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Feedback.FeedbackHandler;
 import Synk.Api.Controller.Group.GroupHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
 import Synk.Api.Controller.Post.PointHandler;
 import Synk.Api.Controller.User.UserHandler;
+import Synk.Api.Model.Analysis.Analysis;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.Report.Report;
 import Synk.Api.Model.City.Role.Role;
@@ -45,6 +47,7 @@ public class MuniciPathController {
     private PendingHandler peh;
     private SavedContentHandler sch;
     private FeedbackHandler fh;
+    private AnalysisHandler ah;
     private IdentifierManager idManager;
     
     
@@ -75,8 +78,6 @@ public class MuniciPathController {
     public boolean createCity(String username, String cityName, int cap, String curator, Position pos ) {
 		if(username == null || (!checkManager(username)))
     		return false;
-    	if(cityName == null || curator == null || pos == null)
-    		return false;
         return ch.createCity(cityName, cap, curator, pos);
     }
     
@@ -93,8 +94,6 @@ public class MuniciPathController {
     public boolean updateCity(String username, String id, String cityName, int cap, String curator, Position pos ){
 		if(username == null || (!checkManager(username)))
     		return false;
-    	if(id == null || cityName == null || curator == null || pos == null)
-    		return false;
 		return ch.updateCity(id, cityName, cap, curator, pos);
     }
     
@@ -107,8 +106,6 @@ public class MuniciPathController {
     public boolean deleteCity(String username, String cityId) {
 		if(username == null || (!checkManager(username)))
     		return false;
-    	if(cityId == null)
-    		return false;
     	return ch.deleteCity(cityId);
     }
     
@@ -118,8 +115,6 @@ public class MuniciPathController {
      * @return lista dei comuni con nomi simili
      */
     public List<City> searchCity(String search){
-    	if(search == null)
-    		search = "";
     	return ch.getCities(search);
     }
     
@@ -129,8 +124,6 @@ public class MuniciPathController {
      * @return il comune se l'ha trovato, null altrimenti
      */
 	public City getCity(String cityId) {
-		if(cityId == null)
-			return null;
 		return ch.getCity(cityId);
 	}
 	
@@ -145,8 +138,6 @@ public class MuniciPathController {
 	public boolean setRole(String username, String toSet, String cityId, Role role) {
 		if(cityId == null || username == null || (!checkStaff(username, cityId)))
 			return false;
-		if(toSet == null || role == null)
-			return false;
 		return this.ch.setRole(toSet, cityId, role);
 	}
 	
@@ -157,10 +148,6 @@ public class MuniciPathController {
 	 * @return ruolo che ha l'utente rispetto al comune
 	 */
 	public Role getRole(String username, String cityId) {
-		if(username == null)
-			return Role.LIMITED;
-		if(cityId == null)
-			return Role.TOURIST;
 		return this.ch.getRole(username, cityId);
 	}
 	
@@ -173,8 +160,6 @@ public class MuniciPathController {
 	 */
 	public boolean addModerator(String username, String toSet, String cityId) {
 		if(username == null || cityId == null || (!checkCurator(username, cityId)))
-			return false;
-		if(toSet == null)
 			return false;
 		return this.ch.addModerator(toSet, cityId);
 	}
@@ -189,8 +174,6 @@ public class MuniciPathController {
 	public boolean removeModerator(String username, String toSet, String cityId) {
 		if(username == null || cityId == null || (!checkCurator(username, cityId)))
 			return false;
-		if(toSet == null)
-			return false;
 		return this.ch.removeModerator(toSet, cityId);
 	}
 	
@@ -202,8 +185,6 @@ public class MuniciPathController {
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
 	public boolean addRequest(String username, String cityId) {
-		if(username == null || cityId == null)
-			return false;
 		return this.ch.addRequest(username, cityId);
 	}
 	
@@ -240,8 +221,6 @@ public class MuniciPathController {
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
 	public boolean createGroup(String author, String cityId, ProtoGroup data) {
-		if(author == null || cityId == null || data == null)
-			return false;
 		return this.gh.createGroup(author, cityId, data);
 	}
 	
@@ -253,7 +232,7 @@ public class MuniciPathController {
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
 	public boolean editGroup(String groupId, String username, ProtoGroup data) {
-		if(groupId == null || username == null || data == null)
+		if(groupId == null || username == null)
 			return false;
 		if(checkStaff(username, idManager.getCityId(groupId)))
 			return this.gh.editGroup(groupId, data);
@@ -280,8 +259,6 @@ public class MuniciPathController {
 	 * @return il gruppo da visualizzare
 	 */
 	public Group viewGroup(String groupId) {
-		if(groupId == null)
-			return null;
 		return this.gh.viewGroup(groupId);
 	}
 
@@ -290,9 +267,7 @@ public class MuniciPathController {
 	 * @param groupIds lista degli id dei gruppi da visualizzare
 	 * @return lista dei gruppi da visualizzare
 	 */
-	public List<Group> viewGroups(List<String> groupIds) {
-		if(groupIds == null)
-			return null;
+	public List<Group> viewGroups(List<String> groupIds) { 
 		return this.gh.viewGroups(groupIds);
 	}
 
@@ -307,8 +282,6 @@ public class MuniciPathController {
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
 	public boolean createPost(String username, Position pos, String cityId, ProtoPost post) {
-		if(username == null || pos == null || cityId == null || post == null)
-    		return false;
     	return this.poh.createPost(username, pos, cityId, post);
 	}
 
@@ -321,7 +294,7 @@ public class MuniciPathController {
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
     public boolean editPost(String postId, String username, String cityId, ProtoPost data) {
-    	if(postId == null || username == null || cityId == null ||  data == null)
+    	if(username == null || cityId == null)
     		return false;
     	if(checkStaff(username, cityId))
     		return this.poh.editPost(postId, data);
@@ -335,8 +308,6 @@ public class MuniciPathController {
 	 * @return lista dei punti del comune
 	 */
     public List<Point> getPoints (String cityId, String username) {
-    	if(cityId == null || username == null)
-    		return null;
         return this.poh.getPoints(cityId, username);
       
     }
@@ -348,8 +319,6 @@ public class MuniciPathController {
 	 * @return lista dei post contenuti nel punto
 	 */
     public List<Post> viewPosts (String pointId, String username) {
-    	if(pointId == null || username == null)
-    		return null;
         return this.poh.viewPosts(pointId, username);
     }
 
@@ -359,8 +328,6 @@ public class MuniciPathController {
 	 * @return la lista di post desiderata
 	 */
     public List<Post> viewPosts (List<String> postIds) {
-    	if(postIds == null)
-    		return null;
         return this.poh.getPosts(postIds);
     }
 
@@ -371,8 +338,6 @@ public class MuniciPathController {
 	 * @return il post desiderato
 	 */
     public Post viewPost(String postId, String username) {
-    	if(postId == null || username == null)
-    		return null;
         return this.poh.getPost(postId, username);
     }
 
@@ -399,6 +364,8 @@ public class MuniciPathController {
 	public List<Contribute> getContributes(String username, String postId){
     	if(postId == null || username == null)
     		return null;
+    	if(checkStaff(username, idManager.getCityId(postId)))
+    		return this.poh.getContributes(postId);
 		return this.poh.getContributes(username, postId);
 	}
 
@@ -410,8 +377,6 @@ public class MuniciPathController {
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
 	public boolean addContentToContest(String contestAuthor, String contestId, List<String> content) {
-    	if(contestAuthor == null || contestId == null || content == null)
-    		return false;
 		return this.poh.addContentToContest(contestAuthor, contestId, content);
 	}
 
@@ -423,8 +388,6 @@ public class MuniciPathController {
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
 	public boolean declareWinner(String author, String contestId, String winnerId) {
-		if(author == null || contestId == null || winnerId == null)
-			return false;
 		return this.poh.declareWinner(author, contestId, winnerId);
 	}
 
@@ -439,8 +402,6 @@ public class MuniciPathController {
 	public boolean judge(String username, String pendingId, boolean outcome, String motivation) {
 		if(username == null || pendingId == null || (!checkStaff(username, idManager.getCityId(pendingId))))
 			return false;
-    	if(motivation == null)
-    		return false;
 		return this.peh.judge(pendingId, outcome, motivation);
 	}
 
@@ -451,9 +412,7 @@ public class MuniciPathController {
 	 * @return lista delle richieste in pending
 	 */
 	public List<PendingRequest> getAllRequest(String username, String cityId){
-		if(username == null || (!checkStaff(username, cityId)))
-			return null;
-		if(cityId == null)
+		if(username == null || cityId == null || (!checkStaff(username, cityId)))
 			return null;
 		return this.peh.getAllRequest(cityId);
 	}
@@ -465,9 +424,8 @@ public class MuniciPathController {
 	 * @return la richiesta desiderata
 	 */
 	public PendingRequest getRequest(String username, String requestId) {
-		if(username == null || (!checkStaff(username, this.idManager.getCityId(requestId))))
-			return null;
-		if(requestId == null)
+		if(username == null || requestId == null
+				|| (!checkStaff(username, this.idManager.getCityId(requestId))))
 			return null;
 		return this.peh.getRequest(requestId);
 	}
@@ -479,8 +437,6 @@ public class MuniciPathController {
 	 * @return true se l'operazione e' andata a buon fine, false altrimenti
 	 */
 	public boolean addUser(String username, String password) {
-		if(username == null || password == null)
-			return false;
 		return this.uh.addUser(username, password);
 	}
 
@@ -493,8 +449,6 @@ public class MuniciPathController {
 	public boolean removeUser(String username, String toRemove) {
 		if(username == null || (!checkManager(username)))
     		return false;
-		if(toRemove == null)
-			return false;
 		return this.uh.removeUser(toRemove);
 	}
 
@@ -505,8 +459,6 @@ public class MuniciPathController {
 	 * @return true se la password corrisponde, false altrimenti
 	 */
 	public boolean isThePassword(String username, String password) {
-		if(username == null || password == null)
-			return false;
 		return this.uh.isThePassword(username, password);
 	}
 
@@ -517,8 +469,6 @@ public class MuniciPathController {
 	 * @return true se la password è stata cambiata, false altrimenti
 	 */
 	public boolean changePassword(String username, String password) {
-		if(username == null || password == null)
-			return false;
 		return this.uh.changePassword(username, password);
 	}
 
@@ -530,8 +480,6 @@ public class MuniciPathController {
 	public boolean userValidation(String username, String toValidate) {
 		if(username == null || (!checkManager(username)))
     		return false;
-		if(toValidate == null)
-			return false;
 		return this.uh.userValidation(toValidate);
 	}
 
@@ -544,8 +492,6 @@ public class MuniciPathController {
 	public boolean manageManager(String username, String toManage, boolean auth) {
 		if(username == null || (!checkManager(username)))
     		return false;
-		if(toManage == null)
-			return false;
 		return this.uh.manageManager(toManage, auth);
 	}
 
@@ -575,8 +521,6 @@ public class MuniciPathController {
 	 * @return un booleano che indica se l'utente è un gestore o meno
 	 */
 	public boolean checkManager(String username) {
-		if(username == null)
-			return false;
     	return this.uh.getUser(username).isManager();
     }
 
@@ -587,8 +531,6 @@ public class MuniciPathController {
 	 * @return un booleano che indica se l'utente è un curatore o meno
 	 */
     private boolean checkCurator(String username, String cityId) {
-		if(username == null || cityId == null)
-			return false;
     	Role role = this.getRole(username, cityId);
     	return role == Role.CURATOR;
     }
@@ -600,8 +542,6 @@ public class MuniciPathController {
 	 * @return un booleano che indica se l'utente è un moderatore o curatore o meno
 	 */
     private boolean checkStaff(String username, String cityId) {
-		if(username == null || cityId == null)
-			return false;
     	return this.ch.isTheStaff(cityId, username);
     }
 
@@ -612,8 +552,6 @@ public class MuniciPathController {
 	 * @return un booleano che indica se l'utente è l'autore o meno
 	 */
 	public boolean checkAuthor(String username, String contentId) {
-		if(username == null || contentId == null)
-			return false;
 		return username.equals(this.idManager.isGroup(contentId) ?
 				this.gh.getAuthor(contentId) : this.poh.getAuthor(contentId));
 	}
@@ -625,15 +563,11 @@ public class MuniciPathController {
 	 * @return un booleano che indica se l'utente ha i permessi o meno
 	 */
 	public boolean havePowerWithIt(String username, String contentId) {
-        if (username == null || contentId == null)
-            return false;
 		return checkStaff(username, idManager.getCityId(contentId))
 				|| checkAuthor(username, contentId);
 	}
 	
 	public boolean isLimited(String username, String cityId) {
-		if (username == null || cityId == null)
-            return true;
 		return this.getRole(username, cityId) == Role.LIMITED;
 	}
 	
@@ -776,5 +710,11 @@ public class MuniciPathController {
 		return this.uh.getMyMessage(username, id);
 	}
 	
+	public synchronized Analysis getAnalytics(String username, String cityId,
+												int months, boolean onlyUsers) {
+		if(!this.checkCurator(username, cityId))
+			return null;
+		return this.ah.getAnalysis(cityId, months, onlyUsers);
+	}
 	
 }

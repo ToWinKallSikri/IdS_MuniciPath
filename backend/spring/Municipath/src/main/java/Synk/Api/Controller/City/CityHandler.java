@@ -57,6 +57,8 @@ public class CityHandler {
 	 * @return true se la città è stata creata, false altrimenti
 	 */
 	public boolean createCity(String cityName, int cap, String curator, Position pos ) {
+		if(cityName == null || curator == null || pos == null)
+			return false;
     	String id = "" + (cityName+cap).hashCode();
         City c1 = new City(id, cityName,pos, curator, cap);
         if (checkIfAlreadyExists(id))
@@ -84,15 +86,9 @@ public class CityHandler {
 	 * @return la città se esiste, null altrimenti
 	 */
 	public City getCity(String cityId) {
+		if(cityId == null)
+			return null;
     	return this.cityRepository.findById(cityId).orElse(null);
-    }
-
-	/**
-	 * Metodo per ottenere tutte le città
-	 * @return una lista contenente tutte le città
-	 */
-	public List<City> getCities(){
-    	return this.getCities("");
     }
 
 	/**
@@ -117,6 +113,8 @@ public class CityHandler {
 	 * @return true se la città è stata aggiornata, false altrimenti
 	 */
     public boolean updateCity(String id, String cityName, int cap, String curator, Position pos ){
+    	if(id == null || cityName == null || curator == null || pos == null)
+    		return false;
     	City city = getCity(id);
     	if(city == null)
     		return false;
@@ -137,6 +135,8 @@ public class CityHandler {
 	 * @return true se la città è stata eliminata, false altrimenti
 	 */
     public boolean deleteCity(String cityId) {
+    	if(cityId == null)
+    		return false;
     	City city = getCity(cityId);
     	if(city == null)
     		return false;
@@ -187,6 +187,8 @@ public class CityHandler {
 	 * @return la licenza se l'utente esiste, una nuova licenza con ruolo di tipo LIMITED altrimenti
 	 */
 	public Licence getAuthorization(String username, String cityId) {
+		if(username == null || cityId == null)
+			return null;
 		if (!this.mediator.usernameExists(username)) 
 			return new Licence(cityId, username, Role.LIMITED);
 		return this.roleHandler.getAuthorization(username, cityId);
@@ -209,6 +211,8 @@ public class CityHandler {
 	 * @return true se il ruolo è stato settato, false altrimenti
 	 */
 	public boolean setRole(String username, String cityId, Role role) {
+		if(username == null || cityId == null || role == null)
+			return false;
 		if(!this.mediator.usernameExists(username))
 			return false;
 		if(getCity(cityId) == null)
@@ -223,6 +227,8 @@ public class CityHandler {
 	 * @return true se il moderatore è stato aggiunto, false altrimenti
 	 */
 	public boolean addModerator(String username, String cityId) {
+		if(username == null || cityId == null)
+			return false;
 		if(!this.mediator.usernameExists(username))
 			return false;
 		if(getCity(cityId) == null)
@@ -237,6 +243,8 @@ public class CityHandler {
 	 * @return true se il moderatore è stato rimosso, false altrimenti
 	 */
 	public boolean removeModerator(String username, String cityId) {
+		if(username == null || cityId == null)
+			return false;
 		if(!this.mediator.usernameExists(username))
 			return false;
 		if(getCity(cityId) == null)
@@ -251,6 +259,8 @@ public class CityHandler {
 	 * @return il ruolo se l'utente esiste, null altrimenti
 	 */
 	public Role getRole(String username, String cityId) {
+		if(username == null || cityId == null)
+			return Role.LIMITED;
 		return this.getAuthorization(username, cityId).getRole();
 	}
 
@@ -261,6 +271,8 @@ public class CityHandler {
 	 * @return true se la richiesta è stata aggiunta, false altrimenti
 	 */
 	public boolean addRequest(String username, String cityId) {
+		if(username == null || cityId == null)
+			return false;
 		if(getCity(cityId) == null || (!this.mediator.usernameExists(username)))
 			return false;
 		return this.roleHandler.addRequest(cityId, username);

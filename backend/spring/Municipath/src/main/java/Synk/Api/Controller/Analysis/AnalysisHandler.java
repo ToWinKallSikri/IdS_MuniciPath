@@ -1,14 +1,14 @@
-package Synk.Api.Controller.Analytics;
+package Synk.Api.Controller.Analysis;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Model.MetaData;
-import Synk.Api.Model.Analytics.Analytics;
+import Synk.Api.Model.Analysis.Analysis;
 
 @Service
-public class AnalyticsHandler {
+public class AnalysisHandler {
 	
 	private DataMonthPartitioner partitioner;
 	private DirectorAnalyzer director;
@@ -20,7 +20,7 @@ public class AnalyticsHandler {
 	private TopFiveViewedMonthAnalyzer TFVAnalyzer;
 	private MuniciPathMediator mediator;
 	
-	public AnalyticsHandler() {
+	public AnalysisHandler() {
 		this.partitioner = new DataMonthPartitioner();
 		this.director = new DirectorAnalyzer();
 		this.publAnalyzer = new PublicationMonthAnalyzer();
@@ -31,27 +31,31 @@ public class AnalyticsHandler {
 		this.TFVAnalyzer = new TopFiveViewedMonthAnalyzer();
 	}
 	
-	public synchronized Analytics getAnalytics(String cityId, int months, boolean onlyUsers) {
+	public void setMediator(MuniciPathMediator mediator) {
+		this.mediator = mediator;
+	}
+	
+	public synchronized Analysis getAnalysis(String cityId, int months, boolean onlyUsers) {
 		if(months < 1 || months > 12 || cityId == null)
 			return null;
 		List<MetaData> data = this.mediator.getDataForAnalysis(cityId, months, onlyUsers);
-		return getAnalytics(data, months);
+		return getAnalysis(data, months);
 	}
 	
-	private Analytics getAnalytics(List<MetaData> data, int months) {
+	private Analysis getAnalysis(List<MetaData> data, int months) {
 		if(data == null || data.isEmpty())
 			return null;
-		return getAnalytics(this.partitioner.divide(data, months));
+		return getAnalysis(this.partitioner.divide(data, months));
 	}
 	
-	private Analytics getAnalytics(List<List<MetaData>> data) {
+	private Analysis getAnalysis(List<List<MetaData>> data) {
 		long[] publs = getNumberResult(this.publAnalyzer, data);
 		long[] views = getNumberResult(this.viewAnalyzer, data);
 		long[] votes = getNumberResult(this.voteAveAnalyzer, data);
 		String[][] contr = getTFResult(this.TFCAnalyzer, data);
 		String[][] like = getTFResult(this.TFLAnalyzer, data);
 		String[][] viewed = getTFResult(this.TFVAnalyzer, data);
-		return new Analytics(publs, views, votes, contr, like, viewed);
+		return new Analysis(publs, views, votes, contr, like, viewed);
 	}
 
 	private long[] getNumberResult(NumberMonthAnalyzer analyzer, List<List<MetaData>> data) {

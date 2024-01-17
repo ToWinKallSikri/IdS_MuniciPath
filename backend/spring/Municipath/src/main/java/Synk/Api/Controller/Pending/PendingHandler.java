@@ -45,6 +45,8 @@ public class PendingHandler {
 	 * @param id l'id della richiesta
 	 */
 	public void addRequest(String id) {
+		if(id == null)
+			return;
 		this.pendingRepository.save(new PendingRequest(id));
 	}
 
@@ -54,6 +56,8 @@ public class PendingHandler {
 	 * @param data dati del post
 	 */
 	public void addPostRequest(String postId, ProtoPost data) {
+		if(postId == null || data == null)
+			return;
 		this.pendingRepository.save(new PendingRequest(postId, data));
 	}
 
@@ -63,6 +67,8 @@ public class PendingHandler {
 	 * @param data dati di un gruppo
 	 */
 	public void addGroupRequest(String groupId, ProtoGroup data) {
+		if(groupId == null || data == null)
+			return;
 		this.pendingRepository.save(new PendingRequest(groupId, data));
 	}
 
@@ -74,6 +80,8 @@ public class PendingHandler {
 	 * @return true se la richiesta è stata giudicata, false altrimenti
 	 */
 	public boolean judge(String pendingId, boolean outcome, String motivation) {
+		if(pendingId == null || motivation == null)
+			return false;
 		PendingRequest request = getRequest(pendingId);
 		if(request == null)
 			return false;
@@ -101,6 +109,8 @@ public class PendingHandler {
 	 * @return una lista contenente tutte le richieste in pending della città
 	 */
 	public List<PendingRequest> getAllRequest(String cityId){
+		if(cityId == null)
+			return null;
 		return StreamSupport.stream(pendingRepository.findAll().spliterator(), true)
 				.filter(p -> idManager.getCityId(p.getId()).equals(cityId)).toList();
 	}
@@ -111,6 +121,8 @@ public class PendingHandler {
 	 * @return la richiesta se esiste, null altrimenti
 	 */
 	public PendingRequest getRequest(String requestId) {
+		if(requestId == null)
+			return null;
 		return this.pendingRepository.findById(requestId).orElse(null);
 	}
 

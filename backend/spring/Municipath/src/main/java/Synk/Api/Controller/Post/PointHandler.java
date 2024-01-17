@@ -36,7 +36,7 @@ public class PointHandler {
     private WeatherService weather;
     private MuniciPathMediator mediator;
     private IdentifierManager idManager;
-    private PostBuilder normalBuilder, eventBuilder, contestBuilder;
+    private PostCreator normalCreator, eventCreator, contestCreator;
     private PostValidator validator;
     
     /**
@@ -57,9 +57,9 @@ public class PointHandler {
     public PointHandler() {
         weather = new WeatherForecastProxy();
         idManager = new IdentifierManager();
-        normalBuilder = new NormalPostBuilder();
-        eventBuilder = new EventPostBuilder();
-        contestBuilder = new ContestPostBuilder();
+        normalCreator = new NormalPostCreator();
+        eventCreator = new EventPostCreator();
+        contestCreator = new ContestPostCreator();
         validator = new PostValidator();
     }
     
@@ -81,15 +81,17 @@ public class PointHandler {
      * @return true se l'operazione e' andata a buon fine, false altrimenti
      */
 	public boolean createPost(String author, Position pos, String cityId, ProtoPost post) {
+		if(author == null || pos == null || cityId == null || post == null)
+    		return false;
 		int level = this.mediator.getRoleLevel(cityId, author);
     	if(level < CONTR_NOT_AUTH_LEVEL)
     		return false;
-		PostBuilder builder = buildingPost(author, pos, level, post);
-    	if(!builder.correctPost())
+		PostCreator creator = buildingPost(author, pos, level, post);
+    	if(!creator.correctPost())
     		return false;
         Point point = getPoint(pos, cityId);
-    	builder.setIds(point.getNewPostId(), point.getPointId(), cityId);
-    	Post newPost = builder.createPost();
+    	creator.setIds(point.getNewPostId(), point.getPointId(), cityId);
+    	Post newPost = creator.createPost();
         postRepository.save(newPost);
         point.getPosts().add(newPost);
     	this.pointRepository.save(point);
@@ -105,25 +107,25 @@ public class PointHandler {
 	 * @param pos posizione del post
 	 * @param level livello di autorizzazione del post
 	 * @param post dati del post
-	 * @return builder pronto a produrre il post
+	 * @return creator pronto a produrre il post
 	 */
-	private PostBuilder buildingPost(String author, Position pos, int level, ProtoPost post) {
-		PostBuilder builder = getRightBuilder(post.getType());
-		builder.initializePost();
-    	builder.setData(post.getTitle(), post.getText(), post.getMultimediaData());
-    	builder.setDetails(author, pos, level > CONTR_AUTH_LEVEL, post.getType());
-    	builder.setSpecialDetails(level > CONTR_NOT_AUTH_LEVEL, post.getStartTime(), post.getEndTime(), post.isPersistence());
-    	return builder;
+	private PostCreator buildingPost(String author, Position pos, int level, ProtoPost post) {
+		PostCreator creator = getRightCreator(post.getType());
+		creator.initializePost();
+    	creator.setData(post.getTitle(), post.getText(), post.getMultimediaData());
+    	creator.setDetails(author, pos, level > CONTR_AUTH_LEVEL, post.getType());
+    	creator.setSpecialDetails(level > CONTR_NOT_AUTH_LEVEL, post.getStartTime(), post.getEndTime(), post.isPersistence());
+    	return creator;
 	}
 	
 	/**
-	 * metodo per scegliere il builder giusto per un post
+	 * metodo per scegliere il creator giusto per un post
 	 * @param type tipo di post
-	 * @return builder adatto al post
+	 * @return creator adatto al post
 	 */
-	private PostBuilder getRightBuilder(PostType type) {
-		return type == PostType.EVENT ? this.eventBuilder : type == PostType.CONTEST ?
-				this.contestBuilder : this.normalBuilder;
+	private PostCreator getRightCreator(PostType type) {
+		return type == PostType.EVENT ? this.eventCreator : type == PostType.CONTEST ?
+				this.contestCreator : this.normalCreator;
 	}
     
     /**
@@ -134,9 +136,11 @@ public class PointHandler {
      * @param data dati aggiornati del post
      */
 	public boolean editPost(String postId, String author, String cityId, ProtoPost data) {
-    	PostBuilder builder = getRightBuilder(data.getType());
+		if(postId == null || author == null || cityId == null ||  data == null)
+    		return false;
+    	PostCreator creator = getRightCreator(data.getType());
     	boolean published = this.mediator.canPublish(cityId, author);
-    	if(!validator.correctPost(builder, published, data.getStartTime(), data.getEndTime(), data.isPersistence()))
+    	if(!validator.correctPost(creator, published, data.getStartTime(), data.getEndTime(), data.isPersistence()))
     		return false;
     	Post post = this.getPost(postId);
 		if(post == null || (!post.getAuthor().equals(author)) || isPrime(post))
@@ -157,8 +161,10 @@ public class PointHandler {
 	 * @return true se la modifica e' andata a buon fine, false altrimenti
 	 */
 	public boolean editPost(String postId, ProtoPost data) {
-		PostBuilder builder = getRightBuilder(data.getType());
-    	if(!validator.correctPost(builder, true, data.getStartTime(), data.getEndTime(), data.isPersistence()))
+		if(postId == null || data == null)
+    		return false;
+		PostCreator creator = getRightCreator(data.getType());
+    	if(!validator.correctPost(creator, true, data.getStartTime(), data.getEndTime(), data.isPersistence()))
     		return false;
     	Post post = this.getPost(postId);
     	if(post == null || isPrime(post))
@@ -178,6 +184,8 @@ public class PointHandler {
 	 * @param request richiesta di modifica accettata
 	 */
     public void editPost(PendingRequest request) {
+    	if(request == null)
+    		return;
     	Post post = getPost(request.getId());
         checkContest(post.getId(), post.getType(), request.getType());
     	post.updateInfo(request);
@@ -229,7 +237,9 @@ public class PointHandler {
      * @return lista di punti
      */
     public List<Point> getPoints (String cityId, String username) {
-          return this.pointRepository.findByCityId(cityId).stream()
+    	if(cityId == null)
+    		return null;
+        return this.pointRepository.findByCityId(cityId).stream()
         		  .filter( p -> p.getPosts().stream().anyMatch(po -> toShow(po, username))).toList();
     }
     
@@ -256,6 +266,8 @@ public class PointHandler {
      * @param cityId id del comune da cancellare
      */
     public void deleteCityPoints (String cityId) {
+    	if(cityId == null)
+    		return;
         List<Point> ps = this.pointRepository.findByCityId(cityId);
         this.pointRepository.deleteAll(ps);
         ps.stream().map(p -> p.getPosts())
@@ -273,6 +285,8 @@ public class PointHandler {
      * @return lista di post da vedere
      */
     public List<Post> viewPosts (String pointId, String username) {
+    	if(pointId == null)
+    		return null;
     	Point point = this.pointRepository.findById(pointId).orElse(null);
         return point == null ? null : point.getPosts().stream()
         		.filter(p -> toShow(p, username)).toList();
@@ -301,6 +315,8 @@ public class PointHandler {
      * @return post ricercato
      */
     public Post getPost(String postId, String username) {
+    	if(postId == null)
+    		return null;
     	Post post = postRepository.findById(postId).orElse(null);
     	if(post == null)
     		return null;
@@ -316,6 +332,8 @@ public class PointHandler {
      * @return post ricercato
      */
     public Post getPost(String postId) {
+    	if(postId == null)
+    		return null;
     	Post post = postRepository.findById(postId).orElse(null);
     	return post == null ? null : updatePost(post, null);
     }
@@ -326,9 +344,11 @@ public class PointHandler {
      * @param positon posizione
      * @return point ricercato
      */
-    private Point searchPoint (String cityId,Position positon) {
+    private Point searchPoint (String cityId,Position position) {
+    	if(cityId == null || position == null)
+    		return null;
         return this.pointRepository.findByCityId(cityId).stream()
-        		.filter(p -> p.getPos().equals(positon))
+        		.filter(p -> p.getPos().equals(position))
         		.findFirst().orElse(new Point());
     }
     
@@ -340,6 +360,8 @@ public class PointHandler {
      * @return true se e' stato eliminato, false altimenti
      */
     public boolean deletePost (String postId, String author) {
+    	if(postId == null || author == null)
+    		return false;
     	Post post = getPost(postId);
     	if(!(post != null && post.getAuthor().equals(author)))
     		return false;
@@ -355,6 +377,8 @@ public class PointHandler {
      * @return true se e' stato eliminato, false altrimenti
      */
     public boolean deletePost (String postId) {
+    	if(postId == null)
+    		return false;
     	Post post = getPost(postId);
     	if(post == null || isPrime(post))
     		return false;
@@ -402,6 +426,8 @@ public class PointHandler {
 	 * @return lista di post ricercati
 	 */
 	public List<Post> getPosts(List<String> postIds){
+		if(postIds == null)
+    		return null;
 		String cityId = idManager.getCityId(postIds.get(0));
 		return this.pointRepository.findByCityId(cityId).stream()
 				.map(p -> p.getPosts()).flatMap(List::stream).
@@ -418,6 +444,8 @@ public class PointHandler {
 	 * @return dati per le analisi
 	 */
 	public List<Post> getPosts(String cityId, LocalDateTime from) {
+		if(cityId == null || from == null)
+			return null;
 		return this.postRepository.findByCityId(cityId).stream()
 				.filter(p -> p.getPublicationTime().isAfter(from)).toList();
 	}
@@ -430,6 +458,8 @@ public class PointHandler {
 	 * esistono, altrimenti null.
 	 */
 	public List<Post> getPostsIfAllExists(List<String> postIds) {
+		if(postIds == null)
+			return null;
 		List<Post> posts = getPosts(postIds);
 		return posts.size() == postIds.size() ? posts : null;
 	}
@@ -442,6 +472,8 @@ public class PointHandler {
 	 * @return se il post e' stato pubblicato true, false altrimenti.
 	 */
 	public boolean approvePost(String postId) {
+		if(postId == null)
+			return false;
 		Post post = getPost(postId);
 		if(post == null || post.isPublished())
 			return false;
@@ -459,6 +491,8 @@ public class PointHandler {
 	 * @return contributi del post se l'autore e' corretto, null altrimenti
 	 */
 	public List<Contribute> getContributes(String username, String postId){
+		if(username == null || postId == null)
+			return null;
 		Post post = getPost(postId);
 		if(post == null || post.getType() != PostType.CONTEST || (!post.getAuthor().equals(username)))
 			return null;
@@ -471,6 +505,8 @@ public class PointHandler {
 	 * @return contributi del post se esso esiste, null altrimenti
 	 */
 	public List<Contribute> getContributes(String postId){
+		if(postId == null)
+			return null;
 		Post post = getPost(postId);
 		if(post == null || post.getType() != PostType.CONTEST)
 			return null;
@@ -485,6 +521,8 @@ public class PointHandler {
 	 * @return true se i contenuti sono stati aggiunti, false altrimenti
 	 */
 	public boolean addContentToContest(String contestAuthor, String contestId, List<String> content) {
+		if(contestAuthor == null || contestId == null || content == null)
+    		return false;
 		if(!this.mediator.usernameExists(contestAuthor))
 			return false;
 		Post contest = getPost(contestId);
@@ -501,6 +539,8 @@ public class PointHandler {
 	 * @return true se la dichiarazione e' andata a buon fine, false altrimenti
 	 */
 	public boolean declareWinner(String author, String contestId, String winnerId) {
+		if(author == null || contestId == null || winnerId == null)
+			return false;
 		Post post = getPost(contestId);
 		if(post == null || post.getType() != PostType.CONTEST 
 				|| (!post.getAuthor().equals(author)) || post.getEndTime().isAfter(LocalDateTime.now()))

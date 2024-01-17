@@ -1,6 +1,6 @@
-package Synk.Api.Model.Analytics;
+package Synk.Api.Model.Analysis;
 
-public class Analytics {
+public class Analysis {
     
 	//il numero delle pubblicazioni nel suo comune negli ultimi sei mesi
 	private long[] lastMonthsPublications;
@@ -15,9 +15,9 @@ public class Analytics {
 	//i 5 contenuti più piaciuti pubblicati negli ultimi 6 mesi
 	private String[][] lastMonthsTopFiveLikedContents;
 
-	public Analytics() { }
+	public Analysis() { }
 
-	public Analytics(long[] lastMonthsPublications, long[] lastMonthsViews, long[] lastMonthsVoteAverage,
+	public Analysis(long[] lastMonthsPublications, long[] lastMonthsViews, long[] lastMonthsVoteAverage,
 			String[][] lastMonthsTopFiveContributors, String[][] lastMonthsTopFiveViewedContents,
 			String[][] lastMonthsTopFiveLikedContents) {
 		this.lastMonthsPublications = lastMonthsPublications;

@@ -1,4 +1,4 @@
-package Synk.Api.Controller.Analytics;
+package Synk.Api.Controller.Analysis;
 
 import java.util.ArrayList;
 import java.util.Comparator;
