@@ -26,7 +26,7 @@ public class NotificationHandler {
     }
 	
 	public List<Notification> getMyMessages(String username){
-		return this.notificationRepository.findByUsername(username);
+		return this.notificationRepository.findByReceiver(username);
 	}
 	
 	public Notification getMyMessage(String username, String id) {
