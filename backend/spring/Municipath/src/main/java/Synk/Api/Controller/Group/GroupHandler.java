@@ -2,6 +2,7 @@ package Synk.Api.Controller.Group;
 
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Controller.MuniciPathMediator;
+import Synk.Api.Model.MetaData;
 import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Group.GroupRepository;
 import Synk.Api.Model.Pending.PendingRequest;
@@ -251,6 +253,19 @@ public class GroupHandler {
 		return getStreamOfAll()
 				.filter(g -> groupIds.contains(g.getId()))
 				.toList();
+	}
+	
+	/**
+	 * Metodo per le analisi dei dati.
+	 * Raccoglie tutti gli insiemi pubblicati 
+	 * dopo una certa data e in un certo comune
+	 * @param cityId luogo di pubblicazione
+	 * @param from data di partenza
+	 * @return dati per le analisi
+	 */
+	public List<Group> viewGroups(String cityId, LocalDateTime from) {
+		return this.groupRepository.findByCityId(cityId).stream()
+				.filter(g -> g.getPublicationTime().isAfter(from)).toList();
 	}
 	
 	/**

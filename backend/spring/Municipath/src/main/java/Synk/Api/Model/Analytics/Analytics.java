@@ -3,77 +3,77 @@ package Synk.Api.Model.Analytics;
 public class Analytics {
     
 	//il numero delle pubblicazioni nel suo comune negli ultimi sei mesi
-	private long[] lastSixMonthsPublications;
+	private long[] lastMonthsPublications;
 	//il numero di visualizzazioni dei contenuti pubblicati nel suo comune negli ultimi sei mesi
-	private long[] lastSixMonthsViews;
+	private long[] lastMonthsViews;
 	//la media delle valutazioni fatte nei contenuti pubblicati negli ultimi 6 mesi
-	private long[] lastSixMonthsVoteAverage;
+	private long[] lastMonthsVoteAverage;
 	//i 5 contributors con l'indice di pubblicazione più alto negli ultimi sei mesi
-	private String[][] lastSixMonthsTopFiveContributors;
+	private String[][] lastMonthsTopFiveContributors;
 	//i 5 contenuti più visitati pubblicati negli ultimi sei mesi
-	private String[][] lastSixMonthsTopFiveViewedContents;
+	private String[][] lastMonthsTopFiveViewedContents;
 	//i 5 contenuti più piaciuti pubblicati negli ultimi 6 mesi
-	private String[][] lastSixMonthsTopFiveLikedContents;
-	
-	public Analytics(long[] lastSixMonthsPublications, long[] lastSixMonthsViews, long[] lastSixMonthsVoteAverage,
-			String[][] lastSixMonthsTopFiveContributors, String[][] lastSixMonthsTopFiveViewedContents,
-			String[][] lastSixMonthsTopFiveLikedContents) {
-		this.lastSixMonthsPublications = lastSixMonthsPublications;
-		this.lastSixMonthsViews = lastSixMonthsViews;
-		this.lastSixMonthsVoteAverage = lastSixMonthsVoteAverage;
-		this.lastSixMonthsTopFiveContributors = lastSixMonthsTopFiveContributors;
-		this.lastSixMonthsTopFiveViewedContents = lastSixMonthsTopFiveViewedContents;
-		this.lastSixMonthsTopFiveLikedContents = lastSixMonthsTopFiveLikedContents;
-	}
+	private String[][] lastMonthsTopFiveLikedContents;
 
 	public Analytics() { }
 
-	public long[] getLastSixMonthsPublications() {
-		return lastSixMonthsPublications;
+	public Analytics(long[] lastMonthsPublications, long[] lastMonthsViews, long[] lastMonthsVoteAverage,
+			String[][] lastMonthsTopFiveContributors, String[][] lastMonthsTopFiveViewedContents,
+			String[][] lastMonthsTopFiveLikedContents) {
+		this.lastMonthsPublications = lastMonthsPublications;
+		this.lastMonthsViews = lastMonthsViews;
+		this.lastMonthsVoteAverage = lastMonthsVoteAverage;
+		this.lastMonthsTopFiveContributors = lastMonthsTopFiveContributors;
+		this.lastMonthsTopFiveViewedContents = lastMonthsTopFiveViewedContents;
+		this.lastMonthsTopFiveLikedContents = lastMonthsTopFiveLikedContents;
 	}
 
-	public void setLastSixMonthsPublications(long[] lastSixMonthsPublications) {
-		this.lastSixMonthsPublications = lastSixMonthsPublications;
+	public long[] getLastMonthsPublications() {
+		return lastMonthsPublications;
 	}
 
-	public long[] getLastSixMonthsViews() {
-		return lastSixMonthsViews;
+	public void setLastMonthsPublications(long[] lastMonthsPublications) {
+		this.lastMonthsPublications = lastMonthsPublications;
 	}
 
-	public void setLastSixMonthsViews(long[] lastSixMonthsViews) {
-		this.lastSixMonthsViews = lastSixMonthsViews;
+	public long[] getLastMonthsViews() {
+		return lastMonthsViews;
 	}
 
-	public long[] getLastSixMonthsVoteAverage() {
-		return lastSixMonthsVoteAverage;
+	public void setLastMonthsViews(long[] lastMonthsViews) {
+		this.lastMonthsViews = lastMonthsViews;
 	}
 
-	public void setLastSixMonthsVoteAverage(long[] lastSixMonthsVoteAverage) {
-		this.lastSixMonthsVoteAverage = lastSixMonthsVoteAverage;
+	public long[] getLastMonthsVoteAverage() {
+		return lastMonthsVoteAverage;
 	}
 
-	public String[][] getLastSixMonthsTopFiveContributors() {
-		return lastSixMonthsTopFiveContributors;
+	public void setLastMonthsVoteAverage(long[] lastMonthsVoteAverage) {
+		this.lastMonthsVoteAverage = lastMonthsVoteAverage;
 	}
 
-	public void setLastSixMonthsTopFiveContributors(String[][] lastSixMonthsTopFiveContributors) {
-		this.lastSixMonthsTopFiveContributors = lastSixMonthsTopFiveContributors;
+	public String[][] getLastMonthsTopFiveContributors() {
+		return lastMonthsTopFiveContributors;
 	}
 
-	public String[][] getLastSixMonthsTopFiveViewedContents() {
-		return lastSixMonthsTopFiveViewedContents;
+	public void setLastMonthsTopFiveContributors(String[][] lastMonthsTopFiveContributors) {
+		this.lastMonthsTopFiveContributors = lastMonthsTopFiveContributors;
 	}
 
-	public void setLastSixMonthsTopFiveViewedContents(String[][] lastSixMonthsTopFiveViewedContents) {
-		this.lastSixMonthsTopFiveViewedContents = lastSixMonthsTopFiveViewedContents;
+	public String[][] getLastMonthsTopFiveViewedContents() {
+		return lastMonthsTopFiveViewedContents;
 	}
 
-	public String[][] getLastSixMonthsTopFiveLikedContents() {
-		return lastSixMonthsTopFiveLikedContents;
+	public void setLastMonthsTopFiveViewedContents(String[][] lastMonthsTopFiveViewedContents) {
+		this.lastMonthsTopFiveViewedContents = lastMonthsTopFiveViewedContents;
 	}
 
-	public void setLastSixMonthsTopFiveLikedContents(String[][] lastSixMonthsTopFiveLikedContents) {
-		this.lastSixMonthsTopFiveLikedContents = lastSixMonthsTopFiveLikedContents;
+	public String[][] getLastMonthsTopFiveLikedContents() {
+		return lastMonthsTopFiveLikedContents;
+	}
+
+	public void setLastMonthsTopFiveLikedContents(String[][] lastMonthsTopFiveLikedContents) {
+		this.lastMonthsTopFiveLikedContents = lastMonthsTopFiveLikedContents;
 	}
 	
 }

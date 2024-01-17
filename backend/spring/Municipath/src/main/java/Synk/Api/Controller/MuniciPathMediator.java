@@ -1,5 +1,6 @@
 package Synk.Api.Controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -363,6 +364,16 @@ public class MuniciPathMediator {
 	
 	public void removeAllFeedbackOf(String contentId) {
 		this.feedback.removeAllFeedbackOf(contentId);
+	}
+
+	public List<MetaData> getDataForAnalysis(String cityId, int months, boolean onlyUsers) {
+		LocalDateTime from = LocalDateTime.now().minusMonths(months);
+		List<MetaData> list = new ArrayList<>();
+		list.addAll(this.point.getPosts(cityId, from));
+		list.addAll(this.group.viewGroups(cityId, from));
+		if(onlyUsers)
+			list = list.stream().filter(d -> !d.isOfCity()).toList();
+		return list;
 	}
 	
 }

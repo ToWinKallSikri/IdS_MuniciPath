@@ -410,6 +410,19 @@ public class PointHandler {
 	}
 	
 	/**
+	 * Metodo per le analisi dei dati.
+	 * Raccoglie tutti i post pubblicati 
+	 * dopo una certa data e in un certo comune
+	 * @param cityId luogo di pubblicazione
+	 * @param from data di partenza
+	 * @return dati per le analisi
+	 */
+	public List<Post> getPosts(String cityId, LocalDateTime from) {
+		return this.postRepository.findByCityId(cityId).stream()
+				.filter(p -> p.getPublicationTime().isAfter(from)).toList();
+	}
+	
+	/**
 	 * data una lista di postIds, ritorna una lista di tutti
 	 * i post corrispondenti
 	 * @param postIds ids da ricercare
