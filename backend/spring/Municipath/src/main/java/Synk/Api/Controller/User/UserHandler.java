@@ -35,9 +35,9 @@ public class UserHandler {
 	 */
 	@Autowired
 	private UserRepository userRepository;
-	
+	@Autowired
 	private FollowHandler followHandler;
-
+	@Autowired
     private NotificationHandler notificationHandler;
 
 	/**

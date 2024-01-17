@@ -1,7 +1,12 @@
 package Synk.Api.Model.User.Follow;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Follow {
 	
+	@Id
 	private String id;
     private String followed;
     private String username;

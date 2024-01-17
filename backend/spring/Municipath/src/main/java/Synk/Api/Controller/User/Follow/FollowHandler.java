@@ -1,19 +1,22 @@
 package Synk.Api.Controller.User.Follow;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Model.MetaData;
 import Synk.Api.Model.User.Follow.Follow;
+import Synk.Api.Model.User.Follow.FollowRepository;
 
+@Service
 public class FollowHandler {
 	
-	private List<Follow> follows;
+	private FollowRepository followRepository;
 	private IdentifierManager idManager;
 	
-	public FollowHandler() {
-		this.follows = new ArrayList<>();
+	public FollowHandler(FollowRepository followRepository) {
+		this.followRepository = followRepository;
 		this.idManager = new IdentifierManager();
 	}
 	
@@ -22,7 +25,7 @@ public class FollowHandler {
 			return false;
 		String id = username + "u" + contributor;
 		Follow follow = new Follow(id, contributor, username);
-		this.follows.add(follow);
+		this.followRepository.save(follow);
 		return true;
 	}
 	
@@ -31,7 +34,7 @@ public class FollowHandler {
 		Follow follow = getFollow(id);
 		if(follow == null)
 			return false;
-		this.follows.remove(follow);
+		this.followRepository.delete(follow);
 		return true;
 	}
 	
@@ -40,7 +43,7 @@ public class FollowHandler {
 			return false;
 		String id = username + "c" + cityId;
 		Follow follow = new Follow(id, cityId, username);
-		this.follows.add(follow);
+		this.followRepository.save(follow);
 		return true;
 	}
 	
@@ -49,14 +52,12 @@ public class FollowHandler {
 		Follow follow = getFollow(id);
 		if(follow == null)
 			return false;
-		this.follows.remove(follow);
+		this.followRepository.delete(follow);
 		return true;
 	}
 	
 	private Follow getFollow(String id) {
-		return this.follows.stream()
-				.filter(f -> f.getId().equals(id))
-				.findFirst().orElse(null);
+		return this.followRepository.findById(id).orElse(null);
 	}
 	
 	public boolean follow(String username, MetaData data) {
@@ -79,36 +80,34 @@ public class FollowHandler {
 	
 	public boolean alreadyFollowingCity(String username, String cityId) {
 		String id = username + "c" + cityId;
-		return this.follows.stream().anyMatch(f -> f.getId().equals(id));
+		return this.followRepository.existsById(id);
 	}
 	
 	public boolean alreadyFollowingContributor(String username, String contributor) {
 		String id = username + "u" + contributor;
-		return this.follows.stream().anyMatch(f -> f.getId().equals(id));
+		return this.followRepository.existsById(id);
 	}
 	
 	public List<String> getAllFollowed(String username){
-		return this.follows.stream()
-				.filter(f -> f.getUsername().equals(username))
-				.map(f -> f.getFollowed()).toList();
+		return this.followRepository.findByUsername(username)
+				.stream().map(Follow::getUsername).toList();
 	}
 
 	public List<String> getAllCityFollowers(String cityId) {
-		return this.follows.stream().filter(f -> f.getFollowed().equals(cityId))
+		return this.followRepository.findByFollowed(cityId).stream()
 				.filter(f -> this.idManager.isCityFollowing(f.getId()))
 				.map(f -> f.getUsername()).toList();
 	}
 
 	public List<String> getAllContributorFollowers(String author) {
-		return this.follows.stream().filter(f -> f.getFollowed().equals(author))
+		return this.followRepository.findByFollowed(author).stream()
 				.filter(f -> !this.idManager.isCityFollowing(f.getId()))
 				.map(f -> f.getUsername()).toList();
 	}
 
 	public void deleteUser(String username) {
-		List<Follow> list = this.follows.stream().filter(f -> f.getUsername().equals(username))
-				.filter(f -> this.idManager.isCityFollowing(f.getId())).toList();
-		this.follows.removeAll(list);
+		List<Follow> list = this.followRepository.findByUsername(username);
+		this.followRepository.deleteAll(list);
 	}
 	
 }
