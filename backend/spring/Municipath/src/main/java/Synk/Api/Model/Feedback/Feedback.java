@@ -1,6 +1,12 @@
 package Synk.Api.Model.Feedback;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Feedback {
+
+    @Id
     private String id;
     private String username;
     private String contentId;
