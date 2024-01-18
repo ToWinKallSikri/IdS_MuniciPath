@@ -3,11 +3,18 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Municipath": {
+    "municipath": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "standalone": false
+        },
+        "@schematics/angular:directive": {
+          "standalone": false
+        },
+        "@schematics/angular:pipe": {
+          "standalone": false
         }
       },
       "root": "",
@@ -15,11 +22,11 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/municipath",
             "index": "src/index.html",
-            "main": "src/main.ts",
+            "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -30,8 +37,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss",
-              "./node_modules/leaflet/dist/leaflet.css"
+              "@angular/material/prebuilt-themes/pink-bluegrey.css",
+              "./node_modules/leaflet/dist/leaflet.css",
+              "src/styles.scss"
             ],
             "scripts": ["./node_modules/leaflet/dist/leaflet.js"]
           },
@@ -52,12 +60,9 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -75,10 +80,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "Municipath:build:production"
+              "buildTarget": "municipath:build:production"
             },
             "development": {
-              "browserTarget": "Municipath:build:development"
+              "buildTarget": "municipath:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -86,7 +91,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Municipath:build"
+            "buildTarget": "municipath:build"
           }
         },
         "test": {
@@ -103,16 +108,14 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss",
-              "./node_modules/leaflet/dist/leaflet.css"
+              "@angular/material/prebuilt-themes/pink-bluegrey.css",
+              "./node_modules/leaflet/dist/leaflet.css",
+              "src/styles.scss"
             ],
             "scripts": ["./node_modules/leaflet/dist/leaflet.js"]
           }
         }
       }
     }
-  },
-  "cli": {
-    "analytics": false
   }
 }

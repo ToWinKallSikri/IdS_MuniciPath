@@ -6,10 +6,12 @@ describe('ComuneComponent', () => {
   let component: ComuneComponent;
   let fixture: ComponentFixture<ComuneComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [ComuneComponent]
-    });
+    })
+    .compileComponents();
+    
     fixture = TestBed.createComponent(ComuneComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

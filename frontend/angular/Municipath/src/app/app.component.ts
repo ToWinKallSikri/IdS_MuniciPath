@@ -4,10 +4,10 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'Municipath';
+  title = 'MuniciPath';
 
   like:boolean= false;
 

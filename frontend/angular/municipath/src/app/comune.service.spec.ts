@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ComuniService } from './comuni.service';
+import { ComuneService } from './comune.service';
 
-describe('ComuniService', () => {
-  let service: ComuniService;
+describe('ComuneService', () => {
+  let service: ComuneService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ComuniService);
+    service = TestBed.inject(ComuneService);
   });
 
   it('should be created', () => {

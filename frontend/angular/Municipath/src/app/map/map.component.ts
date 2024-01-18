@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewEncapsulation  } from '@angular/core';
-declare let L: any;
+import { AfterViewInit, Component, ViewEncapsulation   } from '@angular/core';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
+  styleUrl: './map.component.scss',
   encapsulation: ViewEncapsulation.None
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements AfterViewInit {
   private map: any;
   private markers: any[] = [];
   authority = 'https://i.postimg.cc/GpP8xRfs/Authority.png';
@@ -16,7 +16,7 @@ export class MapComponent implements OnInit {
   social = 'https://i.postimg.cc/RFM3P8rp/Social.png'
   turistic = 'https://i.postimg.cc/QxV7GRFR/Turistic.png'
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.map = L.map('map').setView([44, 13], 5.5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
     this.map.setMaxZoom(12);

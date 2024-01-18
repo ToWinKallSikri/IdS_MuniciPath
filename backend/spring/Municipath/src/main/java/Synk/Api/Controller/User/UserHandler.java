@@ -319,6 +319,8 @@ public class UserHandler {
 	}
 	
 	public boolean unfollowContributor(String username, String contributor) {
+		if(username == null || contributor == null)
+			return false;
 		return this.followHandler.unfollowContributor(username, contributor);
 	}
 	

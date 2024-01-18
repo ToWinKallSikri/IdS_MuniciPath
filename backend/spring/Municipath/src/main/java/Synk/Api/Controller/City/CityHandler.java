@@ -284,6 +284,8 @@ public class CityHandler {
 	 * @return una lista contenente tutte le richieste di promozione di ruolo della città
 	 */
 	public List<RoleRequest> getRequests(String cityId) {
+		if(cityId == null)
+			return null;
 		if(!this.checkIfAlreadyExists(cityId))
 			return null;
 		return this.roleHandler.getRequests(cityId);
@@ -296,22 +298,30 @@ public class CityHandler {
 	 * @return true se la richiesta è stata giudicata, false altrimenti
 	 */
 	public boolean judge(String requestId, boolean outcome) {
+		if(requestId == null)
+			return false;
 		return this.roleHandler.judge(requestId, outcome);
 	}
 	
 	public boolean reportContent(String username, String contentId, String motivation) {
+		if(username == null || contentId == null || motivation == null)
+			return false;
         if(!(mediator.usernameExists(username) && mediator.contentExist(contentId)))
             return false;
         return this.reportHandler.reportContent(username, contentId, motivation);
 	}
 	
 	public List<Report> getReports(String cityId){
+		if(cityId == null)
+			return null;
 		if(!this.checkIfAlreadyExists(cityId))
 			return null;
 		return this.reportHandler.getReports(cityId);
 	}
 	
 	public Report getReport(String reportId){
+		if(reportId == null)
+			return null;
 		return this.reportHandler.getReport(reportId);
 	}
 

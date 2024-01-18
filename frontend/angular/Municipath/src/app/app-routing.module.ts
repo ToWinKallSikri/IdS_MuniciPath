@@ -5,7 +5,6 @@ import { HomeComponent } from './home/home.component';
 import { MapComponent } from './map/map.component';
 import { ComuneComponent } from './comune/comune.component';
 
-
 const routes: Routes = [{
   path: "",
   component: HomeComponent
@@ -27,5 +26,4 @@ const routes: Routes = [{
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-
 export class AppRoutingModule { }

@@ -23,11 +23,15 @@ public class SavedContentHandler {
     }
 
     public List<String> getPartecipants(String contentId){
+    	if(contentId == null)
+    		return null;
         return savedContentRepository.findByContentId(contentId)
                 .stream().map(SavedContent::getUsername).toList();
     }
 
 	public boolean saveSavedContent(String username, String contentId) {
+		if(username == null || contentId == null)
+    		return false;
         if (!(mediator.usernameExists(username) && mediator.contentExist(contentId)))
                 return false;
         SavedContent s1 = new SavedContent(username, contentId);
@@ -38,6 +42,8 @@ public class SavedContentHandler {
 	}
 
 	public boolean removeSavedContent(String username, String contentId) {
+		if(username == null || contentId == null)
+    		return false;
         if (!(mediator.usernameExists(username) && mediator.contentExist(contentId)))
             return false;
         SavedContent s1 = new SavedContent(username, contentId);
@@ -48,6 +54,8 @@ public class SavedContentHandler {
 	}
 
 	public List<String> getSavedContent(String username) {
+		if(username == null)
+    		return null;
         if(!(mediator.usernameExists(username)))
             return null;
 		return savedContentRepository.findByUsername(username).stream()

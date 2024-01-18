@@ -32,6 +32,8 @@ public class FeedbackHandler {
     }
 
 	public boolean valute(String username, String contentId, int vote) {
+		if(username == null || contentId == null)
+			return false;
 		if(vote < 1 || vote > 5)
 			return false;
 		if(!(this.mediator.usernameExists(username) && this.mediator.contentExist(contentId)))
@@ -44,12 +46,16 @@ public class FeedbackHandler {
 	}
 	
 	public Score getFeedback(String contentId) {
+		if(contentId == null)
+			return null;
 		List<Feedback> list = this.feedbackRepository.findByContentId(contentId);
 		float sum = list.stream().map(f -> f.getVote()).reduce((a,b) -> a + b).orElse(0f);
 		return sum == 0f ? null : new Score(sum/list.size(), list.size());
 	}
 	
 	public void removeAllFeedbackOf(String contentId) {
+		if(contentId == null)
+			return;
 		List<Feedback> list =this.feedbackRepository.findByContentId(contentId);
 		this.feedbackRepository.deleteAll(list);
 	}

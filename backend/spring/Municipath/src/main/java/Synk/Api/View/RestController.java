@@ -2,6 +2,7 @@ package Synk.Api.View;
 
 import Synk.Api.Model.Post.Contribute.Contribute;
 import Synk.Api.Model.User.User;
+import Synk.Api.Model.User.Notification.Notification;
 import Synk.Api.ViewModel.ProtoCity;
 import Synk.Api.ViewModel.ProtoGroup;
 import Synk.Api.ViewModel.ProtoPost;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import Synk.Api.Controller.MuniciPathController;
+import Synk.Api.Model.Analysis.Analysis;
 import Synk.Api.Model.City.City;
+import Synk.Api.Model.City.Report.Report;
 import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.City.Role.RoleRequest;
 import Synk.Api.Model.Group.Group;
@@ -43,35 +46,67 @@ public class RestController {
 		this.wrc = new WebResponseCreator();
 	}
 	
-	//-------------DETAILS------------------
+	//--------------------------CHECK--------------------------------
 
-	@GetMapping(value="/api/v1/isManager")
+	@GetMapping(value="/api/v1/check/isManager")
 	public ResponseEntity<Object> isManager(@RequestHeader(name="auth") String token) {
 		String username = auth.getUsername(token);
 		return new ResponseEntity<Object>(wrc.make(this.controller.checkManager(username)), HttpStatus.OK);
 	}
 	
-	@GetMapping(value="/api/v1/isAuthor")
+	@GetMapping(value="/api/v1/check/isAuthor")
 	public ResponseEntity<Object> isAuthor(@RequestHeader(name="auth") String token,
 										   @RequestParam("contentId") String contentId) {
 		String username = auth.getUsername(token);
 		return new ResponseEntity<Object>(wrc.make(this.controller.checkAuthor(username, contentId)), HttpStatus.OK);
 	}
 	
-	@GetMapping(value="/api/v1/havePowerWithIt")
+	@GetMapping(value="/api/v1/check/havePowerWithIt")
 	public ResponseEntity<Object> havePowerWithIt(@RequestHeader(name="auth") String token,
 												  @RequestParam("contentId") String contentId) {
 		String username = auth.getUsername(token);
 		return new ResponseEntity<Object>(wrc.make(this.controller.havePowerWithIt(username, contentId)), HttpStatus.OK);
 	}
+	
+	@GetMapping(value="/api/v1/check/isLimited")
+	public ResponseEntity<Object> isLimited(@RequestHeader(name="auth") String token,
+												  @RequestParam("cityId") String cityId) {
+		String username = auth.getUsername(token);
+		return new ResponseEntity<Object>(wrc.make(this.controller.isLimited(username, cityId)), HttpStatus.OK);
+	}
 
-	@GetMapping(value="/api/v1/role")
+	@GetMapping(value="/api/v1/check/role")
 	public ResponseEntity<Object> getRole(@RequestHeader(name="auth") String token, @RequestParam("cityId") String cityId) {
 		String username = auth.getUsername(token);
 		return new ResponseEntity<Object>(wrc.make(this.controller.getRole(username, cityId)), HttpStatus.OK);
 	}
 	
-	//----------------USER EXP-----------------
+
+	
+	@GetMapping(value="/api/v1/city/{cityId}/check/follow/content")
+	public ResponseEntity<Object> alreadyFollowingContent(@RequestHeader(name="auth") String token,
+													@PathVariable("cityId") String cityId,
+													@RequestParam("contentId")	String contentId) {
+		String username = auth.getUsername(token);
+		return new ResponseEntity<Object>(this.controller.alreadyFollowing(username, contentId), HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/api/v1/city/{cityId}/check/follow/city")
+	public ResponseEntity<Object> alreadyFollowingCity(@RequestHeader(name="auth") String token,
+														@PathVariable("cityId") String cityId) {
+		String username = auth.getUsername(token);
+		return new ResponseEntity<Object>(this.controller.alreadyFollowing(username, cityId), HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/api/v1/city/{cityId}/check/follow/contributor")
+	public ResponseEntity<Object> alreadyFollowingContributor(@RequestHeader(name="auth") String token,
+														@PathVariable("cityId") String cityId,
+														@RequestParam("contributor") String contributor) {
+		String username = auth.getUsername(token);
+		return new ResponseEntity<Object>(this.controller.alreadyFollowingContributor(username, contributor), HttpStatus.OK);
+	}
+	
+	//----------------USER LOG-----------------
 	
 	@PostMapping(value="/api/v1/signin")
 	public ResponseEntity<Object> signin(@RequestParam("username") String username, @RequestParam("password") String password) {
@@ -106,7 +141,7 @@ public class RestController {
 		}
 	}
 	
-
+	//--------------------------FOR NOT LIMITED--------------------------
 	
 	@PostMapping(value="/api/v1/city/{cityId}/addRoleRequest")
 	public ResponseEntity<Object> addRoleRequest(@RequestHeader(name="auth") String token,
@@ -134,6 +169,129 @@ public class RestController {
 		}
 	}
 	
+
+	@PutMapping(value="/api/v1/saved/save")
+    public ResponseEntity<Object> saveSavedContent(@RequestHeader(name="auth") String token, 
+    											   @RequestParam("contentId") String contentId,
+    											   @RequestParam("action") boolean action) {
+		String username = auth.getUsername(token);
+		boolean result;
+		if(action) result = this.controller.saveSavedContent(username, contentId);
+		else result = this.controller.removeSavedContent(username, contentId);
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+	
+	@GetMapping(value="/api/v1/saved/all")
+    public ResponseEntity<Object> getSavedContent(@RequestHeader(name="auth") String token) {
+		String username = auth.getUsername(token);
+		List<String> list = this.controller.getSavedContent(username);
+		if(list != null)
+			return new ResponseEntity<Object>(list, HttpStatus.OK);
+		else return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+    }
+    
+	@GetMapping(value="/api/v1/msgs")
+    public ResponseEntity<Object> getMyMessages(@RequestHeader(name="auth") String token){
+		String username = auth.getUsername(token);
+    	List<Notification> list = this.controller.getMyMessages(username);
+    	if(list != null)
+    		return new ResponseEntity<Object>(list, HttpStatus.OK);
+    	else return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+	}
+	
+	@GetMapping(value="/api/v1/msg/{msgId}")
+	public ResponseEntity<Object> getMyMessage(@RequestHeader(name="auth") String token,
+												@PathVariable("msgId") String msgId) {
+		String username = auth.getUsername(token);
+		Notification msg = this.controller.getMyMessage(username, msgId);
+		if(msg != null)
+    		return new ResponseEntity<Object>(msg, HttpStatus.OK);
+		else return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+	}
+
+	@GetMapping(value="/api/v1/follows")
+	public ResponseEntity<Object> getAllFollowed(@RequestHeader(name="auth") String token) {
+		String username = auth.getUsername(token);
+		List<String> list = this.controller.getAllFollowed(username);
+		if(list != null)
+    		return new ResponseEntity<Object>(list, HttpStatus.OK);
+	    else return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
+	
+
+	@PutMapping(value="/api/v1/city/{cityId}/follow/contributor")
+	public ResponseEntity<Object> followUnfollowContributor(@RequestHeader(name="auth") String token,
+													@RequestParam("contributor")	String contributor,
+	    											@PathVariable("cityId") String cityId,
+	    											@RequestParam("action") boolean action) {
+		String username = auth.getUsername(token);
+		boolean result;
+		if(action)
+			result = this.controller.followContributor(username, contributor);
+		else result = this.controller.unfollowContributor(username, contributor);
+		if(result)
+			return new ResponseEntity<Object>(wrc.make("Azione eseguita."), HttpStatus.OK);
+		else
+	    	return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@PutMapping(value="/api/v1/city/{cityId}/follow/city")
+	public ResponseEntity<Object> followUnfollowCity(@RequestHeader(name="auth") String token,
+	    											@PathVariable("cityId") String cityId,
+	    											@RequestParam("action") boolean action) {
+		String username = auth.getUsername(token);
+		boolean result;
+		if(action)
+			result = this.controller.followCity(username, cityId);
+		else result = this.controller.unfollowCity(username, cityId);
+		if(result)
+			return new ResponseEntity<Object>(wrc.make("Azione eseguita."), HttpStatus.OK);
+		else
+	    	return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
+	
+
+	
+	@PutMapping(value="/api/v1/city/{cityId}/follow/content")
+	public ResponseEntity<Object> followUnfollowContent(@RequestHeader(name="auth") String token,
+	    											@PathVariable("cityId") String cityId,
+													@RequestParam("contentId")	String contentId,
+	    											@RequestParam("action") boolean action) {
+		String username = auth.getUsername(token);
+		boolean result;
+		if(action)
+			result = this.controller.follow(username, contentId);
+		else result = this.controller.unfollow(username, contentId);
+		if(result)
+			return new ResponseEntity<Object>(wrc.make("Azione eseguita."), HttpStatus.OK);
+		else
+	    	return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
+	
+
+	@PostMapping(value="/api/v1/city/{cityId}/report")
+	public ResponseEntity<Object> reportContent(@RequestHeader(name="auth") String token,
+												@PathVariable("cityId") String cityId,
+												@RequestParam("contentId") String contentId,
+												@RequestBody String motivation) {
+		String username = auth.getUsername(token);
+		this.controller.reportContent(username, contentId, motivation);
+        return new ResponseEntity<Object>(wrc.make("Segnalazione inviata."), HttpStatus.OK);
+    }
+	
+
+    
+	@PostMapping(value="/api/v1/city/{cityId}/valute")
+    public ResponseEntity<Object> valute(@RequestHeader(name="auth") String token,
+    						@PathVariable("cityId") String cityId,
+    						@RequestParam("contentId") String contentId, 
+    						@RequestParam("vote") int vote) {
+		String username = auth.getUsername(token);
+		if(this.controller.valute(username, contentId, vote))
+    		return new ResponseEntity<Object>(wrc.make("Valutazione inviata."), HttpStatus.OK);
+	    else
+	    	return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
 	
 	//----------------------MANAGER----------------
 
@@ -308,21 +466,31 @@ public class RestController {
 		}
 	}
 	
-	//-----------------------STAFF----------------
 	
-	@PutMapping(value="/api/v1/city/{cityId}/staff/setRole")
-	public ResponseEntity<Object> setRole(@RequestHeader(name="auth") String token,
-											@PathVariable("cityId") String cityId,
-											@RequestParam("toSet") String toSet, 
-											@RequestParam("role") String role) {
-		String username = auth.getUsername(token);
-		Role _role = Role.safeValueOf(role);
-		if(this.controller.setRole(username, toSet, cityId, _role)) {
-			return new ResponseEntity<Object>(wrc.make("Ruovo modificato."), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-		}
+	@GetMapping(value="/api/v1/saved/number")
+    public ResponseEntity<Object> getNumberOfPartecipants(@PathVariable("cityId") String cityId,
+    														@RequestParam("contentId") String contentId){
+		int num = this.controller.getNumberOfPartecipants(contentId);
+		return new ResponseEntity<Object>(num, HttpStatus.OK);
     }
+	
+	//-----------------------CURATOR------------------------
+	
+
+	
+	@PostMapping(value="/api/v1/city/{cityId}/staff/analysis")
+	public ResponseEntity<Object> getAnalysis(@RequestHeader(name="auth") String token,
+											  @PathVariable("cityId") String cityId,
+											  @RequestParam("months") int months, 
+											  @RequestParam("onlyUsers")boolean onlyUsers) {
+		String username = auth.getUsername(token);
+		Analysis data = this.controller.getAnalysis(username, cityId, months, onlyUsers);
+		if(data != null)
+			return new ResponseEntity<Object>(data, HttpStatus.OK);
+		else return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
+	
+	//-------------------------STAFF-----------------------
 
 	@PutMapping(value="/api/v1/city/{cityId}/staff/addModerator")
 	public ResponseEntity<Object> addModerator(@RequestHeader(name="auth") String token,
@@ -347,6 +515,20 @@ public class RestController {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@PutMapping(value="/api/v1/city/{cityId}/staff/setRole")
+	public ResponseEntity<Object> setRole(@RequestHeader(name="auth") String token,
+											@PathVariable("cityId") String cityId,
+											@RequestParam("toSet") String toSet, 
+											@RequestParam("role") String role) {
+		String username = auth.getUsername(token);
+		Role _role = Role.safeValueOf(role);
+		if(this.controller.setRole(username, toSet, cityId, _role)) {
+			return new ResponseEntity<Object>(wrc.make("Ruovo modificato."), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+		}
+    }
 	
 	@GetMapping(value="/api/v1/city/{cityId}/staff/roleRequests")
 	public ResponseEntity<Object> getRoleRequests(@RequestHeader(name="auth") String token,
@@ -399,7 +581,31 @@ public class RestController {
 		}
 	}
 	
-	//-------------------------------CONTRIBUTORS-------------
+
+	@GetMapping(value="/api/v1/city/{cityId}/staff/reports")
+	public ResponseEntity<Object> getReports(@RequestHeader(name="auth") String token,
+												@PathVariable("cityId") String cityId) {
+    	String username = auth.getUsername(token);
+    	List<Report> list = controller.getReports(username, cityId);
+    	if(list != null)
+    		return new ResponseEntity<Object>(list, HttpStatus.OK);
+	    else
+	    	return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+    }
+	
+	@GetMapping(value="/api/v1/city/{cityId}/staff/report")
+	public ResponseEntity<Object> getReport(@RequestHeader(name="auth") String token,
+												@PathVariable("cityId") String cityId,
+												@RequestParam("id") String id) {
+    	String username = auth.getUsername(token);
+    	Report report = controller.getReport(username, cityId, id);
+    	if(report != null)
+    		return new ResponseEntity<Object>(report, HttpStatus.OK);
+	    else
+	    	return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+    }
+	
+	//-------------------------------CONTRIBUTORS------------------------
 
 	
 	@GetMapping(value="/api/v1/city/{cityId}/posts/{postId}/contributes")
@@ -522,6 +728,17 @@ public class RestController {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+
+	@PostMapping(value="/api/v1/city/{cityId}/notifyEvent")
+    public ResponseEntity<Object> notifyEvent(@RequestHeader(name="auth") String token,
+    											@PathVariable("cityId") String cityId,
+    											@RequestParam("contentId") String contentId,
+    											@RequestBody String message) {
+		String username = auth.getUsername(token);
+		this.controller.notifyEvent(username, message, contentId);
+		return new ResponseEntity<Object>(wrc.make("Evento notificato."), HttpStatus.OK);
+    }
 
 	
 	//-----------------------MEDIA--------------------
@@ -537,5 +754,6 @@ public class RestController {
 		List<String> list = files.stream().map(f -> this.fh.getName(f)).toList();
 		return new ResponseEntity<Object>(list, HttpStatus.OK);
 	}
+	
 
 }

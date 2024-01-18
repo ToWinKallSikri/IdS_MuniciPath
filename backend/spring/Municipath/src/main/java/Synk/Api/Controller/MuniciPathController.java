@@ -710,8 +710,8 @@ public class MuniciPathController {
 		return this.uh.getMyMessage(username, id);
 	}
 	
-	public synchronized Analysis getAnalytics(String username, String cityId,
-												int months, boolean onlyUsers) {
+	public Analysis getAnalysis(String username, String cityId,
+									int months, boolean onlyUsers) {
 		if(!this.checkCurator(username, cityId))
 			return null;
 		return this.ah.getAnalysis(cityId, months, onlyUsers);
