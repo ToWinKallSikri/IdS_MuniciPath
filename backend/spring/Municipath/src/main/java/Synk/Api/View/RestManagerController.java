@@ -21,9 +21,13 @@ public class RestManagerController {
     private CityHandler ch;
     @Autowired
     private Authorizer authorizer;
-    private Authenticator authenticator;
-    private WebResponseCreator wrc;
+    private final Authenticator authenticator;
+    private final WebResponseCreator wrc;
 
+    public RestManagerController() {
+        this.authenticator = new Authenticator();
+        this.wrc = new WebResponseCreator();
+    }
 
     @DeleteMapping(value="/api/v1/manager/removeUser")
     public ResponseEntity<Object> removeUser(@RequestHeader(name="auth") String token,

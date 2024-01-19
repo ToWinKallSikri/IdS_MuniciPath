@@ -24,7 +24,7 @@ import Synk.Api.View.Auth.Authenticator;
 import Synk.Api.View.Auth.Authorizer;
 
 @RestController
-public class RestTuristContoller {
+public class RestTouristContoller {
 	
 	@Autowired
 	private PointHandler poh;
@@ -41,7 +41,7 @@ public class RestTuristContoller {
     private Authenticator authenticator;
     private WebResponseCreator wrc;
     
-    public RestTuristContoller(){
+    public RestTouristContoller(){
     	this.authenticator = new Authenticator();
     	this.wrc = new WebResponseCreator();
     }
