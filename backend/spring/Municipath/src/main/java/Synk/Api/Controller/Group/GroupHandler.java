@@ -275,7 +275,10 @@ public class GroupHandler implements AuthorProvider {
 		if(cityId == null || from == null)
 			return null;
 		return this.groupRepository.findByCityId(cityId).stream()
-				.filter(g -> g.getPublicationTime().isAfter(from)).toList();
+				.filter(g -> g.getPublicationTime().isAfter(from)).map(g -> {
+					g.setVote(this.mediator.getVoteOf(g.getId()));
+					return g;
+				}).toList();
 	}
 	
 	/**

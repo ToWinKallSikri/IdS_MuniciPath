@@ -448,7 +448,10 @@ public class PointHandler implements AuthorProvider {
 		if(cityId == null || from == null)
 			return null;
 		return this.postRepository.findByCityId(cityId).stream()
-				.filter(p -> p.getPublicationTime().isAfter(from)).toList();
+				.filter(p -> p.getPublicationTime().isAfter(from))
+				.map(p -> {
+					p.setVote(this.mediator.getVoteOf(p.getId())); 
+					return p;}).toList();
 	}
 	
 	/**

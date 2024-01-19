@@ -3,23 +3,24 @@ package Synk.Api.Controller.Analysis;
 import Synk.Api.Model.MetaData;
 
 public class VoteAverageMonthAnalyzer implements NumberMonthAnalyzer {
-
+	
+	float count, sum;
+	
 	@Override
 	public void StartAnalysis() {
-		// TODO Auto-generated method stub
-		
+		count = 0f;
+		sum = 0f;
 	}
 
 	@Override
 	public void acceptData(MetaData data) {
-		// TODO Auto-generated method stub
-		
+		this.sum += data.getVote().getVoteAverage();
+		this.count++;
 	}
 
 	@Override
 	public long getResult() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Math.round(sum/count);
 	}
 
 }
