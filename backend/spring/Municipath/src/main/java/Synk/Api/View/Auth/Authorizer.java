@@ -20,7 +20,7 @@ public class Authorizer {
 	private AuthorProvider postAuthorProvider, groupAuthorProvider;
 	private UserProvider userProvider;
     private IdentifierManager idManager;
-    private final String TURIST = "unregistered_tourist";
+    private final String LIMITED = "unregistered_tourist";
 	
     
 	public Authorizer(CityHandler city, PointHandler post,
@@ -79,7 +79,7 @@ public class Authorizer {
 	
 	
 	public boolean isLogged(String username) {
-		return !username.equals(TURIST);
+		return !username.equals(LIMITED);
 	}
 	
 }

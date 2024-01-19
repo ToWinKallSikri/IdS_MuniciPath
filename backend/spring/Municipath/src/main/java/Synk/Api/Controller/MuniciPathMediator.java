@@ -332,7 +332,7 @@ public class MuniciPathMediator {
     public void send(String author, String contentId, String message, String reciver) {
 		this.user.notify(author, message, contentId, reciver);
 	}
-
+    
 	public String getNameOfCity(String cityId) {
 		City city = this.city.getCity(cityId);
 		return city == null ? null : city.getName();
@@ -345,7 +345,7 @@ public class MuniciPathMediator {
 	public void removeAllFeedbackOf(String contentId) {
 		this.feedback.removeAllFeedbackOf(contentId);
 	}
-
+	
 	public List<MetaData> getDataForAnalysis(String cityId, int months, boolean onlyUsers) {
 		LocalDateTime from = LocalDateTime.now().minusMonths(months);
 		List<MetaData> list = new ArrayList<>();

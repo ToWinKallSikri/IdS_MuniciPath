@@ -10,7 +10,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 public class Authenticator {
 
     private final String SECRET = "passwordsegretissima";
-    private final String TURIST = "unregistered_tourist";
+    private final String LIMITED = "unregistered_tourist";
 
     public String createJwt(String username) {
         JWTCreator.Builder builder = JWT.create().withSubject(username);
@@ -24,7 +24,7 @@ public class Authenticator {
     		DecodedJWT token = JWT.require(Algorithm.HMAC256(this.SECRET)).build().verify(jwt);
     		return token.getSubject();
     	} catch(Exception e) {
-    		return TURIST;
+    		return LIMITED;
     	}
     }
 }
