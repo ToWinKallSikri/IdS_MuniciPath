@@ -154,5 +154,9 @@ public class CityHandlerTests {
 		uh.removeUser("sakura");
 	}
 	
+	@Test
+	void testReport() {
+		//TODO
+	}
 	
 }

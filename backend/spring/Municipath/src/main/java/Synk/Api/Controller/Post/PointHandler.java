@@ -552,17 +552,16 @@ public class PointHandler implements AuthorProvider {
 		List<String> winnercontent = this.contributes.declareWinner(contestId, winnerId);
 		if(winnercontent == null)
 			return false;
-		showWinner(post.getId(), post.getTitle(), winnercontent);
-		post.setAuthor(winnerId);
+		showWinner(post.getId(), post.getTitle(), winnercontent, winnerId);
 		Point point = pointRepository.findById(post.getPointId()).get();
 		this.pointRepository.save(point);
 		return true;
 	}
 	
-	private void showWinner(String postId, String title, List<String> content) {
+	private void showWinner(String postId, String title, List<String> content, String winnerId) {
 		ProtoPost data = new ProtoPost();
 		data.setTitle(title);
-		data.setText("");
+		data.setText("Vincitore: "+winnerId);
 		data.setPersistence(true);
 		data.setType(PostType.SOCIAL);
 		data.setMultimediaData(content);

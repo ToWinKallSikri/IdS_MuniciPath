@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import Synk.Api.Controller.ContentTimeModifier;
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
 import Synk.Api.Controller.User.UserHandler;
@@ -19,6 +20,7 @@ import Synk.Api.View.ViewModel.ProtoPost;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,8 @@ public class PointHandlerTests {
     private PointHandler poh;
 	@Autowired
     private PendingHandler peh;
+	@Autowired
+	private ContentTimeModifier timeModifier;
 	
 	
 	@Test
@@ -220,14 +224,16 @@ public class PointHandlerTests {
 		content.add("foto5.png");
 		content.add("foto6.png");
 		assertFalse(poh.addContentToContest(user2, contestId, content2));
+		assertFalse(this.poh.declareWinner(user, contestId, user2));
+		this.timeModifier.modifyEndTime(contestId, -4, ChronoUnit.DAYS);
+		assertTrue(this.poh.declareWinner(user, contestId, user2));
+		Post post = this.poh.getPost(contestId);
+		assertEquals(post.getType(), PostType.SOCIAL);
+		assertEquals(post.getText(), "Vincitore: sasuke");
 		poh.deletePost(contestId);
 		ch.deleteCity(id);
 		uh.removeUser(user);
 		uh.removeUser(user2);
 	}
-	
-	
-	
-	
 	
 }

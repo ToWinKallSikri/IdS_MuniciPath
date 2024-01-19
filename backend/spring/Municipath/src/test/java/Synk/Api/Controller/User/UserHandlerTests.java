@@ -133,6 +133,16 @@ public class UserHandlerTests {
 		assertFalse(uh.usernameExists("vegeta"));
 		uh.removeUser("goku");
 	}
+	
+	@Test
+	void testFollowing() {
+		//TODO
+	}
+	
+	@Test
+	void testNotification() {
+		//TODO
+	}
 
 	
 }
