@@ -10,10 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@org.springframework.web.bind.annotation.RestController
+@RestController
 public class RestManagerController {
     @Autowired
     private UserHandler uh;
@@ -23,6 +24,11 @@ public class RestManagerController {
     private Authorizer authorizer;
     private Authenticator authenticator;
     private WebResponseCreator wrc;
+    
+    public RestManagerController() {
+    	this.authenticator = new Authenticator();
+        this.wrc = new WebResponseCreator();
+    }
 
 
     @DeleteMapping(value="/api/v1/manager/removeUser")
