@@ -23,6 +23,7 @@ import Synk.Api.Model.User.Notification.Notification;
 import Synk.Api.View.WebResponseCreator;
 import Synk.Api.View.Auth.Authenticator;
 import Synk.Api.View.Auth.Authorizer;
+import Synk.Api.View.ViewModel.WebLog;
 
 @RestController
 public class RestTouristContoller {
@@ -45,6 +46,25 @@ public class RestTouristContoller {
     public RestTouristContoller(){
     	this.authenticator = new Authenticator();
     	this.wrc = new WebResponseCreator();
+    }
+    
+    @PostMapping(value="/api/v1/signin")
+    public ResponseEntity<Object> signin(@RequestBody WebLog log) {
+        if(uh.addUser(log.getUsername(), log.getPassword())) {
+            return new ResponseEntity<Object>(wrc.make("Creazione account riuscito."), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    @PostMapping(value="/api/v1/login")
+    public ResponseEntity<Object> login(@RequestBody WebLog log) {
+        if(this.uh.isThePassword(log.getUsername(), log.getPassword())) {
+            String jwt = authenticator.createJwt(log.getUsername());
+            return new ResponseEntity<Object>(wrc.make(jwt), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
     }
 	
 	@PostMapping(value="/api/v1/city/{cityId}/addRoleRequest")
