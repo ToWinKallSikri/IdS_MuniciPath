@@ -357,8 +357,8 @@ public class PointHandler implements AuthorProvider {
      * metodo per elimanare un post. e' destinato 
      * all'uso dell'autore
      * @param postId id del post
-     * @param author autore del psot
-     * @return true se e' stato eliminato, false altimenti
+     * @param author autore del post
+     * @return true se e' stato eliminato, false altrimenti
      */
     public boolean deletePost (String postId, String author) {
     	if(postId == null || author == null)
