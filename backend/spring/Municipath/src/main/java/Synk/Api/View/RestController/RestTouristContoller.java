@@ -1,4 +1,4 @@
-package Synk.Api.View;
+package Synk.Api.View.RestController;
 
 import java.util.List;
 
@@ -20,6 +20,7 @@ import Synk.Api.Controller.Post.PointHandler;
 import Synk.Api.Controller.SavedContent.SavedContentHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.User.Notification.Notification;
+import Synk.Api.View.WebResponseCreator;
 import Synk.Api.View.Auth.Authenticator;
 import Synk.Api.View.Auth.Authorizer;
 

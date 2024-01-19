@@ -1,4 +1,4 @@
-package Synk.Api.View;
+package Synk.Api.View.RestController;
 
 import java.util.List;
 
@@ -21,6 +21,7 @@ import Synk.Api.Model.City.Report.Report;
 import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.City.Role.RoleRequest;
 import Synk.Api.Model.Pending.PendingRequest;
+import Synk.Api.View.WebResponseCreator;
 import Synk.Api.View.Auth.Authenticator;
 import Synk.Api.View.Auth.Authorizer;
 

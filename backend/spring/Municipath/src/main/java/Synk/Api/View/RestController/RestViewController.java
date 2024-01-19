@@ -1,4 +1,4 @@
-package Synk.Api.View;
+package Synk.Api.View.RestController;
 
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Group.GroupHandler;
@@ -51,8 +51,8 @@ public class RestViewController {
         else return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value="/api/v1/city/{cityId}/groups/{groupId}")
-    public ResponseEntity<Object> viewGroup(@PathVariable("groupId") String groupId,
+    @GetMapping(value="/api/v1/city/{cityId}/groups")
+    public ResponseEntity<Object> viewGroup(@RequestParam("groupId") String groupId,
                                             @PathVariable("cityId") String cityId) {
         Group group = this.gh.viewGroup(groupId);
         if(group != null) {
@@ -85,9 +85,9 @@ public class RestViewController {
         }
     }
 
-    @GetMapping(value="/api/v1/city/{cityId}/points/{pointId}")
+    @GetMapping(value="/api/v1/city/{cityId}/point")
     public ResponseEntity<Object> viewPosts(@RequestHeader(name="auth") String token,
-                                            @PathVariable("pointId") String pointId,
+                                            @RequestParam("pointId") String pointId,
                                             @PathVariable("cityId") String cityId) {
         String username = authenticator.getUsername(token);
         List<Post> list = this.poh.viewPosts(pointId, username);
@@ -98,9 +98,9 @@ public class RestViewController {
         }
     }
 
-    @GetMapping(value="/api/v1/city/{cityId}/posts/{postId}")
+    @GetMapping(value="/api/v1/city/{cityId}/posts")
     public ResponseEntity<Object> viewPost(@RequestHeader(name="auth") String token,
-                                           @PathVariable("postId") String postId,
+    										@RequestParam("postId") String postId,
                                            @PathVariable("cityId") String cityId) {
         String username = authenticator.getUsername(token);
         Post post = this.poh.getPost(postId, username);

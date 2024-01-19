@@ -1,4 +1,4 @@
-package Synk.Api.View;
+package Synk.Api.View.RestController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import Synk.Api.Controller.User.UserHandler;
+import Synk.Api.View.WebResponseCreator;
 import Synk.Api.View.Auth.Authenticator;
 import Synk.Api.View.Auth.Authorizer;
 

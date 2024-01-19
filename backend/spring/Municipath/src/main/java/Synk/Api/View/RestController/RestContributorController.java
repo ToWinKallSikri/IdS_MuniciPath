@@ -1,4 +1,4 @@
-package Synk.Api.View;
+package Synk.Api.View.RestController;
 
 import Synk.Api.Controller.Group.GroupHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
@@ -6,6 +6,7 @@ import Synk.Api.Controller.Post.PointHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.Post.Contribute.Contribute;
 import Synk.Api.Model.Post.Position;
+import Synk.Api.View.WebResponseCreator;
 import Synk.Api.View.Auth.Authenticator;
 import Synk.Api.View.Auth.Authorizer;
 import Synk.Api.View.ViewModel.ProtoGroup;
@@ -38,9 +39,9 @@ public class RestContributorController {
         this.wrc = new WebResponseCreator();
     }
 
-    @GetMapping(value="/api/v1/city/{cityId}/posts/{postId}/contributes")
+    @GetMapping(value="/api/v1/city/{cityId}/contributes")
     public ResponseEntity<Object> getContributes(@RequestHeader(name="auth") String token,
-                                                 @PathVariable("postId") String postId,
+    											@RequestParam("postId") String postId,
                                                  @PathVariable("cityId") String cityId) {
         String username = authenticator.getUsername(token);
         List<Contribute> list = this.poh.getContributes(username, postId);
@@ -51,9 +52,9 @@ public class RestContributorController {
         }
     }
 
-    @PutMapping(value="/api/v1/city/{cityId}/posts/{postId}/declareWinner")
+    @PutMapping(value="/api/v1/city/{cityId}/declareWinner")
     public ResponseEntity<Object> declareWinner(@RequestHeader(name="auth") String token,
-                                                @PathVariable("postId") String postId,
+    											@RequestParam("postId") String postId,
                                                 @RequestParam("winnerId") String winnerId,
                                                 @PathVariable("cityId") String cityId) {
         String username = authenticator.getUsername(token);
@@ -85,7 +86,7 @@ public class RestContributorController {
     }
 
 
-    @PostMapping(value="/api/v1/city/{cityId}/groups/createGroup")
+    @PostMapping(value="/api/v1/city/{cityId}/groups")
     public ResponseEntity<Object> createGroup(@RequestHeader(name="auth") String token,
                                               @PathVariable("cityId") String cityId,
                                               @RequestBody ProtoGroup data) {
@@ -97,25 +98,33 @@ public class RestContributorController {
         }
     }
 
-    @PutMapping(value="/api/v1/city/{cityId}/groups/{groupId}/editGroup")
+    @PutMapping(value="/api/v1/city/{cityId}/groups")
     public ResponseEntity<Object> editGroup(@RequestHeader(name="auth") String token,
-                                            @PathVariable("groupId") String groupId,
+                                            @RequestParam("groupId") String groupId,
                                             @RequestBody ProtoGroup data,
                                             @PathVariable("cityId") String cityId) {
         String username = authenticator.getUsername(token);
-        if(this.gh.editGroup(username, groupId, data)) {
+        boolean result;
+        if(authorizer.isStaff(username, cityId))
+			result = this.gh.editGroup(groupId, data);
+        else result = this.gh.editGroup(groupId, username, data);
+        if(result) {
             return new ResponseEntity<Object>(wrc.make("Gruppo modificato."), HttpStatus.OK);
         } else {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @DeleteMapping(value="/api/v1/city/{cityId}/groups/{groupId}/removeGroup")
+    @DeleteMapping(value="/api/v1/city/{cityId}/groups")
     public ResponseEntity<Object> removeGroup(@RequestHeader(name="auth") String token,
-                                              @PathVariable("groupId") String groupId,
+    										  @RequestParam("groupId") String groupId,
                                               @PathVariable("cityId") String cityId) {
         String username = authenticator.getUsername(token);
-        if(this.gh.removeGroup(username, groupId)) {
+        boolean result;
+        if(authorizer.isStaff(username, cityId))
+			result = this.gh.removeGroup(groupId);
+        else result = this.gh.removeGroup(username, groupId);
+        if(result) {
             return new ResponseEntity<Object>(wrc.make("Gruppo eliminato."), HttpStatus.OK);
         } else {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -123,7 +132,7 @@ public class RestContributorController {
     }
 
 
-    @PostMapping(value="/api/v1/city/{cityId}/posts/createPost")
+    @PostMapping(value="/api/v1/city/{cityId}/posts")
     public ResponseEntity<Object> createPost(@RequestHeader(name="auth") String token,
                                              @RequestParam("lat") double lat,
                                              @RequestParam("lng") double lng,
@@ -138,25 +147,33 @@ public class RestContributorController {
         }
     }
 
-    @PutMapping(value="/api/v1/city/{cityId}/posts/{postId}/editPost")
+    @PutMapping(value="/api/v1/city/{cityId}/posts")
     public ResponseEntity<Object> editPost(@RequestHeader(name="auth") String token,
-                                           @PathVariable("postId") String postId,
+                                           @RequestParam("postId") String postId,
                                            @RequestBody ProtoPost data,
                                            @PathVariable("cityId") String cityId) {
         String username = authenticator.getUsername(token);
-        if(this.poh.editPost(postId, username, cityId, data)) {
+        boolean result;
+        if(authorizer.isStaff(username, cityId))
+			result = this.poh.editPost(postId, data);
+        else result = this.poh.editPost(postId, username, cityId, data);
+        if(result) {
             return new ResponseEntity<Object>(wrc.make("Post modificato."), HttpStatus.OK);
         } else {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @DeleteMapping(value="/api/v1/city/{cityId}/posts/{postId}/deletePost")
+    @DeleteMapping(value="/api/v1/city/{cityId}/posts")
     public ResponseEntity<Object> deletePost(@RequestHeader(name="auth") String token,
-                                             @PathVariable("postId") String postId,
+    										 @RequestParam("postId") String postId,
                                              @PathVariable("cityId") String cityId) {
         String username = authenticator.getUsername(token);
-        if(this.poh.deletePost(postId, username)) {
+        boolean result;
+        if(authorizer.isStaff(username, cityId))
+			result = this.poh.deletePost(postId);
+        else result = this.poh.deletePost(postId, username);
+        if(result) {
             return new ResponseEntity<Object>(wrc.make("Post eliminato."), HttpStatus.OK);
         } else {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

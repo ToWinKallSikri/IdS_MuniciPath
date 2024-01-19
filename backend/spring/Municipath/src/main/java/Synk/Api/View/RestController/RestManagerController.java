@@ -1,8 +1,9 @@
-package Synk.Api.View;
+package Synk.Api.View.RestController;
 
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.User.User;
+import Synk.Api.View.WebResponseCreator;
 import Synk.Api.View.Auth.Authenticator;
 import Synk.Api.View.Auth.Authorizer;
 import Synk.Api.View.ViewModel.ProtoCity;
