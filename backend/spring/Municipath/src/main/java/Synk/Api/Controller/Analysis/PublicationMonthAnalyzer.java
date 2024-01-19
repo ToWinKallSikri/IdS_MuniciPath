@@ -3,23 +3,23 @@ package Synk.Api.Controller.Analysis;
 import Synk.Api.Model.MetaData;
 
 public class PublicationMonthAnalyzer implements NumberMonthAnalyzer {
+	
+	private long count;
 
 	@Override
 	public void StartAnalysis() {
-		// TODO Auto-generated method stub
+		this.count = 0;
 		
 	}
 
 	@Override
 	public void acceptData(MetaData data) {
-		// TODO Auto-generated method stub
-		
+		this.count++;
 	}
 
 	@Override
 	public long getResult() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.count;
 	}
 
 }

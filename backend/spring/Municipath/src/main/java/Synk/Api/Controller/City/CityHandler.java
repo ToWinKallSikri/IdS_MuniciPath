@@ -12,7 +12,6 @@ import Synk.Api.Controller.City.Role.RoleHandler;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.CityRepository;
 import Synk.Api.Model.City.Report.Report;
-import Synk.Api.Model.City.Role.Licence;
 import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.City.Role.RoleRequest;
 
@@ -146,28 +145,6 @@ public class CityHandler implements RoleProvider {
     	this.cityRepository.delete(city);
     	return true;
     }
-
-	/**
-	 * Metodo per controllare se un utente è autorizzato a postare in una determinata città
-	 * @param cityId, l'id della città in cui si vuole postare
-	 * @param username, l'username dell'utente che vuole postare
-	 * @return true se l'utente è autorizzato a postare, false altrimenti
-	 */
-    public boolean isAuthorized(String cityId, String username) {
-    	Role role = getAuthorization(username, cityId).getRole();
-    	return role != Role.LIMITED && role != Role.TOURIST;
-	}
-
-	/**
-	 * Metodo per controllare se un utente può pubblicare in una determinata città
-	 * @param cityId, l'id della città in cui si vuole postare
-	 * @param author, l'username dell'utente che vuole postare
-	 * @return true se l'utente può pubblicare, false altrimenti
-	 */
-	public boolean canPublish(String cityId, String author) {
-		Role role = getAuthorization(author, cityId).getRole();
-		return role == Role.CURATOR || role == Role.CONTR_AUTH || role == Role.MODERATOR;
-	}
 	
 	/**
 	 * Metodo per controllare se un utente e' moderatore o curatore in una determinata città
@@ -176,31 +153,8 @@ public class CityHandler implements RoleProvider {
 	 * @return true se l'utente può pubblicare, false altrimenti
 	 */
 	public boolean isTheStaff(String cityId, String author) {
-		Role role = getAuthorization(author, cityId).getRole();
+		Role role = this.getRole(author, cityId);
 		return role == Role.CURATOR || role == Role.MODERATOR;
-	}
-
-	/**
-	 * Metodo per ottenere la "licenza" di un utente in una determinata città
-	 * @param username, l'username dell'utente di cui si vuole ottenere la licenza
-	 * @param cityId, l'id della città in cui si vuole ottenere il ruolo
-	 * @return la licenza se l'utente esiste, una nuova licenza con ruolo di tipo LIMITED altrimenti
-	 */
-	public Licence getAuthorization(String username, String cityId) {
-		if(username == null || cityId == null)
-			return null;
-		if (!this.mediator.usernameExists(username)) 
-			return new Licence(cityId, username, Role.LIMITED);
-		return this.roleHandler.getAuthorization(username, cityId);
-	}
-
-	/**
-	 * Metodo per ottenere tutte le licenze di una determinata città
-	 * @param cityId, l'id della città di cui si vogliono ottenere le licenze
-	 * @return una lista contenente tutte le licenze della città
-	 */
-	public List<Licence> getAuthorizations(String cityId) {
-		return this.roleHandler.getAuthorizations(cityId);
 	}
 
 	/**
@@ -261,7 +215,9 @@ public class CityHandler implements RoleProvider {
 	public Role getRole(String username, String cityId) {
 		if(username == null || cityId == null)
 			return Role.LIMITED;
-		return this.getAuthorization(username, cityId).getRole();
+		if (!this.mediator.usernameExists(username)) 
+			return Role.LIMITED;
+		return this.roleHandler.getAuthorization(username, cityId).getRole();
 	}
 
 	/**

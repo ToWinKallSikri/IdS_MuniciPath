@@ -69,31 +69,6 @@ public class MuniciPathMediator {
 		this.analysis.setMediator(this);
 	}
 	
-	/*
-	public void setPoint(PointHandler point) {
-		this.point = point;
-	}
-	
-	public void setUser(UserHandler user) {
-		this.user = user;
-	}
-	
-	public void setCity(CityHandler city) {
-		this.city = city;
-	}
-	
-	public void setGroup(GroupHandler group) {
-		this.group = group;
-	}
-	
-	public void setPending(PendingHandler pending) {
-		this.pending = pending;
-	}
-	
-	public void setFeedback(FeedbackHandler feedback) {
-		this.feedback = feedback;
-	}*/
-	
 	/**
 	 * controlla se un dato autore può postare in un dato comune
 	 * @param cityId id del comune
@@ -101,7 +76,7 @@ public class MuniciPathMediator {
 	 * @return true se puo' postare, false altrimenti
 	 */
 	public boolean isAuthorizedToPost(String cityId, String author) {
-		return this.city.isAuthorized(cityId, author);
+		return this.getRoleLevel(cityId, author) > 1;
 	}
 	
 	/**
@@ -111,7 +86,7 @@ public class MuniciPathMediator {
 	 * @return true se puo' pubblicare, false altrimenti
 	 */
 	public boolean canPublish(String cityId, String author) {
-		return this.city.canPublish(cityId, author);
+		return this.getRoleLevel(cityId, author) > 2;
 	}
 	
 	/**
@@ -148,7 +123,7 @@ public class MuniciPathMediator {
 	 * @return
 	 */
 	public boolean isTheStaff(String cityId, String author) {
-		return this.city.isTheStaff(cityId, author);
+		return this.getRoleLevel(cityId, author) > 3;
 	}
 	
 	/**
@@ -351,7 +326,7 @@ public class MuniciPathMediator {
 	}
 
     public List<String> getPartecipants(String contentId) {
-        return null;
+        return this.saved.getPartecipants(contentId);
     }
     
     public void send(String author, String contentId, String message, String reciver) {
