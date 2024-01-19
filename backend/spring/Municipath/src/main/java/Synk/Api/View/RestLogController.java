@@ -11,8 +11,13 @@ import org.springframework.web.bind.annotation.*;
 public class RestLogController {
     @Autowired
     private UserHandler uh;
-    private Authenticator authenticator;
-    private WebResponseCreator wrc;
+    private final Authenticator authenticator;
+    private final WebResponseCreator wrc;
+
+    public RestLogController() {
+        this.authenticator = new Authenticator();
+        this.wrc = new WebResponseCreator();
+    }
 
     @PostMapping(value="/api/v1/signin")
     public ResponseEntity<Object> signin(@RequestParam("username") String username, @RequestParam("password") String password) {
