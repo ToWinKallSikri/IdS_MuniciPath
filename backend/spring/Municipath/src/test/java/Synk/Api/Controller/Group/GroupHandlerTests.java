@@ -18,8 +18,8 @@ import Synk.Api.Controller.User.UserHandler;
 import Synk.Api.Model.City.City;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.PostType;
-import Synk.Api.ViewModel.ProtoGroup;
-import Synk.Api.ViewModel.ProtoPost;
+import Synk.Api.View.ViewModel.ProtoGroup;
+import Synk.Api.View.ViewModel.ProtoPost;
 
 
 @RunWith(SpringRunner.class)

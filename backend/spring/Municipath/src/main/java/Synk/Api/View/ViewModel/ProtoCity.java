@@ -1,4 +1,4 @@
-package Synk.Api.ViewModel;
+package Synk.Api.View.ViewModel;
 
 
 import Synk.Api.Model.Post.Position;

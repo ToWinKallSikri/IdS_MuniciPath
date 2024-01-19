@@ -14,7 +14,7 @@ import Synk.Api.Model.Post.Point;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
-import Synk.Api.ViewModel.ProtoPost;
+import Synk.Api.View.ViewModel.ProtoPost;
 
 import static org.junit.jupiter.api.Assertions.*;
 

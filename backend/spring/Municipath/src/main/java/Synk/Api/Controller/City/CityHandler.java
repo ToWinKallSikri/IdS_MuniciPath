@@ -18,7 +18,7 @@ import Synk.Api.Model.City.Role.RoleRequest;
 
 
 @Service
-public class CityHandler {
+public class CityHandler implements RoleProvider {
 	/**
 	 * Oggetto mediator, utilizzato per far comunicare i vari handler fra di loro
 	 */

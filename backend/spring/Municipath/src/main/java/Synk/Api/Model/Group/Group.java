@@ -11,7 +11,7 @@ import org.hibernate.annotations.FetchMode;
 import Synk.Api.Model.MetaData;
 import Synk.Api.Model.Feedback.Score;
 import Synk.Api.Model.Pending.PendingRequest;
-import Synk.Api.ViewModel.ProtoGroup;
+import Synk.Api.View.ViewModel.ProtoGroup;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

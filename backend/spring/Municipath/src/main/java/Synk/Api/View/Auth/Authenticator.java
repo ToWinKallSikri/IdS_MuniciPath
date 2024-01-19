@@ -1,14 +1,12 @@
-package Synk.Api.View;
+package Synk.Api.View.Auth;
 
 
 import org.joda.time.DateTime;
-import org.springframework.stereotype.Component;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-@Component
 public class Authenticator {
 
     private final String SECRET = "passwordsegretissima";

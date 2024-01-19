@@ -15,6 +15,8 @@ public class IdentifierManager {
 	 */
 	public String FromPostToPoint(String postId) {
     	String[] parts = postId.split("\\.");
+    	if(parts.length < 2)
+    		return "";
     	return parts[0]+"."+parts[1];
     }
     
@@ -37,7 +39,10 @@ public class IdentifierManager {
      * @return true se appartiene ad un gruppo, false se appartiene ad un post
      */
     public boolean isGroup(String id) {
-    	return id.split("\\.")[1].equals("g");
+    	String[] parts = id.split("\\.");
+    	if(parts.length < 2)
+    		return false;
+    	return parts[1].equals("g");
     }
     
     /**
@@ -47,11 +52,24 @@ public class IdentifierManager {
      * @return suo reale id
      */
     public String getContentId(String id) {
-    	return id.split("\\.")[2];
+    	String[] parts = id.split("\\.");
+    	if(parts.length < 3)
+    		return "";
+    	return parts[2];
     }
-
+    
+    /**
+     * metodo per verificare se un
+     * id di following appartiene
+     * ad un follow di comune
+     * @param id id da controllare
+     * @return true se appartiene ad un comune, false altrimenti
+     */
 	public boolean isCityFollowing(String id) {
-		return id.split("\\.")[1].equals("c");
+		String[] parts = id.split("\\.");
+    	if(parts.length < 2)
+    		return false;
+		return parts[1].equals("c");
 	}
 	
 	

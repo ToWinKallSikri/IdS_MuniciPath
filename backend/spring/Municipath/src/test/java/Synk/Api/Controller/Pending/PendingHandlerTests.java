@@ -7,8 +7,8 @@ import Synk.Api.Model.City.City;
 import Synk.Api.Model.City.Role.Role;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.PostType;
-import Synk.Api.ViewModel.ProtoGroup;
-import Synk.Api.ViewModel.ProtoPost;
+import Synk.Api.View.ViewModel.ProtoGroup;
+import Synk.Api.View.ViewModel.ProtoPost;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

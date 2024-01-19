@@ -18,7 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserHandler {
+public class UserHandler implements UserProvider {
 
 	/**
 	 * Oggetto mediator, utilizzato per far comunicare i vari handler fra di loro

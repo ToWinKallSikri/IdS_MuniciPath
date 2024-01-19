@@ -7,8 +7,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import Synk.Api.Model.Post.PostType;
-import Synk.Api.ViewModel.ProtoGroup;
-import Synk.Api.ViewModel.ProtoPost;
+import Synk.Api.View.ViewModel.ProtoGroup;
+import Synk.Api.View.ViewModel.ProtoPost;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

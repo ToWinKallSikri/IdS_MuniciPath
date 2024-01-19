@@ -3,9 +3,11 @@ package Synk.Api.View;
 import Synk.Api.Model.Post.Contribute.Contribute;
 import Synk.Api.Model.User.User;
 import Synk.Api.Model.User.Notification.Notification;
-import Synk.Api.ViewModel.ProtoCity;
-import Synk.Api.ViewModel.ProtoGroup;
-import Synk.Api.ViewModel.ProtoPost;
+import Synk.Api.View.Auth.Authenticator;
+import Synk.Api.View.File.FileHandler;
+import Synk.Api.View.ViewModel.ProtoCity;
+import Synk.Api.View.ViewModel.ProtoGroup;
+import Synk.Api.View.ViewModel.ProtoPost;
 import jakarta.websocket.server.PathParam;
 
 import org.springframework.web.bind.annotation.*;

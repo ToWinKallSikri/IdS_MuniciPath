@@ -1,4 +1,4 @@
-package Synk.Api.ViewModel;
+package Synk.Api.View.ViewModel;
 
 import java.time.LocalDateTime;
 import java.util.List;

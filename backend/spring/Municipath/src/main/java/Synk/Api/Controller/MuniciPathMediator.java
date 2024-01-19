@@ -22,8 +22,8 @@ import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostType;
-import Synk.Api.ViewModel.ProtoGroup;
-import Synk.Api.ViewModel.ProtoPost;
+import Synk.Api.View.ViewModel.ProtoGroup;
+import Synk.Api.View.ViewModel.ProtoPost;
 import jakarta.annotation.PostConstruct;
 
 /**

@@ -28,8 +28,8 @@ import Synk.Api.Model.Post.Contribute.Contribute;
 import Synk.Api.Model.Post.Point;
 import Synk.Api.Model.User.User;
 import Synk.Api.Model.User.Notification.Notification;
-import Synk.Api.ViewModel.ProtoGroup;
-import Synk.Api.ViewModel.ProtoPost;
+import Synk.Api.View.ViewModel.ProtoGroup;
+import Synk.Api.View.ViewModel.ProtoPost;
 
 /**
  * questa classe funge da maschera per il lato controller

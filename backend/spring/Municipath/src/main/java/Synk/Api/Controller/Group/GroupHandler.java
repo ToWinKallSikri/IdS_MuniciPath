@@ -9,16 +9,17 @@ import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import Synk.Api.Controller.AuthorProvider;
 import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Model.Group.Group;
 import Synk.Api.Model.Group.GroupRepository;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Post;
-import Synk.Api.ViewModel.ProtoGroup;
+import Synk.Api.View.ViewModel.ProtoGroup;
 
 @Service
-public class GroupHandler {
+public class GroupHandler implements AuthorProvider {
 	
 
 	private final Integer CONTR_NOT_AUTH_LEVEL = 2;

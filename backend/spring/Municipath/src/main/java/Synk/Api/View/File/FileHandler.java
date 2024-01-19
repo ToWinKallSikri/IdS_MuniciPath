@@ -1,4 +1,4 @@
-package Synk.Api.View;
+package Synk.Api.View.File;
 
 
 import java.io.File;

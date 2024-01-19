@@ -8,6 +8,7 @@ import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import Synk.Api.Controller.AuthorProvider;
 import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Controller.Post.Contribute.ContributeHandler;
@@ -21,10 +22,10 @@ import Synk.Api.Model.Post.Post;
 import Synk.Api.Model.Post.PostRepository;
 import Synk.Api.Model.Post.PostType;
 import Synk.Api.Model.Post.Contribute.Contribute;
-import Synk.Api.ViewModel.ProtoPost;
+import Synk.Api.View.ViewModel.ProtoPost;
 
 @Service
-public class PointHandler {
+public class PointHandler implements AuthorProvider {
 
 	private final Integer CONTR_NOT_AUTH_LEVEL = 2;
 	private final Integer CONTR_AUTH_LEVEL = 3;
