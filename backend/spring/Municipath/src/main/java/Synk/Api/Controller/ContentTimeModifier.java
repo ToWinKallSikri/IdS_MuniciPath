@@ -114,4 +114,10 @@ public class ContentTimeModifier {
 		}
 	}
 	
+	public enum TimeType{
+		PUBL,
+		START,
+		END
+	}
+	
 }

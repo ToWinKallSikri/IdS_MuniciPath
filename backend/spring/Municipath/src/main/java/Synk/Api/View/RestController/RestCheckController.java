@@ -48,6 +48,12 @@ public class RestCheckController {
 		String username = authenticator.getUsername(token);
 		return new ResponseEntity<Object>(wrc.make(this.authorizer.havePowerWithIt(username, contentId)), HttpStatus.OK);
 	}
+
+	
+	@GetMapping(value="/api/v1/check/usernameExists")
+	public ResponseEntity<Object> usernameExists(@RequestParam("username") String username) {
+		return new ResponseEntity<Object>(this.uh.usernameExists(username), HttpStatus.OK);
+	}
 	
 	@GetMapping(value="/api/v1/check/isNotLimited")
 	public ResponseEntity<Object> isNotLimited(@RequestHeader(name="auth") String token,

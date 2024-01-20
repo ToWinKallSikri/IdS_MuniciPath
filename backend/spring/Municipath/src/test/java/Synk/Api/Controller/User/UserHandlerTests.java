@@ -135,7 +135,12 @@ public class UserHandlerTests {
 	}
 	
 	@Test
-	void testFollowing() {
+	void testFollowingUnfollowing() {
+		//TODO
+	}
+	
+	@Test
+	public void testNotifyCreation() {
 		//TODO
 	}
 	

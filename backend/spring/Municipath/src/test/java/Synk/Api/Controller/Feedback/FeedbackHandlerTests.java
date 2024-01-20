@@ -16,12 +16,7 @@ public class FeedbackHandlerTests {
 	AnalysisHandler handler;
 	
 	@Test
-	public void testFolowUnfollow() {
-		//TODO
-	}
-	
-	@Test
-	public void testNotifyCreation() {
+	public void testGiveFeedback() {
 		//TODO
 	}
 	
