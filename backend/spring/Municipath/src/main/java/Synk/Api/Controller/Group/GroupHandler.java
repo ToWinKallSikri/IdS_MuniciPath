@@ -196,7 +196,7 @@ public class GroupHandler implements AuthorProvider {
 		if(group == null || (!group.getAuthor().equals(author)))
 			return false;
 		this.groupRepository.delete(group);
-		this.mediator.removeAllFeedbackOf(groupId);
+		this.mediator.removeAllDataOf(groupId);
 		return true;
 	}
 	
@@ -214,7 +214,7 @@ public class GroupHandler implements AuthorProvider {
 		this.groupRepository.delete(group);
         String cityName = this.mediator.getNameOfCity(group.getCityId());
         this.mediator.send(cityName, group.getId(), "Il tuo insieme è stato eliminato dal comune.", group.getAuthor());
-		this.mediator.removeAllFeedbackOf(groupId);
+		this.mediator.removeAllDataOf(groupId);
         return true;
 	}
 

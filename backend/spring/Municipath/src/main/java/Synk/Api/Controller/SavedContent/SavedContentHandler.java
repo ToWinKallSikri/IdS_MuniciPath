@@ -62,4 +62,18 @@ public class SavedContentHandler {
                 .map(SavedContent::getContentId).toList();
 	}
 	
+	public void removeAllFromUser(String username) {
+		if(username == null)
+    		return;
+		List<SavedContent> list = savedContentRepository.findByUsername(username);
+		this.savedContentRepository.deleteAll(list);
+	}
+	
+	public void removeAllFromContent(String contentId) {
+		if(contentId == null)
+    		return;
+		List<SavedContent> list = savedContentRepository.findByContentId(contentId);
+		this.savedContentRepository.deleteAll(list);
+	}
+	
 }

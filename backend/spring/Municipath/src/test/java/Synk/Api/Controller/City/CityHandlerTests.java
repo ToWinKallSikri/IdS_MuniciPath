@@ -180,7 +180,6 @@ public class CityHandlerTests {
         Position pos = new Position(10, 10);
         List<String> empty = new ArrayList<>();
         ProtoPost data1 = new ProtoPost();
-        String postId = "655823757.75498433.0";
         String postId2 = "655823757.75498433.1";
         data1.setTitle("parole");
         data1.setText("blablabla");

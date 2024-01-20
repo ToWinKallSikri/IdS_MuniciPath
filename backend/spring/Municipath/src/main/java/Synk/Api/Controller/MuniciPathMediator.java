@@ -342,8 +342,13 @@ public class MuniciPathMediator {
 		this.user.notifyCreation(data);
 	}
 	
-	public void removeAllFeedbackOf(String contentId) {
+	public void removeAllDataOf(String contentId) {
 		this.feedback.removeAllFeedbackOf(contentId);
+		this.saved.removeAllFromContent(contentId);
+	}
+
+	public void removeAllSaveContentOf(String username) {
+		this.saved.removeAllFromUser(username);
 	}
 	
 	public List<MetaData> getDataForAnalysis(String cityId, int months, boolean onlyUsers) {

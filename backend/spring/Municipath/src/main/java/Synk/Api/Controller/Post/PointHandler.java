@@ -403,7 +403,7 @@ public class PointHandler implements AuthorProvider {
     	} else this.pointRepository.save(point);
     	this.postRepository.delete(post);
     	this.mediator.removeFromAllGroups(post.getId());
-    	this.mediator.removeAllFeedbackOf(post.getId());
+    	this.mediator.removeAllDataOf(post.getId());
     	return true;
     }
     

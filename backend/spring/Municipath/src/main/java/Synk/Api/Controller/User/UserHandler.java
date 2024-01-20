@@ -85,6 +85,7 @@ public class UserHandler implements UserProvider {
 		this.userRepository.deleteById(username);
 		this.followHandler.deleteUser(username);
 		this.notificationHandler.deleteUser(username);
+		this.mediator.removeAllSaveContentOf(username);
 		return true;
 	}
 
