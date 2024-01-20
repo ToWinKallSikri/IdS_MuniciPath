@@ -279,7 +279,7 @@ public class UserHandler implements UserProvider {
 	public void notify(String author, String message, String contentId, String reciever) {
 		if(author == null || message == null || contentId == null || reciever == null)
 			return;
-        if(!(this.usernameExists(author)) && (this.usernameExists(reciever)) && (this.mediator.contentExist(contentId)))
+        if( (!this.usernameExists(reciever)) || (!this.mediator.contentExist(contentId)))
             return;
         notificationHandler.notify(author,message,contentId,reciever);
 	}
@@ -337,7 +337,7 @@ public class UserHandler implements UserProvider {
 	public boolean unfollowCity(String username, String cityId) {
 		if(username == null || cityId == null)
 			return false;
-		return this.followHandler.followCity(username, cityId);
+		return this.followHandler.unfollowCity(username, cityId);
 	}
 	
 	public boolean follow(String username, String contentId) {

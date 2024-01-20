@@ -23,14 +23,14 @@ public class FollowHandler {
 	public boolean followContributor(String username, String contributor) {
 		if(username.equals(contributor) || this.alreadyFollowingContributor(username, contributor))
 			return false;
-		String id = username + "u" + contributor;
+		String id = username + ".u." + contributor;
 		Follow follow = new Follow(id, contributor, username);
 		this.followRepository.save(follow);
 		return true;
 	}
 	
 	public boolean unfollowContributor(String username, String contributor) {
-		String id = username + "u" + contributor;
+		String id = username + ".u." + contributor;
 		Follow follow = getFollow(id);
 		if(follow == null)
 			return false;
@@ -41,14 +41,14 @@ public class FollowHandler {
 	public boolean followCity(String username, String cityId) {
 		if(this.alreadyFollowingCity(username, cityId))
 			return false;
-		String id = username + "c" + cityId;
+		String id = username + ".c." + cityId;
 		Follow follow = new Follow(id, cityId, username);
 		this.followRepository.save(follow);
 		return true;
 	}
 	
 	public boolean unfollowCity(String username, String cityId) {
-		String id = username + "c" + cityId;
+		String id = username + ".c." + cityId;
 		Follow follow = getFollow(id);
 		if(follow == null)
 			return false;
@@ -79,12 +79,12 @@ public class FollowHandler {
 	}
 	
 	public boolean alreadyFollowingCity(String username, String cityId) {
-		String id = username + "c" + cityId;
+		String id = username + ".c." + cityId;
 		return this.followRepository.existsById(id);
 	}
 	
 	public boolean alreadyFollowingContributor(String username, String contributor) {
-		String id = username + "u" + contributor;
+		String id = username + ".u." + contributor;
 		return this.followRepository.existsById(id);
 	}
 	
