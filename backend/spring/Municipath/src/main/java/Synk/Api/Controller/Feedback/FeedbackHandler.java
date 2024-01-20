@@ -30,7 +30,17 @@ public class FeedbackHandler {
 	public void setMediator(MuniciPathMediator mediator) {
         this.mediator = mediator;
     }
-
+	
+	/**
+	 * metodo per valutare un contenuto. una eventuale
+	 * valutazione precedente dello stesso utente
+	 * verra' sovrascritta
+	 * @param username nome utente
+	 * @param contentId contenuto da valutare
+	 * @param vote voto
+	 * @return true se la valutazione e' andata a buon
+	 * fine, false altrimenti
+	 */
 	public boolean valute(String username, String contentId, int vote) {
 		if(username == null || contentId == null)
 			return false;
@@ -45,14 +55,26 @@ public class FeedbackHandler {
 		return true;
 	}
 	
+	/**
+	 * metodo per ottenere il voto di un contenuto
+	 * @param contentId id del contenuto
+	 * @return voto del contenuto
+	 */
 	public Score getFeedback(String contentId) {
 		if(contentId == null)
 			return null;
 		List<Feedback> list = this.feedbackRepository.findByContentId(contentId);
+		if(list.isEmpty())
+			return new Score(0, 0);
 		float sum = list.stream().map(f -> f.getVote()).reduce((a,b) -> a + b).orElse(0f);
-		return sum == 0f ? null : new Score(sum/list.size(), list.size());
+		return new Score(sum/list.size(), list.size());
 	}
 	
+	/**
+	 * metodo per rimuovere tutti i voti
+	 * di un contenuto destinato alla eliminazione
+	 * @param contentId id del contenuto
+	 */
 	public void removeAllFeedbackOf(String contentId) {
 		if(contentId == null)
 			return;

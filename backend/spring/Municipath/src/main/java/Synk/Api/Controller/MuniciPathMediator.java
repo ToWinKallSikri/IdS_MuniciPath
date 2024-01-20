@@ -260,13 +260,31 @@ public class MuniciPathMediator {
 	}
 	
 	/**
-	 * metodo per ottenere l'autore di un post o di un
+	 * metodo per ottenere 
+	 * l'autore di un post o di un
 	 * gruppo tramite l'id
 	 * @param pendingId id del contenuto
 	 * @return l'autore se esiste, false altrimenti
 	 */
-	public String getAuthor(String pendingId) {
-		return idManager.isGroup(pendingId) ? group.getAuthor(pendingId) : point.getAuthor(pendingId);
+	public String getAuthor(String contentId) {
+		return this.getMetaData(contentId).getAuthor();
+	}
+	
+
+	/**
+	 * metodo per controllare se un utente
+	 * è autore di contenuto
+	 * @param username nome utente
+	 * @param contentId contenuto
+	 * @return true se è il vero autore o se
+	 * appartiene ad un comune di cui possiede
+	 * i privilegi di moderatore o curatore
+	 */
+	public boolean isAuthor(String username, String contentId) {
+		MetaData content = this.getMetaData(contentId);
+		if(content.isOfCity())
+			return this.getRoleLevel(idManager.getCityId(contentId), username) > 3;
+		else return content.getAuthor().equals(username);
 	}
 	
 	
@@ -306,58 +324,128 @@ public class MuniciPathMediator {
 	public void deletePendingPost(String pendingId) {
 		this.point.deletePost(pendingId);
 	}
-
+	
+	/**
+	 * metodo per ricevere il voto di
+	 * contenuto
+	 * @param id id del contenuto
+	 * @return voto del contenuto
+	 */
 	public Score getVoteOf(String id) {
 		return this.feedback.getFeedback(id);
 	}
-
+	
+	/**
+	 * metodo per controllare se un dato contenuto
+	 * esiste o meno
+	 * @param contentId id del contenuto
+	 * @return true se esiste, false altrimenti
+	 */
 	public boolean contentExist(String contentId) {
 		return getMetaData(contentId) != null;
 	}
-
+	
+	/**
+	 * metodo per controllare se un comune
+	 * esiste o meno
+	 * @param cityId id del comune
+	 * @return true se esiste, false altrimenti
+	 */
 	public boolean checkCity(String cityId) {
 		return this.city.getCity(cityId) != null;
 	}
-
+	
+	/**
+	 * metodo per ottenre un metadato, cioè un
+	 * contenuto astratto con meno informazioni
+	 * @param contentId id del contenuto
+	 * @return il contenuto ricercato
+	 */
 	public MetaData getMetaData(String contentId) {
 		if(this.idManager.isGroup(contentId))
 			return this.group.viewGroup(contentId);
 		return this.point.getPost(contentId);
 	}
-
+	
+	/**
+	 * metodo per ottenre gli username che hanno
+	 * salvato un dato contenuto
+	 * viene usato per vedere i "partecipanti 
+	 * ad un evento".
+	 * @param contentId id del contenuto
+	 * @return username che lo hanno salvato
+	 */
     public List<String> getPartecipants(String contentId) {
         return this.saved.getPartecipants(contentId);
     }
     
+    /**
+     * metodo per inviare una notifica
+     * @param author autore della notifica
+     * @param contentId id del contenuto
+     * @param message messaggio da inviare
+     * @param reciver destinatario
+     */
     public void send(String author, String contentId, String message, String reciver) {
 		this.user.notify(author, message, contentId, reciver);
 	}
     
+    /**
+     * metodo per ottenere il nome di un comune.
+     * @param cityId id del comune.
+     * @return nome del comune se esiste, altrimenti null.
+     */
 	public String getNameOfCity(String cityId) {
 		City city = this.city.getCity(cityId);
 		return city == null ? null : city.getName();
 	}
-
+	
+	/**
+	 * metodo per notificare la creazione
+	 * a tutti i follower
+	 * @param data contenuto da notificare
+	 */
 	public void notifyCreation(MetaData data) {
 		this.user.notifyCreation(data);
 	}
 	
+	/**
+	 * metodo per rimuovere tutti i salvataggi
+	 * di feedback e di contenuti di un contenuto
+	 * destinato alla eliminazione
+	 * @param contentId id del contenuto
+	 */
 	public void removeAllDataOf(String contentId) {
 		this.feedback.removeAllFeedbackOf(contentId);
 		this.saved.removeAllFromContent(contentId);
 	}
-
+	
+	/**
+	 * metodo per rimuovere tutti i salvataggi
+	 * di contenuti appartenenti ad un account
+	 * destinato alla eliminazione
+	 * @param username nome utente
+	 */
 	public void removeAllSaveContentOf(String username) {
 		this.saved.removeAllFromUser(username);
 	}
 	
+	/**
+	 * metodo per ottenere tutti 
+	 * i contenuti in una certa
+	 * distanza temporale
+	 * @param cityId id del comune da controllare
+	 * @param months numero di mesi in cui scavare
+	 * @param onlyUsers se ignorare i cotenuti dello staff
+	 * @return i contenuti richiesti
+	 */
 	public List<MetaData> getDataForAnalysis(String cityId, int months, boolean onlyUsers) {
 		LocalDateTime from = LocalDateTime.now().minusMonths(months);
 		List<MetaData> list = new ArrayList<>();
 		list.addAll(this.point.getPosts(cityId, from));
 		list.addAll(this.group.viewGroups(cityId, from));
 		if(onlyUsers)
-			list = list.stream().filter(d -> !d.isOfCity()).toList();
+			list = new ArrayList<>(list.stream().parallel().filter(d -> !d.isOfCity()).toList());
 		return list;
 	}
 	

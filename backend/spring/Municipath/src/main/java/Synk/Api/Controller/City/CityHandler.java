@@ -206,12 +206,7 @@ public class CityHandler implements RoleProvider {
 		return this.roleHandler.removeModerator(username, cityId);
 	}
 
-	/**
-	 * Metodo per ottenere il ruolo di un utente in una determinata città
-	 * @param username, l'username dell'utente di cui si vuole ottenere il ruolo
-	 * @param cityId, l'id della città in cui si vuole ottenere il ruolo
-	 * @return il ruolo se l'utente esiste, null altrimenti
-	 */
+	@Override
 	public Role getRole(String username, String cityId) {
 		if(username == null || cityId == null)
 			return Role.LIMITED;
@@ -259,6 +254,15 @@ public class CityHandler implements RoleProvider {
 		return this.roleHandler.judge(requestId, outcome);
 	}
 	
+	/**
+	 * metodo per segnalare un contenuto
+	 * @param username username del segnalatore
+	 * @param contentId contenuto da segnalare
+	 * @param motivation motivazione
+	 * @return true se la segnalazione e' 
+	 * andata a buon fine
+	 * false altrimenti.
+	 */
 	public boolean reportContent(String username, String contentId, String motivation) {
 		if(username == null || contentId == null || motivation == null)
 			return false;
@@ -267,6 +271,11 @@ public class CityHandler implements RoleProvider {
         return this.reportHandler.reportContent(username, contentId, motivation);
 	}
 	
+	/**
+	 * metodo per ottenre le segnalazioni di un dato comune
+	 * @param cityId comune da visualizzare
+	 * @return segnalazioni del comune
+	 */
 	public List<Report> getReports(String cityId){
 		if(cityId == null)
 			return null;
@@ -275,6 +284,11 @@ public class CityHandler implements RoleProvider {
 		return this.reportHandler.getReports(cityId);
 	}
 	
+	/**
+	 * metodo per ottenere un singolo report
+	 * @param reportId id del report
+	 * @return repost ricercato
+	 */
 	public Report getReport(String reportId){
 		if(reportId == null)
 			return null;

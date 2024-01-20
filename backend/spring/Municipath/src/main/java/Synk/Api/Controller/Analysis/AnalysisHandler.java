@@ -35,6 +35,13 @@ public class AnalysisHandler {
 		this.mediator = mediator;
 	}
 	
+	/**
+	 * metodo per ottenre le analisi del comune
+	 * @param cityId id del comune
+	 * @param months numero di mesi da controllare
+	 * @param onlyUsers se ignorare i dati dello staff del comune
+	 * @return dati di analisi
+	 */
 	public synchronized Analysis getAnalysis(String cityId, int months, boolean onlyUsers) {
 		if(months < 1 || months > 12 || cityId == null)
 			return null;
@@ -42,12 +49,25 @@ public class AnalysisHandler {
 		return getAnalysis(data, months);
 	}
 	
+	/**
+	 * questo metodo si occupa di dividere i mesi in base
+	 * al numero richiesto.
+	 * @param data dati di da analizzare
+	 * @param months numero di mesi
+	 * @return dati di analisi
+	 */
 	private Analysis getAnalysis(List<MetaData> data, int months) {
 		if(data == null || data.isEmpty())
 			return null;
 		return getAnalysis(this.partitioner.divide(data, months));
 	}
 	
+	/**
+	 * usando gli analizzatori ottiene tutti i 
+	 * dati necessari per comporre le analisi
+	 * @param data dati da analizzare
+	 * @return dati di analisi
+	 */
 	private Analysis getAnalysis(List<List<MetaData>> data) {
 		long[] publs = getNumberResult(this.publAnalyzer, data);
 		long[] views = getNumberResult(this.viewAnalyzer, data);

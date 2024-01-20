@@ -53,9 +53,9 @@ public class SavedContentHandlerTests {
 		data1.setMultimediaData(empty);
 		String postId = "655823757.75498433.0";
 		assertTrue(sh.getSavedContent(user2).isEmpty());
-		assertFalse(sh.saveSavedContent(user2, postId));
+		assertFalse(sh.saveContent(user2, postId));
 		poh.createPost(user, pos, cityId, data1);
-		assertTrue(sh.saveSavedContent(user2, postId));
+		assertTrue(sh.saveContent(user2, postId));
 		assertFalse(sh.getSavedContent(user2).isEmpty());
 		assertEquals(sh.getPartecipants(postId).get(0), user2);
 		ch.deleteCity(cityId);
@@ -84,7 +84,7 @@ public class SavedContentHandlerTests {
 		data1.setEndTime(LocalDateTime.now().plusDays(20));
 		String postId = "655823757.75498433.0";
 		poh.createPost(user, pos, cityId, data1);
-		sh.saveSavedContent(user2, postId);
+		sh.saveContent(user2, postId);
 		uh.notifyEvent(user, "Accorrete numerosi!", postId);
 		assertFalse(uh.getMyMessages(user2).isEmpty());
 		ch.deleteCity(cityId);

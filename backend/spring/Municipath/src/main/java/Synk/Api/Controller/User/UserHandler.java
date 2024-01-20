@@ -4,7 +4,7 @@ package Synk.Api.Controller.User;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-
+import Synk.Api.Controller.IdentifierManager;
 import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Controller.User.Follow.FollowHandler;
 import Synk.Api.Controller.User.Notification.NotificationHandler;
@@ -261,6 +261,12 @@ public class UserHandler implements UserProvider {
 		return this.userRepository.existsById(username);
 	}
 	
+	/**
+	 * metodo per ottenere tutti i messaggi
+	 * di un dato utente
+	 * @param username nome utente
+	 * @return messaggi dell'utente
+	 */
 	public List<Notification> getMyMessages(String username){
 		if(username == null)
 			return null;
@@ -269,6 +275,13 @@ public class UserHandler implements UserProvider {
 		return this.notificationHandler.getMyMessages(username);
 	}
 	
+	/**
+	 * metodo per ottenere un messaggio
+	 * di un utente
+	 * @param username nome utente
+	 * @param id id del messaggio
+	 * @return messaggio ricarcato
+	 */
 	public Notification getMyMessage(String username, String id) {
 		if(username == null || id == null)
 			return null;
@@ -277,6 +290,16 @@ public class UserHandler implements UserProvider {
 		return this.notificationHandler.getMyMessage(username, id);
 	}
 
+	/**
+	 * metodo per notificare un utente in merito
+	 * ad un contenuto. viene usato per notificare
+	 * un esito pending o una modifica / eliminazione
+	 * di contenuto da parte dello staff di un comune
+	 * @param author autore della notifica
+	 * @param message messaggio di notifica
+	 * @param contentId id del contenuto
+	 * @param reciever destinatario del messaggio
+	 */
 	public void notify(String author, String message, String contentId, String reciever) {
 		if(author == null || message == null || contentId == null || reciever == null)
 			return;
@@ -285,16 +308,34 @@ public class UserHandler implements UserProvider {
         notificationHandler.notify(author,message,contentId,reciever);
 	}
 	
+	/**
+	 * metodo per notificare un evento a tutti coloro
+	 * che lo hanno salvato tra i contenuti salvati.
+	 * @param author autore della notifica
+	 * @param message messaggio di notifica
+	 * @param contentId id del contenuto
+	 */
 	public void notifyEvent(String author, String message, String contentId) {
 		if(author == null || message == null || contentId == null)
 			return;
-		if (!(this.usernameExists(author) && (mediator.contentExist(contentId)) &&
-                (mediator.getMetaData(contentId).getAuthor().equals(author))))
+		if (!( this.usernameExists(author) 
+				&& mediator.contentExist(contentId) 
+				&& mediator.isAuthor(author, contentId) ))
             return;
         List<String> l1 = mediator.getPartecipants(contentId);
+		if(mediator.getMetaData(contentId).isOfCity()) {
+			String cityName = mediator.getNameOfCity(new IdentifierManager().getCityId(contentId));
+	        notificationHandler.notifyEvent(cityName, message, contentId, l1);
+		}
         notificationHandler.notifyEvent(author, message, contentId, l1);
     }
 
+	/**
+	 * Metodo per notificare la creazione di un contenuto
+	 * a tutti gli utenti che seguono un certo
+	 * comune o contributor
+	 * @param data contenuto da notificare
+	 */
 	public void notifyCreation(MetaData data) {
 		if(data == null)
 			return;
@@ -310,7 +351,12 @@ public class UserHandler implements UserProvider {
         notificationHandler.notifyEvent(author, "Un nuovo contenuto è stato pubblicato!", data.getId(), list);
 	}
 
-	
+	/**
+	 * metodo per seguire un contributor
+	 * @param username nome utente dell'utente
+	 * @param contributor nome utente del contributo
+	 * @return true se il following e' andato a buon fine
+	 */
 	public boolean followContributor(String username, String contributor) {
 		if(username == null || contributor == null)
 			return false;
@@ -319,12 +365,24 @@ public class UserHandler implements UserProvider {
 		return this.followHandler.followContributor(username, contributor);
 	}
 	
+	/**
+	 * metodo per smettere di seguire un contributor
+	 * @param username nome utente dell'utente
+	 * @param contributor nome utente del contributor
+	 * @return true se l'utente ha da ora smesso di seguire il contributor
+	 */
 	public boolean unfollowContributor(String username, String contributor) {
 		if(username == null || contributor == null)
 			return false;
 		return this.followHandler.unfollowContributor(username, contributor);
 	}
 	
+	/**
+	 * metodo per seguire un comune
+	 * @param username nome utente
+	 * @param cityId id del comune
+	 * @return true se il following e' andato a buon fine
+	 */
 	public boolean followCity(String username, String cityId) {
 		if(username == null || cityId == null)
 			return false;
@@ -335,12 +393,24 @@ public class UserHandler implements UserProvider {
 		return this.followHandler.followCity(username, cityId);
 	}
 	
+	/**
+	 * metodo per smettere di seguire un comune
+	 * @param username nome utente dell'utente
+	 * @param cityId id del comune
+	 * @return true se l'utente ha smesso di seguire il dato comune
+	 */
 	public boolean unfollowCity(String username, String cityId) {
 		if(username == null || cityId == null)
 			return false;
 		return this.followHandler.unfollowCity(username, cityId);
 	}
 	
+	/**
+	 * metodo per seguire il proprietario di un contenuto
+	 * @param username nome utente del contenuto
+	 * @param contentId id del contenuto
+	 * @return truese il following e' andato a buon fine
+	 */
 	public boolean follow(String username, String contentId) {
 		if(username == null || contentId == null)
 			return false;
@@ -352,6 +422,13 @@ public class UserHandler implements UserProvider {
 		return this.followHandler.follow(username, meta);
 	}
 	
+	/**
+	 * metodo per smettere di seguire da un contenuto
+	 * @param username nome utente dell'utente
+	 * @param contentId id del contenuto
+	 * @return true se l'utente ha smesso di seguire il
+	 * proprietario di un contenuto.
+	 */
 	public boolean unfollow(String username, String contentId) {
 		if(username == null || contentId == null)
 			return false;
@@ -361,6 +438,13 @@ public class UserHandler implements UserProvider {
 		return this.followHandler.unfollow(username, meta);
 	}
 	
+	/**
+	 * metodo che dice se si sta seguendo il proprietario
+	 * di un dato contenuto
+	 * @param username nome utente dell'utente
+	 * @param contentId id del contenuto
+	 * @return true se l'utente sta attualmente seguendo il contenuto
+	 */
 	public boolean alreadyFollowing(String username, String contentId) {
 		if(username == null || contentId == null)
 			return false;
@@ -370,6 +454,15 @@ public class UserHandler implements UserProvider {
 		return this.followHandler.alreadyFollowing(username, meta);
 	}
 	
+	/**
+	 * metodo per verificare se 
+	 * un utente segue attualmente
+	 * un dato comune
+	 * @param username nome utente
+	 * @param cityId id del comune
+	 * @return true se attualmente 
+	 * lo segue, false altrimenti.
+	 */
 	public boolean alreadyFollowingCity(String username, String cityId) {
 		if(username == null || cityId == null)
 			return false;
@@ -380,6 +473,13 @@ public class UserHandler implements UserProvider {
 		return this.followHandler.alreadyFollowingCity(username, cityId);
 	}
 	
+	/**
+	 * metodo per verificare se un utente 
+	 * segue attualmente un dato contributor
+	 * @param username nome utente
+	 * @param contributor nome utente del contributor
+	 * @return true se attualmente lo segue
+	 */
 	public boolean alreadyFollowingContributor(String username, String contributor) {
 		if(username == null || contributor == null)
 			return false;
@@ -388,6 +488,12 @@ public class UserHandler implements UserProvider {
 		return this.followHandler.alreadyFollowingContributor(username, contributor);
 	}
 	
+	/**
+	 * metodo che restituisce tutti i comuni e
+	 * contributor attualmente seguiti
+	 * @param username nome utente
+	 * @return lista dei seguiti
+	 */
 	public List<String> getAllFollowed(String username){
 		if(username == null)
 			return null;

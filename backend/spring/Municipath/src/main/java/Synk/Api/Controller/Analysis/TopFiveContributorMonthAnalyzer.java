@@ -1,10 +1,10 @@
 package Synk.Api.Controller.Analysis;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import Synk.Api.Model.MetaData;
 
@@ -27,8 +27,8 @@ public class TopFiveContributorMonthAnalyzer implements TopFiveMonthAnalyzer {
 
 	@Override
 	public String[] getResult() {
-		List<Entry<String, Integer>> list = this.publications.entrySet().stream().toList();
-		list.sort(Comparator.comparing(Entry::getValue));
+		List<Map.Entry<String, Integer>> list = new ArrayList<>(publications.entrySet());
+        list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
 		List<String> authorList = list.subList(0, Math.min(5, list.size()))
 				.stream().map(e -> e.getKey()).toList();
 		String[] result = new String[5];

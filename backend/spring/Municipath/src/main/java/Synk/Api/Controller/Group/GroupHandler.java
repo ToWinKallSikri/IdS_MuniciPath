@@ -2,6 +2,7 @@ package Synk.Api.Controller.Group;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -69,6 +70,7 @@ public class GroupHandler implements AuthorProvider {
 	private void checkCompositionOfGroups(String cityId) {
 		List<Group> toDelete = getAllFromCity(cityId)
 				.filter(g -> !g.isGroup()).toList();
+		toDelete.forEach(g -> this.mediator.removeAllDataOf(g.getId()));
 		this.groupRepository.deleteAll(toDelete);
 	}
 	
@@ -77,7 +79,9 @@ public class GroupHandler implements AuthorProvider {
 	 * @param cityId id del comune da cui rimuovere tutti i gruppi
 	 */
 	public void removeAllFromCity(String cityId) {
-		this.groupRepository.deleteAll(getAllFromCity(cityId).toList());
+		List<Group> toDelete = getAllFromCity(cityId).toList();
+		toDelete.forEach(g -> this.mediator.removeAllDataOf(g.getId()));
+		this.groupRepository.deleteAll(toDelete);
 	}
 	
 	/**
@@ -354,11 +358,15 @@ public class GroupHandler implements AuthorProvider {
 	 */
 	public void checkEndingGroups() {
 		LocalDateTime date = LocalDateTime.now();
+		List<Group> toDelete = new ArrayList<>();
 		getStreamOfAll()
 			.filter(g -> ! g.isPersistence()).forEach(g -> {
 				if(g.getEndTime().isBefore(date))
-					groupRepository.delete(g);
+					toDelete.add(g);
 			});
+		for(Group group : toDelete) {
+			removeGroup(group.getId());
+		}
 	}
 	
 	/**

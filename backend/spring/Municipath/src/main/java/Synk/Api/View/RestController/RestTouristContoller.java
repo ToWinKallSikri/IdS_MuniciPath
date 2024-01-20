@@ -101,7 +101,7 @@ public class RestTouristContoller {
     											   @RequestParam("action") boolean action) {
 		String username = authenticator.getUsername(token);
 		boolean result;
-		if(action) result = this.sch.saveSavedContent(username, contentId);
+		if(action) result = this.sch.saveContent(username, contentId);
 		else result = this.sch.removeSavedContent(username, contentId);
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
     }

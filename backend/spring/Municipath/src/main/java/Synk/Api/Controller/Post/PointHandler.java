@@ -93,9 +93,10 @@ public class PointHandler implements AuthorProvider {
         Point point = getPoint(pos, cityId);
     	creator.setIds(point.getNewPostId(), point.getPointId(), cityId);
     	Post newPost = creator.createPost();
-        postRepository.save(newPost);
         point.getPosts().add(newPost);
-    	this.pointRepository.save(point);
+        newPost.setPoint(point);
+        postRepository.save(newPost);
+    	pointRepository.save(point);
         if(level == CONTR_NOT_AUTH_LEVEL)
         	this.mediator.addPending(newPost.getId());
         else this.mediator.notifyCreation(newPost);
@@ -272,7 +273,10 @@ public class PointHandler implements AuthorProvider {
         List<Point> ps = this.pointRepository.findByCityId(cityId);
         this.pointRepository.deleteAll(ps);
         ps.stream().map(p -> p.getPosts())
-        	.forEach(p -> this.postRepository.deleteAll(p));
+        	.forEach(p -> {
+        		p.forEach(po -> this.mediator.removeAllDataOf(po.getId()));
+        		this.postRepository.deleteAll(p);
+        		});
         this.mediator.removeAllCityGroups(cityId);
     }
     
@@ -288,9 +292,8 @@ public class PointHandler implements AuthorProvider {
     public List<Post> viewPosts (String pointId, String username) {
     	if(pointId == null)
     		return null;
-    	Point point = this.pointRepository.findById(pointId).orElse(null);
-        return point == null ? null : point.getPosts().stream()
-        		.filter(p -> toShow(p, username)).toList();
+    	List<Post> posts = this.postRepository.findByPointId(pointId);
+        return posts.stream().filter(p -> toShow(p, username)).toList();
     }
     
     /**
@@ -396,7 +399,9 @@ public class PointHandler implements AuthorProvider {
     private boolean deletePost(Post post) {
     	if(post.getType() == PostType.CONTEST)
     		this.contributes.removeContest(post.getId());
-    	Point point = this.pointRepository.findById(post.getPointId()).get();
+    	Point point = post.getPoint();
+    	post.setPoint(null);
+    	this.postRepository.save(post);
     	point.getPosts().remove(post);
     	if(point.getPosts().isEmpty()) {
         	this.pointRepository.delete(point);
@@ -583,7 +588,9 @@ public class PointHandler implements AuthorProvider {
 				.forEach(pos -> {
 					if(pos.getEndTime().isBefore(date))
 						toDelete.add(pos); }));
-		toDelete.forEach(po -> deletePost(po));
+		for(Post post : toDelete) {
+			deletePost(post.getId());
+		}
 	}
 	
 	/**
