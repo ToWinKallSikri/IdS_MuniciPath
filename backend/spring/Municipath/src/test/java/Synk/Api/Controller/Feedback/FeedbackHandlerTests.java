@@ -59,9 +59,9 @@ public class FeedbackHandlerTests {
         data1.setMultimediaData(empty);
         poh.createPost(user, pos, id, data1);
         String postId = "655823757.75498433.0";
-        fh.valute(user2, postId, 4);
-        fh.valute(user3, postId, 2);
-        fh.valute(user, postId, 5);
+        assertTrue(fh.valute(user2, postId, 4));
+        assertTrue(fh.valute(user3, postId, 2));
+        assertTrue(fh.valute(user, postId, 5));
         assertEquals(3.6666667461395264, fh.getFeedback(postId).getVoteAverage());
         assertEquals(3, fh.getFeedback(postId).getVoteCount());
         assertNotEquals(6, fh.getFeedback(postId).getVoteCount());
