@@ -1,9 +1,15 @@
 package Synk.Api.Controller.City;
+import Synk.Api.Controller.City.Report.ReportHandler;
+import Synk.Api.Controller.Post.PointHandler;
+import Synk.Api.Model.City.Report.Report;
+import Synk.Api.Model.Post.PostType;
+import Synk.Api.View.ViewModel.ProtoPost;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +30,10 @@ public class CityHandlerTests {
     private CityHandler ch;
 	@Autowired
     private UserHandler uh;
+    @Autowired
+    private PointHandler poh;
+    @Autowired
+    private ReportHandler rh;
 	
 	
 	@Test
@@ -156,7 +166,58 @@ public class CityHandlerTests {
 	
 	@Test
 	void testReport() {
-		//TODO
+        String id = "" + ("tokyo"+12345).hashCode();
+        String user = "naruto";
+        uh.addUser(user, "password");
+        uh.userValidation(user);
+        String user2 = "sasuke";
+        uh.addUser(user2, "password");
+        uh.userValidation(user2);
+        String user3 = "sakura";
+        uh.addUser(user3, "password");
+        uh.userValidation(user3);
+        ch.createCity("tokyo", 12345, user, new Position(1, 2));
+        Position pos = new Position(10, 10);
+        List<String> empty = new ArrayList<>();
+        ProtoPost data1 = new ProtoPost();
+        String postId = "655823757.75498433.0";
+        String postId2 = "655823757.75498433.1";
+        data1.setTitle("parole");
+        data1.setText("blablabla");
+        data1.setType(PostType.SOCIAL);
+        data1.setPersistence(true);
+        data1.setMultimediaData(empty);
+        poh.createPost(user, pos, id, data1);
+        Position pos1 = new Position(10, 10);
+        List<String> ReportableContent = new ArrayList<>();
+        ProtoPost data2 = new ProtoPost();
+        data2.setTitle("CONTENUTO ESPLICITO");
+        data2.setText("CONTENUTO ESPLICITO");
+        data2.setType(PostType.SOCIAL);
+        data2.setPersistence(true);
+        data2.setMultimediaData(ReportableContent);
+        poh.createPost(user, pos1, id, data2);
+        assertTrue(ch.reportContent(user2, postId2, "contenuto inappropriato"));
+        assertTrue(ch.reportContent(user3,postId2,"è improponibile lasciare un contenuto del genere su MuniciPath!!" ));
+        List<Report> reports = new ArrayList<>();
+                reports.add(rh.getReport("sasuke.655823757.75498433.1"));
+                reports.add(rh.getReport("sakura.655823757.75498433.1"));
+        List<Report> actualReports = rh.getReports(id);
+        assertTrue(sameList(reports, actualReports));
+        ch.deleteCity(id);
+        uh.removeUser(user);
+        uh.removeUser(user2);
+        uh.removeUser(user3);
 	}
-	
+
+    private boolean sameList(List<Report> list1, List<Report> list2){
+        if(list1.size() != list2.size())
+            return false;
+        for (int i = 0; i < list1.size(); i++) {
+            if(!list1.get(i).getId().equals(list2.get(i).getId())){
+                return false;
+            }
+        }
+        return true;
+    }
 }
