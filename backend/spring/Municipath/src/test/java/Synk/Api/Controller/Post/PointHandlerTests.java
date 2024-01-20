@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import Synk.Api.Controller.ContentTimeModifier;
+import Synk.Api.Controller.ContentTimeModifier.TimeType;
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.Pending.PendingHandler;
 import Synk.Api.Controller.User.UserHandler;
@@ -225,7 +226,7 @@ public class PointHandlerTests {
 		content.add("foto6.png");
 		assertFalse(poh.addContentToContest(user2, contestId, content2));
 		assertFalse(this.poh.declareWinner(user, contestId, user2));
-		this.timeModifier.modifyEndTime(contestId, -4, ChronoUnit.DAYS);
+		this.timeModifier.modifyTime(contestId, -4, ChronoUnit.DAYS, TimeType.END);
 		assertTrue(this.poh.declareWinner(user, contestId, user2));
 		Post post = this.poh.getPost(contestId);
 		assertEquals(post.getType(), PostType.SOCIAL);

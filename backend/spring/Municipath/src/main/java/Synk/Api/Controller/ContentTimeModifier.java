@@ -16,6 +16,12 @@ import Synk.Api.Model.Post.PostRepository;
 @Service
 public class ContentTimeModifier {
 	
+	public enum TimeType{
+		PUBL,
+		START,
+		END
+	}
+	
 	private PostRepository postRepo;
 	private GroupRepository groupRepo;
 	private IdentifierManager idManager;
@@ -26,84 +32,42 @@ public class ContentTimeModifier {
 		this.idManager = new IdentifierManager();
 	}
 	
-	public boolean modifyStartTime (String contentId, int time, ChronoUnit unit) {
+	public boolean modifyTime (String contentId, int time, ChronoUnit unit, TimeType op) {
 		if(this.idManager.isGroup(contentId))
-			return modifyGroupStartTime(contentId, time, unit);
-		return modifyPostStartTime(contentId, time, unit);
+			return modifyGroupTime(contentId, time, unit, op);
+		return modifyPostTime(contentId, time, unit, op);
 	}
 
-	private boolean modifyGroupStartTime(String contentId, int time, ChronoUnit unit) {
+	private boolean modifyGroupTime(String contentId, int time, ChronoUnit unit, TimeType op) {
 		if(!this.groupRepo.existsById(contentId))
 			return false;
-		Group group = this.groupRepo.findById(contentId).get();
-		LocalDateTime newTime = makeNewTime(group.getPublicationTime(), time, unit);
-		group.setStartTime(newTime);
-		this.groupRepo.save(group);
+		Group content = this.groupRepo.findById(contentId).get();
+		LocalDateTime newTime = makeNewTime(content.getPublicationTime(), time, unit);
+		if(op == TimeType.START)
+			content.setStartTime(newTime);
+		if(op == TimeType.END)
+			content.setEndTime(newTime);
+		if(op == TimeType.PUBL)
+			content.setPublicationTime(newTime);
+		this.groupRepo.save(content);
 		return true;
 	}
 
-	private boolean modifyPostStartTime(String contentId, int time, ChronoUnit unit) {
+	private boolean modifyPostTime(String contentId, int time, ChronoUnit unit, TimeType op) {
 		if(!this.postRepo.existsById(contentId))
 			return false;
-		Post post = this.postRepo.findById(contentId).get();
-		LocalDateTime newTime = makeNewTime(post.getPublicationTime(), time, unit);
-		post.setStartTime(newTime);
-		this.postRepo.save(post);
+		Post content = this.postRepo.findById(contentId).get();
+		LocalDateTime newTime = makeNewTime(content.getPublicationTime(), time, unit);
+		if(op == TimeType.START)
+			content.setStartTime(newTime);
+		if(op == TimeType.END)
+			content.setEndTime(newTime);
+		if(op == TimeType.PUBL)
+			content.setPublicationTime(newTime);
+		this.postRepo.save(content);
 		return true;
 	}
 	
-	public boolean modifyEndTime (String contentId, int time, ChronoUnit unit) {
-		if(this.idManager.isGroup(contentId))
-			return modifyGroupEndTime(contentId, time, unit);
-		return modifyPostEndTime(contentId, time, unit);
-	}
-
-	private boolean modifyGroupEndTime(String contentId, int time, ChronoUnit unit) {
-		if(!this.groupRepo.existsById(contentId))
-			return false;
-		Group group = this.groupRepo.findById(contentId).get();
-		LocalDateTime newTime = makeNewTime(group.getPublicationTime(), time, unit);
-		group.setEndTime(newTime);
-		this.groupRepo.save(group);
-		return true;
-	}
-
-	private boolean modifyPostEndTime(String contentId, int time, ChronoUnit unit) {
-		if(!this.postRepo.existsById(contentId))
-			return false;
-		Post post = this.postRepo.findById(contentId).get();
-		LocalDateTime newTime = makeNewTime(post.getPublicationTime(), time, unit);
-		post.setEndTime(newTime);
-		this.postRepo.save(post);
-		return true;
-	}
-	
-	public boolean modifyPublicationTime (String contentId, int time, ChronoUnit unit) {
-		if(this.idManager.isGroup(contentId))
-			return modifyGroupPublicationTime(contentId, time, unit);
-		return modifyPostPublicationTime(contentId, time, unit);
-	}
-
-	private boolean modifyGroupPublicationTime(String contentId, int time, ChronoUnit unit) {
-		if(!this.groupRepo.existsById(contentId))
-			return false;
-		Group group = this.groupRepo.findById(contentId).get();
-		LocalDateTime newTime = makeNewTime(group.getPublicationTime(), time, unit);
-		group.setPublicationTime(newTime);
-		this.groupRepo.save(group);
-		return true;
-	}
-
-	private boolean modifyPostPublicationTime(String contentId, int time, ChronoUnit unit) {
-		if(!this.postRepo.existsById(contentId))
-			return false;
-		Post post = this.postRepo.findById(contentId).get();
-		LocalDateTime newTime = makeNewTime(post.getPublicationTime(), time, unit);
-		post.setPublicationTime(newTime);
-		this.postRepo.save(post);
-		return true;
-	}
-
 	private LocalDateTime makeNewTime(LocalDateTime publicationTime, int time, ChronoUnit unit) {
 		if(time > 0) {
 			return publicationTime.plus(time, unit);
@@ -112,12 +76,6 @@ public class ContentTimeModifier {
 		} else {
 			return publicationTime;
 		}
-	}
-	
-	public enum TimeType{
-		PUBL,
-		START,
-		END
 	}
 	
 }
