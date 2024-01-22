@@ -37,9 +37,7 @@ public class WeatherForecast implements WeatherService {
         ResponseEntity<Root> response = new RestTemplate().getForEntity(
         		WEATHER_URL, Root.class, pos.getLat(), pos.getLng());
         if (response.getStatusCode() != HttpStatus.OK) return "?";
-        String string = response.getBody().forecast
+        return response.getBody().forecast
         		.forecastday.get(day).hour.get(hour).condition.icon;
-        System.out.println(string);
-        return string;
     }
 }

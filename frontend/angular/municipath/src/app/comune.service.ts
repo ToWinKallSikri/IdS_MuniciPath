@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams  } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Comune } from './Comune';
+import { City } from './City';
 import { environment } from '../environments/environment.development';
 
 
@@ -12,11 +12,14 @@ export class ComuneService {
   
   constructor(private HttpClient: HttpClient) { }
 
-public getComuni() : Observable<Comune[]> {
-  return this.HttpClient.get<Comune[]>(environment.baseUrl + "/api/v1/home");
-}
+  public getCities(id : string) : Observable<City[]> {
+    let params = new HttpParams().append('cityName', id);
+    return this.HttpClient.get<City[]>(environment.baseUrl+'/api/v1/cities', { params: params });
+  }
 
-public getComune(id : number) : Observable<Comune>{
-  return this.HttpClient.get<Comune>(environment.baseUrl + "/api/v1/home/" + id);
-}
+  public getCity(id : string) : Observable<City>{
+    let params = new HttpParams().append('cityId', id);
+    return this.HttpClient.get<City>(environment.baseUrl + '/api/v1/city', { params: params });
+  }
+  
 }

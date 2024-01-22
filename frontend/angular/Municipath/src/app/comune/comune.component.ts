@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Comune } from '../Comune';
+import { City } from '../City';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComuneService } from '../comune.service';
 
@@ -9,11 +9,11 @@ import { ComuneService } from '../comune.service';
   styleUrl: './comune.component.scss'
 })
 export class ComuneComponent {
-  public comune: Comune | undefined;
+  public comune: City | undefined;
 
   constructor(private route : ActivatedRoute, private comuneService : ComuneService, private router : Router) {
     this.route.params.subscribe(params => {
-      comuneService.getComune(params['id']).subscribe((comuniBE) => {
+      comuneService.getCity(params['id']).subscribe((comuniBE) => {
         console.log(comuniBE);
         this.comune = comuniBE;
         if(this.comune == undefined){

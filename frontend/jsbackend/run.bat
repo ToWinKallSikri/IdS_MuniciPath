@@ -1,1 +1,0 @@
-code . && node index.js

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ComuneService } from '../comune.service';
-import { Comune } from '../Comune';
+import { City } from '../City';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -8,12 +9,16 @@ import { Comune } from '../Comune';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  public comuni: Comune[] = [];
+  public comuni: City[] = [];
 
-  constructor(private comuneService : ComuneService) {
-    comuneService.getComuni().subscribe((comuniBE) => {
-      console.log(comuniBE);
-      this.comuni = comuniBE;
+  constructor(private route : ActivatedRoute, comuneService : ComuneService, private router : Router) {
+    route.queryParams.subscribe(params => {
+      let id = params['id'] ? params['id'] : '';
+      comuneService.getCities(id).subscribe((comuniBE) => {
+        console.log(comuniBE);
+        this.comuni = comuniBE;
+      });
     });
   }
+
 }

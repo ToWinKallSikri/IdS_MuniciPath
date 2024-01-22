@@ -40,6 +40,7 @@ public class RestViewController {
 
     @GetMapping(value="/api/v1/cities")
     public ResponseEntity<Object> getCities(@PathParam("cityName") String cityName) {
+    	System.out.println("<"+cityName+">");
         return new ResponseEntity<Object>(this.ch.getCities(cityName), HttpStatus.OK);
     }
 
