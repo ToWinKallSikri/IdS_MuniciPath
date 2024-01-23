@@ -4,6 +4,7 @@ import { City } from '../City';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AfterViewInit, ViewEncapsulation   } from '@angular/core';
 import * as L from 'leaflet';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,8 @@ import * as L from 'leaflet';
 export class HomeComponent implements AfterViewInit  {
   public comuni: City[] = [];
 
-  constructor(private route : ActivatedRoute, private comuneService : ComuneService, private router : Router) {}
+  constructor(private route : ActivatedRoute, private comuneService : ComuneService, private router : Router) {
+     }
 
   private map: any;
   private markers: any[] = [];

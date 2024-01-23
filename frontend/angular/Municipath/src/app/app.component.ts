@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
@@ -8,10 +9,12 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   title = 'MuniciPath';
-
+  jwt : string = '';
   like:boolean= false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private cookieService: CookieService) {
+    this.jwt = cookieService.get('jwt');
+  }
 
   isHomePage(): boolean {
     return this.router.url === '/';

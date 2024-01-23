@@ -13,6 +13,12 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatCardModule} from '@angular/material/card';
 import { HttpClientModule } from  '@angular/common/http';
 import {MatIconModule} from '@angular/material/icon';
+import { CookieService } from 'ngx-cookie-service';
+import { LoginComponent } from './login/login.component';
+import { MakecityComponent } from './makecity/makecity.component';
+import { MakepostComponent } from './makepost/makepost.component';
+import { MakegroupComponent } from './makegroup/makegroup.component';
+import { StaffComponent } from './staff/staff.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +26,12 @@ import {MatIconModule} from '@angular/material/icon';
     ComuneComponent,
     HomeComponent,
     MapComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    LoginComponent,
+    MakecityComponent,
+    MakepostComponent,
+    MakegroupComponent,
+    StaffComponent
   ],
   imports: [
     BrowserModule,
