@@ -4,6 +4,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { HomeComponent } from './home/home.component';
 import { MapComponent } from './map/map.component';
 import { ComuneComponent } from './comune/comune.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [{
   path: "",
@@ -12,6 +13,10 @@ const routes: Routes = [{
 {
   path: "map",
   component: MapComponent
+},
+{
+  path: "login",
+  component: LoginComponent
 },
 {
   path: ":id",

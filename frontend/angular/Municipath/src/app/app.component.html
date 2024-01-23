@@ -18,10 +18,17 @@
             share
           </mat-icon>
         </button>
+        <button mat-icon-button [routerLink]="['/login']" [ngClass]="{'home': isLogged()} ">
+          <mat-icon style="color: black;"> 
+            account_circle
+          </mat-icon>
+        </button>
     </mat-toolbar-row>
   </mat-toolbar>
 </p>
 <router-outlet></router-outlet>
-
+<footer>
+  © 2024 MuniciPath. Tutti i diritti riservati.
+</footer>
 
 

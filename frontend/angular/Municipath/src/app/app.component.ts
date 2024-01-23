@@ -9,15 +9,19 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class AppComponent {
   title = 'MuniciPath';
-  jwt : string = '';
+  jwt : string = '?';
   like:boolean= false;
 
   constructor(private router: Router, private cookieService: CookieService) {
-    this.jwt = cookieService.get('jwt');
+    this.jwt = this.cookieService.check('jwt') ?  cookieService.get('jwt') : '?';
   }
 
   isHomePage(): boolean {
     return this.router.url === '/';
+  }
+
+  isLogged() : boolean{
+    return this.jwt != '?';
   }
 
   liked(){
@@ -26,5 +30,8 @@ export class AppComponent {
 
   share(){
     alert("Contenuto condiviso!")
+  }
+  check(){
+    console.log(this.cookieService.check('jwt'));
   }
 }

@@ -19,6 +19,10 @@ import { MakecityComponent } from './makecity/makecity.component';
 import { MakepostComponent } from './makepost/makepost.component';
 import { MakegroupComponent } from './makegroup/makegroup.component';
 import { StaffComponent } from './staff/staff.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import {ReactiveFormsModule} from "@angular/forms"; 
 
 @NgModule({
   declarations: [
@@ -41,9 +45,13 @@ import { StaffComponent } from './staff/staff.component';
     MatIconModule,
     MatButtonModule,
     MatToolbarModule,
-    MatCardModule
+    MatCardModule,
+    MatFormFieldModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
