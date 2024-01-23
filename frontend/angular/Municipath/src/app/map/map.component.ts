@@ -46,7 +46,6 @@ export class MapComponent implements AfterViewInit {
     var myIcon = L.icon({
       iconUrl: this.getMarker(),
       iconSize: [28, 40],
-      iconAnchor: [22, 94],
       popupAnchor: [-3, -76]
   });
     const marker = L.marker([lat, lng], {icon:myIcon}).addTo(this.map).on('click', (event: any) => {

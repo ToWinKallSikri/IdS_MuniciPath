@@ -1,5 +1,11 @@
-<div *ngFor="let comune of comuni">
-    <p style="color: aliceblue; font-size: large;" [routerLink]="[comune.id]">
-        {{comune.name}}
-    </p>
+<div style="display:flex">
+    <div id="map" class="half">
+    </div>
+    <div class="half text">
+        <div *ngFor="let comune of comuni">
+            <p style="color: aliceblue; font-size: large;" [routerLink]="[comune.id]">
+                {{comune.name}} - {{comune.cap}}
+            </p>
+        </div>
+    </div>
 </div>
