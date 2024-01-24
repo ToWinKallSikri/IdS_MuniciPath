@@ -9,23 +9,21 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class AppComponent {
   title = 'MuniciPath';
-  jwt : string = '?';
   like:boolean= false;
 
-  constructor(private router: Router, private cookieService: CookieService) {
-    this.jwt = this.cookieService.check('jwt') ?  cookieService.get('jwt') : '?';
-  }
+  constructor(private router: Router, private cookieService: CookieService) {}
 
   isHomePage(): boolean {
     return this.router.url === '/';
   }
 
   isLogged() : boolean{
-    return this.jwt != '?';
+    return this.cookieService.check('jwt');
   }
 
-  liked(){
-    this.like = !this.like;
+  logout(){
+    this.cookieService.delete('jwt');
+    this.router.navigateByUrl('/');
   }
 
   share(){

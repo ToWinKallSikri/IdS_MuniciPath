@@ -5,6 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { MapComponent } from './map/map.component';
 import { ComuneComponent } from './comune/comune.component';
 import { LoginComponent } from './login/login.component';
+import { SigninComponent } from './signin/signin.component';
 
 const routes: Routes = [{
   path: "",
@@ -13,6 +14,10 @@ const routes: Routes = [{
 {
   path: "map",
   component: MapComponent
+},
+{
+  path: "signin",
+  component: SigninComponent
 },
 {
   path: "login",

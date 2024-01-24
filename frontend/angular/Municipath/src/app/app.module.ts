@@ -23,6 +23,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import {ReactiveFormsModule} from "@angular/forms"; 
+import {MatMenuModule} from '@angular/material/menu';
+import { SigninComponent } from './signin/signin.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import {ReactiveFormsModule} from "@angular/forms";
     MakecityComponent,
     MakepostComponent,
     MakegroupComponent,
-    StaffComponent
+    StaffComponent,
+    SigninComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +52,8 @@ import {ReactiveFormsModule} from "@angular/forms";
     MatFormFieldModule,
     FormsModule,
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    MatMenuModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

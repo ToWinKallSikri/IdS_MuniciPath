@@ -3,14 +3,9 @@
     <mat-toolbar-row>
       <span style="color: black; ">MuniciPath</span>
       <span class="spacer"></span>
-        <button mat-icon-button [routerLink]="['']" [ngClass]="{'home': isHomePage()}">
-          <mat-icon class="icon" [ngClass]="{'home': isHomePage()}">
+        <button mat-icon-button [routerLink]="['']" [ngClass]="{'selected': isHomePage()}">
+          <mat-icon class="icon" [ngClass]="{'selected': isHomePage()}">
             home
-          </mat-icon>
-        </button>
-        <button mat-icon-button (click)="liked()" [ngClass]="{'home': like}">
-          <mat-icon class="icon" [ngClass]="{'home': like}">
-            favorite
           </mat-icon>
         </button>
         <button mat-icon-button (click)="share()" >
@@ -18,11 +13,28 @@
             share
           </mat-icon>
         </button>
-        <button mat-icon-button [routerLink]="['/login']" [ngClass]="{'home': isLogged()} ">
-          <mat-icon style="color: black;"> 
-            account_circle
-          </mat-icon>
-        </button>
+        <div *ngIf="!isLogged(); then bloccoVero else bloccoFalso"></div>
+        <ng-template #bloccoVero>
+          <button mat-icon-button [matMenuTriggerFor]="menu" [ngClass]="{'selected': isLogged()} ">
+            <mat-icon [ngClass]="{'selected': isLogged()}" [ngClass]="{'black': !isLogged()}"> 
+              account_circle
+            </mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" class="my-menu">
+            <button mat-menu-item [routerLink]="['/signin']">Signin</button>
+            <button mat-menu-item [routerLink]="['/login']">Login</button>
+          </mat-menu>
+        </ng-template>
+        <ng-template #bloccoFalso>
+          <button mat-icon-button [matMenuTriggerFor]="menu" [ngClass]="{'selected': isLogged()} ">
+            <mat-icon [ngClass]="{'selected': isLogged()}" [ngClass]="{'black': !isLogged()}"> 
+              account_circle
+            </mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" class="my-menu">
+            <button mat-menu-item (click)="logout()">Logout</button>
+          </mat-menu>
+        </ng-template>
     </mat-toolbar-row>
   </mat-toolbar>
 </p>

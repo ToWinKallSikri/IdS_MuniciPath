@@ -1,0 +1,13 @@
+
+<form class="container" [formGroup]="myForm">
+    <h1 style="color:white; text-align: center;">SIGNIN</h1>
+    <div class="container">
+        <label for="uname"><b>Nome utente</b></label>
+        <input type="text" placeholder="Inserisci il nome utente" name="uname" id="uname" required formControlName="txtUsername">
+
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Inserisci la password" name="psw" id="psw" required formControlName="txtPassword">
+
+        <button type="submit" class="btn" (click)="signin()">Signin</button>
+    </div>
+</form>
