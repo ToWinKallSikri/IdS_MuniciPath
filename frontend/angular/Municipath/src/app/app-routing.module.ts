@@ -9,6 +9,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { MakecityComponent } from './makecity/makecity.component';
 import { UpdatecityComponent } from './updatecity/updatecity.component';
 import { RemovecityComponent } from './removecity/removecity.component';
+import { UservalidationComponent } from './uservalidation/uservalidation.component';
 
 const routes: Routes = [{
   path: "",
@@ -24,7 +25,7 @@ const routes: Routes = [{
 },
 {
   path: "accountValidation",
-  component : UserActivation
+  component : UservalidationComponent
 },
 {
   path: "profile",
