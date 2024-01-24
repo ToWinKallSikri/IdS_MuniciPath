@@ -6,6 +6,7 @@ import { MapComponent } from './map/map.component';
 import { ComuneComponent } from './comune/comune.component';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
+import { MakecityComponent } from './makecity/makecity.component';
 
 const routes: Routes = [{
   path: "",
@@ -22,6 +23,10 @@ const routes: Routes = [{
 {
   path: "profile",
   component: ProfileComponent
+},
+{
+  path: "makecity/:lat/:lng",
+  component: MakecityComponent
 },
 {
   path: ":id",

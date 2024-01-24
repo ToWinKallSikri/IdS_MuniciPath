@@ -161,6 +161,7 @@ public class UserHandler implements UserProvider {
 	 * @return l'utente se esiste, null altrimenti
 	 */
 	public User getUser(String username) {
+        System.out.println(username);
 		if(username == null)
 			return null;
     	return this.userRepository.findById(username).orElse(null);
