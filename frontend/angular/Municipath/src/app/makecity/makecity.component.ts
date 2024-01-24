@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms'; 
 import { ActivatedRoute, Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
 import { MakecityService } from '../makecity.service';
 import { Position } from '../Position';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-makecity',
@@ -14,7 +14,7 @@ export class MakecityComponent {
   myForm: FormGroup;
   pos!: Position;
   
-  constructor( private cookieService: CookieService, private router: Router, 
+  constructor( private cookieService: SharedService, private router: Router, 
     private mkService : MakecityService, private route : ActivatedRoute) {
     this.myForm = new FormGroup({ 
       txtNomeDelComune: new FormControl(),
@@ -37,10 +37,9 @@ export class MakecityComponent {
 	      cap : this.myForm.value.txtCap,
         pos : this.pos
       };
-      console.log(city);
       this.mkService.createCity(this.cookieService.get('jwt'), city).subscribe({
         next: (result) => {
-          alert('Account Creato.');
+          alert('Comune Creato.');
           this.router.navigateByUrl('/');
         },
         error: (error) => 

@@ -1,8 +1,8 @@
 import { Component,  } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms'; 
 import { ActivatedRoute, Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
 import { LogService } from '../log.service';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +14,7 @@ export class LoginComponent {
   signinForm: FormGroup; 
   isLogin = false;
 
-  constructor(private route : ActivatedRoute, private cookieService: CookieService, private router: Router, private logService : LogService) {
+  constructor(private route : ActivatedRoute, private cookieService: SharedService, private router: Router, private logService : LogService) {
     this.loginForm = new FormGroup({ 
       txtUsername: new FormControl(),
       txtPassword: new FormControl()
@@ -33,7 +33,7 @@ export class LoginComponent {
     if(this.loginForm.valid){
     this.logService.login(this.loginForm.value.txtUsername, this.loginForm.value.txtPassword).subscribe({
       next: (lol) => {
-        this.cookieService.set('jwt', lol.reponse);
+        this.cookieService.set('jwt', lol.response);
         this.router.navigateByUrl('/');
       },
       error: (error) => alert('Dati inseriti non validi.')});

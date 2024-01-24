@@ -1,3 +1,3 @@
 export interface WebResponse{
-    reponse : string;
+    response : string;
 }

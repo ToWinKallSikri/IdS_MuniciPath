@@ -107,18 +107,13 @@ public class RestManagerController {
     public ResponseEntity<Object> createCity(@RequestHeader(name="auth") String token,
                                              @RequestBody ProtoCity pc) {
         String username = authenticator.getUsername(token);
-        System.out.println(pc.getCityName());
-        System.out.println(username);
         if(this.authorizer.isManager(username)) {
             if (this.ch.createCity(pc.getCityName(), pc.getCap(), pc.getCurator(), pc.getPos())) {
-                System.out.println(1);
                 return new ResponseEntity<Object>(wrc.make("Comune " + pc.getCityName() + " creato."), HttpStatus.OK);
             } else {
-                System.out.println(2);
                 return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
             }
         }
-        System.out.println(3);
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 

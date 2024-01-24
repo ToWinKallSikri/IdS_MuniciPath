@@ -10,11 +10,11 @@
         <form class="container" [formGroup]="signinForm">
             <h1 style="color:white; text-align: center;">Registrati a MuniciPath!</h1>
             <div class="container">
-                <label for="uname"><b>Nome utente</b></label>
-                <input type="text" placeholder="Inserisci il nome utente" name="uname" id="uname" required formControlName="txtUsername">
+                <label for="suname"><b>Nome utente</b></label>
+                <input type="text" placeholder="Inserisci il nome utente" name="uname" id="suname" required formControlName="txtUsername">
         
-                <label for="psw"><b>Password</b></label>
-                <input type="password" placeholder="Inserisci la password" name="psw" id="psw" required formControlName="txtPassword">
+                <label for="spsw"><b>Password</b></label>
+                <input type="password" placeholder="Inserisci la password" name="psw" id="spsw" required formControlName="txtPassword">
                 <button type="submit" class="btn" (click)="signin()">Sign In</button>
             </div>
         </form>
@@ -28,10 +28,10 @@
         <form class="container" [formGroup]="loginForm">
             <h1 style="color:white; text-align: center;">Accedi al tuo account!</h1>
             <div class="container">
-                <label for="uname"><b>Nome utente</b></label>
-                <input type="text" placeholder="Inserisci il nome utente" name="uname" id="uname" required formControlName="txtUsername">
-                <label for="psw"><b>Password</b></label>
-                <input type="password" placeholder="Inserisci la password" name="psw" id="psw" required formControlName="txtPassword">
+                <label for="luname"><b>Nome utente</b></label>
+                <input type="text" placeholder="Inserisci il nome utente" name="uname" id="luname" required formControlName="txtUsername">
+                <label for="lpsw"><b>Password</b></label>
+                <input type="password" placeholder="Inserisci la password" name="psw" id="lpsw" required formControlName="txtPassword">
                 <button type="submit" class="btn" (click)="login()">Login</button>
             </div>
         </form>

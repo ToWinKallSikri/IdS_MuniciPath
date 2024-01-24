@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
+import { SharedService } from './shared.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ export class AppComponent {
   title = 'MuniciPath';
   like:boolean= false;
 
-  constructor(private router: Router, private cookieService: CookieService) {}
+  constructor(private router: Router, private cookieService: SharedService) {}
 
   isHomePage(): boolean {
     return this.router.url === '/';

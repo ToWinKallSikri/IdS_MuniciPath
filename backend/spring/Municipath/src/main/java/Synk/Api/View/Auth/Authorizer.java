@@ -34,7 +34,6 @@ public class Authorizer {
 	
 	
 	public boolean isManager(String username) {
-        System.out.println(username);
     	User user = this.userProvider.getUser(username);
     	return user != null && user.isManager();
     }

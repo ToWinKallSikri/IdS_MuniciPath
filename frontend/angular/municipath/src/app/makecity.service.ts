@@ -11,9 +11,9 @@ export class MakecityService {
 
   constructor(private HttpClient: HttpClient) { }
 
-  public createCity(jwt : string, city : any) : Observable<any> {
+  public createCity(jwt : string, pc : any) : Observable<any> {
     let header = new HttpHeaders().append('auth', jwt);
-    return this.HttpClient.post<any>(environment.baseUrl + '/api/v1/manager/createCity', {headers : header}, city)
+    return this.HttpClient.post<any>(environment.baseUrl + '/api/v1/manager/createCity', pc, {headers : header})
     .pipe(catchError(error => throwError(() => error)));
   }
 }
