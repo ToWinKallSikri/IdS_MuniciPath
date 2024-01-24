@@ -48,10 +48,16 @@ label{
     color:white;
 }
 #map {
-    height: 80%; 
+    height: 100%; 
     width: 50%;
 }
 .half{
-    flex: 46%;
+    flex: 60%;
     margin: 1%;
+}
+.text{
+    border: 2px solid white;
+    border-radius: 10px;
+    padding: 20px;
+    height: 100%; 
 }

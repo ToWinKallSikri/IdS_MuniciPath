@@ -35,18 +35,24 @@ export class UpdatecityComponent implements AfterViewInit {
   
 
   ngAfterViewInit(): void {
-    this.map = L.map('map').setView([44, 13], 5.5);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
-    this.map.setMaxZoom(20).setMinZoom(12).setMaxBounds([
-      [47.0, 6.0],
-      [35.0, 19.0]
-    ])
-    this.map.on('click', (event: any) => {
-      this.pos.lat = event.latlng.lat;
-      this.pos.lng = event.latlng.lng;
-      this.addEmptyMarker(event.latlng.lat, event.latlng.lng);
-      console.log(event.latlng);
-    });
+    this.route.params.subscribe((params) => {
+      let id = params['id'];
+      this.comuneService.getCity(id).subscribe((city) => {
+        this.map = L.map('map').setView([city.pos.lat, city.pos.lng], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
+        this.map.setMaxZoom(20).setMinZoom(12).setMaxBounds([
+          [47.0, 6.0],
+          [35.0, 19.0]
+        ])
+        this.map.on('click', (event: any) => {
+          this.pos.lat = event.latlng.lat;
+          this.pos.lng = event.latlng.lng;
+          this.addEmptyMarker(event.latlng.lat, event.latlng.lng);
+          console.log(event.latlng);
+        });
+      })
+    })
+    
   }
 
   async modifica() {

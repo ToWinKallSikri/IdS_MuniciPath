@@ -1,21 +1,23 @@
-<div style="display:flex; height: 88%;"></div>
-<form class="container" [formGroup]="myForm">
-    <h1 style="color:white; text-align: center;">Modifica il Comune</h1>
-    <div class="container">
-        <label for="uname"><b>Nome del Comune</b></label>
-        <input type="text" placeholder="Inserisci il nome del comune" name="uname" id="uname" required formControlName="txtNomeDelComune">
+<div style="display:flex; height: 100%;">
+    <div class="half text">
+        <form class="container" [formGroup]="myForm">
+            <h1 style="color:white; text-align: center;">Modifica il Comune</h1>
+            <div class="container">
+                <label for="uname"><b>Nome del Comune</b></label>
+                <input type="text" placeholder="Inserisci il nome del comune" name="uname" id="uname" required formControlName="txtNomeDelComune">
 
-        <label for="cura"><b>Curatore</b></label>
-        <input type="text" placeholder="Inserisci il curatore" name="cura" id="cura" required formControlName="txtCuratore">
-        
-        <label for="cap"><b>CAP</b></label>
-        <input type="text" placeholder="Inserisci il CAP" name="cap" id="cap" required formControlName="txtCap">
-       
-        <button type="submit" class="btn" (click)="modifica()">Modifica</button>
+                <label for="cura"><b>Curatore</b></label>
+                <input type="text" placeholder="Inserisci il curatore" name="cura" id="cura" required formControlName="txtCuratore">
+                
+                <label for="cap"><b>CAP</b></label>
+                <input type="text" placeholder="Inserisci il CAP" name="cap" id="cap" required formControlName="txtCap">
+            
+                <button type="submit" class="btn" (click)="modifica()">Modifica</button>
+            </div>
+        </form>
     </div>
-</form>
-
-<div id="map" class="half">
+    <div id="map" class="half">
+    </div>
 </div>
 
 
