@@ -1,3 +1,6 @@
 <div *ngFor="let user of users; index as i">
-    <p>{{user}}</p>
+    <div>
+        <p>{{user}}</p>
+        <button (click)="validate(user)">Convalida</button>
+    </div>
 </div>

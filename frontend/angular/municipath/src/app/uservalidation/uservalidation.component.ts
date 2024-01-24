@@ -27,7 +27,7 @@ export class UservalidationComponent {
   private reload(){
     this.logService.getToValidate(this.sharedService.get('jwt')).subscribe({
       next: (list) =>{this.users = list;},
-      error: (error)=> {alert('Operazione fallita');}})
+      error: (error)=> {}})
   }
 
 }
