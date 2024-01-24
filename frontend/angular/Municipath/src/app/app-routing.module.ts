@@ -7,6 +7,7 @@ import { ComuneComponent } from './comune/comune.component';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MakecityComponent } from './makecity/makecity.component';
+import { UpdatecityComponent } from './updatecity/updatecity.component';
 
 const routes: Routes = [{
   path: "",
@@ -27,6 +28,10 @@ const routes: Routes = [{
 {
   path: "makecity/:lat/:lng",
   component: MakecityComponent
+},
+{
+  path: "updatecity/:id",
+  component: UpdatecityComponent
 },
 {
   path: ":id",

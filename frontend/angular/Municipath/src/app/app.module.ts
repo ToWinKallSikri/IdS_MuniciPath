@@ -26,6 +26,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatMenuModule} from '@angular/material/menu';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { ProfileComponent } from './profile/profile.component';
+import { UpdatecityComponent } from './updatecity/updatecity.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { ProfileComponent } from './profile/profile.component';
     MakepostComponent,
     MakegroupComponent,
     StaffComponent,
-    ProfileComponent
+    ProfileComponent,
+    UpdatecityComponent
   ],
   imports: [
     BrowserModule,

@@ -7,13 +7,13 @@ import { catchError } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class MakecityService {
+export class UpdatecityService {
 
   constructor(private HttpClient: HttpClient) { }
 
-  public createCity(jwt : string, pc : any) : Observable<any> {
+  public updateCity(jwt : string, pc : any, cityId : string) : Observable<any> {
     let header = new HttpHeaders().append('auth', jwt);
-    return this.HttpClient.post<any>(environment.baseUrl + '/api/v1/manager/updateCity', pc, {headers : header})
+    return this.HttpClient.post<any>(environment.baseUrl + '/api/v1/manager/updateCity', {headers : header}, cityId, pc)
     .pipe(catchError(error => throwError(() => error)));
   }
 }

@@ -1,5 +1,5 @@
 <form class="container" [formGroup]="myForm">
-    <h1 style="color:white; text-align: center;">Inserisci un nuovo Comune</h1>
+    <h1 style="color:white; text-align: center;">Modifica il Comune</h1>
     <div class="container">
         <label for="uname"><b>Nome del Comune</b></label>
         <input type="text" placeholder="Inserisci il nome del comune" name="uname" id="uname" required formControlName="txtNomeDelComune">
@@ -10,7 +10,6 @@
         <label for="cap"><b>CAP</b></label>
         <input type="text" placeholder="Inserisci il CAP" name="cap" id="cap" required formControlName="txtCap">
        
-        <button type="submit" class="btn" (click)="salva()">Salva</button>
+        <button type="submit" class="btn" (click)="modifica()">Modifica</button>
     </div>
 </form>
-
