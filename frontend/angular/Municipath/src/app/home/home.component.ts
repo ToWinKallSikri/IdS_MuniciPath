@@ -19,8 +19,9 @@ export class HomeComponent implements AfterViewInit  {
      }
 
   private map: any;
-  private markers: any[] = [];
-  authority = 'https://i.postimg.cc/GpP8xRfs/Authority.png';
+  private marker: any;
+  city = 'https://i.postimg.cc/GpP8xRfs/Authority.png';
+  empty = 'https://i.postimg.cc/ZngYcZfq/immagine-2024-01-24-113850127-png.png';
 
   ngAfterViewInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -37,18 +38,34 @@ export class HomeComponent implements AfterViewInit  {
           [35.0, 19.0]
         ]);
         this.comuni.forEach(c =>  this.addMarker(c));
+        this.map.on('click', (event: any) => {
+          this.addEmptyMarker(event.latlng.lat, event.latlng.lng);
+          console.log(event.latlng);
+        });
       });
     });
-    
   }
 
-  private getMarker() : string {
-    return this.authority;
+  private addEmptyMarker(lat : number, lng: number){
+    if(this.marker)
+      this.map.removeLayer(this.marker);
+    var myIcon = L.icon({
+      iconUrl: this.empty,
+      iconSize: [28, 40],
+      popupAnchor: [0, -26]
+  });
+    this.marker = L.marker([lat, lng], {icon:myIcon}).addTo(this.map)
+    .bindPopup(`<button onClick="location.href='/makecity/${lat}/${lng}'">Crea Comune</button>`,  {closeButton: false})
+    .on('click', (event: any) => {
+      this.marker.openPopup();
+    });
   }
+
+  
 
   private addMarker(city: City): void {
     var myIcon = L.icon({
-      iconUrl: this.getMarker(),
+      iconUrl: this.city,
       iconSize: [28, 40],
       popupAnchor: [0, -26]
   });
@@ -63,7 +80,6 @@ export class HomeComponent implements AfterViewInit  {
     marker.on('mouseout', (event : any) =>{
       marker.closePopup();
     });
-    this.markers.push(marker);
   }
 
 }
