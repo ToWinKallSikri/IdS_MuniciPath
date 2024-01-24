@@ -17,8 +17,8 @@ export class LogService {
       username : username,
       password : password
     }
-    return this.HttpClient.post<WebResponse>(environment.baseUrl+'/api/v1/signin', data).pipe(
-      catchError(error => throwError(() => error)));
+    return this.HttpClient.post<WebResponse>(environment.baseUrl+'/api/v1/signin', data
+    ).pipe(catchError(error => throwError(() => error)));
   }
 
   public login(username : string, password : string) : Observable<WebResponse> {
@@ -26,8 +26,19 @@ export class LogService {
       username : username,
       password : password
     }
-    console.log(data);
-    return this.HttpClient.post<WebResponse>(environment.baseUrl + '/api/v1/login', data).pipe(
-      catchError(error => throwError(() => error)));
+    return this.HttpClient.post<WebResponse>(environment.baseUrl + '/api/v1/login', data)
+    .pipe(catchError(error => throwError(() => error)));
+  }
+
+  public getToValidate(jwt : string) : Observable<string[]> {
+    let header = new HttpHeaders().append('auth', jwt);
+    return this.HttpClient.get<string[]>(environment.baseUrl + '/api/v1/manager/getUsersNotConvalidated', {headers: header});
+  }
+
+  public validate(jwt : string, username: string) : Observable<WebResponse> {
+    let header = new HttpHeaders().append('auth', jwt);
+    let param = new HttpParams().append('toValidate', username)
+    return this.HttpClient.put<WebResponse>(environment.baseUrl + '/api/v1/manager/convalidate', "", {headers: header, params: param})
+    .pipe(catchError(error => throwError(() => error)));
   }
 }

@@ -27,6 +27,8 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { ProfileComponent } from './profile/profile.component';
 import { UpdatecityComponent } from './updatecity/updatecity.component';
+import { RemovecityComponent } from './removecity/removecity.component';
+import { UservalidationComponent } from './uservalidation/uservalidation.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { UpdatecityComponent } from './updatecity/updatecity.component';
     MakegroupComponent,
     StaffComponent,
     ProfileComponent,
-    UpdatecityComponent
+    UpdatecityComponent,
+    RemovecityComponent,
+    UservalidationComponent
   ],
   imports: [
     BrowserModule,

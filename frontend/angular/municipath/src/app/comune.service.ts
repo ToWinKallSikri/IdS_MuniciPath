@@ -16,7 +16,7 @@ export class ComuneService {
     let params = new HttpParams().append('cityName', id);
     return this.HttpClient.get<City[]>(environment.baseUrl+'/api/v1/cities', { params: params });
   }
-
+  
   public getCity(id : string) : Observable<City>{
     let params = new HttpParams().append('cityId', id);
     return this.HttpClient.get<City>(environment.baseUrl + '/api/v1/city', { params: params });

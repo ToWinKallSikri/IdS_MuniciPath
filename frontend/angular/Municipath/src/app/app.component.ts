@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedService } from './shared.service';
+import { CheckService } from './check.service';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +11,13 @@ import { SharedService } from './shared.service';
 export class AppComponent {
   title = 'MuniciPath';
   like:boolean= false;
+  isManager:boolean=false;
 
-  constructor(private router: Router, private cookieService: SharedService) {}
+  constructor(private router: Router, private cookieService: SharedService, private checkService : CheckService) {
+    this.checkService.checkManager().subscribe((wr) => {
+      this.isManager = wr.response == 'true';
+    })
+  }
 
   isHomePage(): boolean {
     return this.router.url === '/';
@@ -34,4 +40,5 @@ export class AppComponent {
   check(){
     console.log(this.cookieService.check('jwt'));
   }
+
 }

@@ -2,7 +2,6 @@ package Synk.Api.View.RestController;
 
 import Synk.Api.Controller.City.CityHandler;
 import Synk.Api.Controller.User.UserHandler;
-import Synk.Api.Model.User.User;
 import Synk.Api.View.WebResponseCreator;
 import Synk.Api.View.Auth.Authenticator;
 import Synk.Api.View.Auth.Authorizer;
@@ -60,7 +59,7 @@ public class RestManagerController {
     public ResponseEntity<Object> getUsersNotConvalidated(@RequestHeader(name="auth") String token) {
         String username = authenticator.getUsername(token);
         if(this.authorizer.isManager(username)) {
-            List<User> list = this.uh.getNotConvalidatedUsers();
+            List<String> list = this.uh.getNotConvalidatedUsers().stream().map(u -> u.getUsername()).toList();
             if (list != null) {
                 return new ResponseEntity<Object>(list, HttpStatus.OK);
             } else {

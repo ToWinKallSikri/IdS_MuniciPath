@@ -76,11 +76,8 @@ export class HomeComponent implements AfterViewInit  {
       popupAnchor: [0, -26]
   });
     const marker = L.marker([city.pos.lat, city.pos.lng], {icon:myIcon}).addTo(this.map);
-    marker.on('click', (event: any) => {
-      this.router.navigateByUrl("/"+city.id) ;
-    });
     if(this.isManager){
-    marker.bindPopup(`<p style="text-align: center"><b>${city.name}<br>${city.cap}</b></p><br><button onClick="location.href='/city/${city.id}'">Visita Comune</button><br><button onClick="location.href='/updatecity/${city.id}'">Visita Comune</button><br><button onClick="location.href='/deletecity/${city.id}'">Elimina Comune</button>`,  {closeButton: false})
+    marker.bindPopup(`<style>.pubtn{margin: auto; display: block;}</style><p style="text-align: center"><b>${city.name}<br>${city.cap}</b></p><button class="pubtn" onClick="location.href='/city/${city.id}'">Visita Comune</button><button class="pubtn" onClick="location.href='/updatecity/${city.id}'">Modifica Comune</button><button class="pubtn" onClick="location.href='/deletecity/${city.id}'">Elimina Comune</button>`,  {closeButton: false})
     } else {
       marker.bindPopup(`<p style="text-align: center"><b>${city.name}<br>${city.cap}</b></p><br><button onClick="location.href='/city/${city.id}'">Visita Comune</button>`,  {closeButton: false})
     }

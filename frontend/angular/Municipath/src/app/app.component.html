@@ -36,6 +36,13 @@
             <button mat-menu-item (click)="logout()">Logout</button>
           </mat-menu>
         </ng-template>
+        <ng-template *ngIf="isManager">
+          <button mat-icon-button [routerLink]="['/accountValidation']">
+            <mat-icon style="color: black;">
+              ?
+            </mat-icon>
+          </button>
+        </ng-template>
     </mat-toolbar-row>
   </mat-toolbar>
 </p>

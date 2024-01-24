@@ -15,7 +15,7 @@ export class MapComponent implements AfterViewInit {
   health = 'https://i.postimg.cc/7Yc2xm7b/Health.png'
   social = 'https://i.postimg.cc/RFM3P8rp/Social.png'
   turistic = 'https://i.postimg.cc/QxV7GRFR/Turistic.png'
-
+ 
   ngAfterViewInit(): void {
     this.map = L.map('map').setView([44, 13], 5.5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);

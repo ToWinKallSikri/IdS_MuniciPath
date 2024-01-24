@@ -8,6 +8,7 @@ import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MakecityComponent } from './makecity/makecity.component';
 import { UpdatecityComponent } from './updatecity/updatecity.component';
+import { RemovecityComponent } from './removecity/removecity.component';
 
 const routes: Routes = [{
   path: "",
@@ -22,6 +23,10 @@ const routes: Routes = [{
   component: LoginComponent
 },
 {
+  path: "accountValidation",
+  component : UserActivation
+},
+{
   path: "profile",
   component: ProfileComponent
 },
@@ -34,7 +39,11 @@ const routes: Routes = [{
   component: UpdatecityComponent
 },
 {
-  path: ":id",
+  path: "deletecity/:id",
+  component: RemovecityComponent
+},
+{
+  path: "city/:id",
   component: ComuneComponent
 },
 {
