@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders  } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams  } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../environments/environment.development';
 import { catchError } from 'rxjs/operators';
@@ -13,7 +13,9 @@ export class UpdatecityService {
 
   public updateCity(jwt : string, pc : any, cityId : string) : Observable<any> {
     let header = new HttpHeaders().append('auth', jwt);
-    return this.HttpClient.post<any>(environment.baseUrl + '/api/v1/manager/updateCity', {headers : header}, cityId, pc)
+    let param = new HttpParams().append('cityId', cityId);
+    console.log(pc);
+    return this.HttpClient.put<any>(environment.baseUrl + '/api/v1/manager/updateCity',pc , {headers : header, params: param})
     .pipe(catchError(error => throwError(() => error)));
   }
 }
