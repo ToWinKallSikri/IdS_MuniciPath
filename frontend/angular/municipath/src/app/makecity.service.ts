@@ -13,7 +13,7 @@ export class MakecityService {
 
   public createCity(jwt : string, pc : any) : Observable<any> {
     let header = new HttpHeaders().append('auth', jwt);
-    return this.HttpClient.post<any>(environment.baseUrl + '/api/v1/manager/updateCity', pc, {headers : header})
+    return this.HttpClient.post<any>(environment.baseUrl + '/api/v1/manager/createCity', pc, {headers : header})
     .pipe(catchError(error => throwError(() => error)));
   }
 }

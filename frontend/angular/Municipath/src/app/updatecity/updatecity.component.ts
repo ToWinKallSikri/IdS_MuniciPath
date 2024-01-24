@@ -23,14 +23,17 @@ export class UpdatecityComponent implements AfterViewInit {
   private marker: any;
   city = 'https://i.postimg.cc/GpP8xRfs/Authority.png';
   empty = 'https://i.postimg.cc/ZngYcZfq/immagine-2024-01-24-113850127-png.png';
+  name = '';
+  cap = '';
+  curator = '';
   
   constructor( private cookieService: SharedService, private router: Router, 
     private upCity : UpdatecityService, private route : ActivatedRoute, private comuneService : ComuneService) {
-    this.myForm = new FormGroup({ 
-      txtNomeDelComune: new FormControl(),
-      txtCuratore: new FormControl(),
-      txtCap : new FormControl(),
-    });
+      this.myForm = new FormGroup({ 
+        txtNomeDelComune: new FormControl(),
+        txtCuratore: new FormControl(),
+        txtCap : new FormControl()
+      });
   }
   
 
@@ -48,8 +51,13 @@ export class UpdatecityComponent implements AfterViewInit {
           this.pos.lat = event.latlng.lat;
           this.pos.lng = event.latlng.lng;
           this.addEmptyMarker(event.latlng.lat, event.latlng.lng);
-          console.log(event.latlng);
         });
+        this.addEmptyMarker(city.pos.lat, city.pos.lng);
+        this.pos.lat = city.pos.lat;
+        this.pos.lng = city.pos.lng;
+        this.name = city.name;
+        this.cap = ""+city.cap;
+        this.curator = city.curator;
       })
     })
     

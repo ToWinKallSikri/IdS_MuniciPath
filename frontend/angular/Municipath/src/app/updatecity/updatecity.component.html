@@ -4,13 +4,13 @@
             <h1 style="color:white; text-align: center;">Modifica il Comune</h1>
             <div class="container">
                 <label for="uname"><b>Nome del Comune</b></label>
-                <input type="text" placeholder="Inserisci il nome del comune" name="uname" id="uname" required formControlName="txtNomeDelComune">
+                <input type="text" placeholder={{name}} name="uname" id="uname" required formControlName="txtNomeDelComune">
 
                 <label for="cura"><b>Curatore</b></label>
-                <input type="text" placeholder="Inserisci il curatore" name="cura" id="cura" required formControlName="txtCuratore">
+                <input type="text" placeholder={{curator}} name="cura" id="cura" required formControlName="txtCuratore">
                 
                 <label for="cap"><b>CAP</b></label>
-                <input type="text" placeholder="Inserisci il CAP" name="cap" id="cap" required formControlName="txtCap">
+                <input type="text" placeholder={{cap}} name="cap" id="cap" required formControlName="txtCap">
             
                 <button type="submit" class="btn" (click)="modifica()">Modifica</button>
             </div>
