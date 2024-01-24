@@ -24,7 +24,8 @@ import {MatInputModule} from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import {ReactiveFormsModule} from "@angular/forms"; 
 import {MatMenuModule} from '@angular/material/menu';
-import { SigninComponent } from './signin/signin.component';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,7 @@ import { SigninComponent } from './signin/signin.component';
     MakepostComponent,
     MakegroupComponent,
     StaffComponent,
-    SigninComponent
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +54,8 @@ import { SigninComponent } from './signin/signin.component';
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatMenuModule
+    MatMenuModule,
+    MatExpansionModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

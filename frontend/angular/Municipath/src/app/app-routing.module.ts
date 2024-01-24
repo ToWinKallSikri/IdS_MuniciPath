@@ -5,7 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { MapComponent } from './map/map.component';
 import { ComuneComponent } from './comune/comune.component';
 import { LoginComponent } from './login/login.component';
-import { SigninComponent } from './signin/signin.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [{
   path: "",
@@ -16,12 +16,12 @@ const routes: Routes = [{
   component: MapComponent
 },
 {
-  path: "signin",
-  component: SigninComponent
+  path: "log/:id",
+  component: LoginComponent
 },
 {
-  path: "login",
-  component: LoginComponent
+  path: "profile",
+  component: ProfileComponent
 },
 {
   path: ":id",

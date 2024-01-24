@@ -1,13 +1,40 @@
 
-<form class="container" [formGroup]="myForm">
-    <h1 style="color:white; text-align: center;">LOGIN</h1>
-    <div class="container">
-        <label for="uname"><b>Nome utente</b></label>
-        <input type="text" placeholder="Inserisci il nome utente" name="uname" id="uname" required formControlName="txtUsername">
 
-        <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Inserisci la password" name="psw" id="psw" required formControlName="txtPassword">
-
-        <button type="submit" class="btn" (click)="login()">Login</button>
-    </div>
-</form>
+<mat-accordion>
+    <mat-expansion-panel [expanded]="!isLogin">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Sign In
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+        <form class="container" [formGroup]="signinForm">
+            <h1 style="color:white; text-align: center;">Registrati a MuniciPath!</h1>
+            <div class="container">
+                <label for="uname"><b>Nome utente</b></label>
+                <input type="text" placeholder="Inserisci il nome utente" name="uname" id="uname" required formControlName="txtUsername">
+        
+                <label for="psw"><b>Password</b></label>
+                <input type="password" placeholder="Inserisci la password" name="psw" id="psw" required formControlName="txtPassword">
+                <button type="submit" class="btn" (click)="signin()">Sign In</button>
+            </div>
+        </form>
+    </mat-expansion-panel>
+    <mat-expansion-panel [expanded]="isLogin">
+      <mat-expansion-panel-header>
+        <mat-panel-title style="text-align: center;">
+          Login
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+        <form class="container" [formGroup]="loginForm">
+            <h1 style="color:white; text-align: center;">Accedi al tuo account!</h1>
+            <div class="container">
+                <label for="uname"><b>Nome utente</b></label>
+                <input type="text" placeholder="Inserisci il nome utente" name="uname" id="uname" required formControlName="txtUsername">
+                <label for="psw"><b>Password</b></label>
+                <input type="password" placeholder="Inserisci la password" name="psw" id="psw" required formControlName="txtPassword">
+                <button type="submit" class="btn" (click)="login()">Login</button>
+            </div>
+        </form>
+    </mat-expansion-panel>
+  </mat-accordion>
+  

@@ -21,8 +21,8 @@
             </mat-icon>
           </button>
           <mat-menu #menu="matMenu" class="my-menu">
-            <button mat-menu-item [routerLink]="['/signin']">Signin</button>
-            <button mat-menu-item [routerLink]="['/login']">Login</button>
+            <button mat-menu-item [routerLink]="['/log/login']">Login</button>
+            <button mat-menu-item [routerLink]="['/log/signin']">Sign In</button>
           </mat-menu>
         </ng-template>
         <ng-template #bloccoFalso>
@@ -32,6 +32,7 @@
             </mat-icon>
           </button>
           <mat-menu #menu="matMenu" class="my-menu">
+            <button mat-menu-item [routerLink]="['/profile']">Profile</button>
             <button mat-menu-item (click)="logout()">Logout</button>
           </mat-menu>
         </ng-template>
