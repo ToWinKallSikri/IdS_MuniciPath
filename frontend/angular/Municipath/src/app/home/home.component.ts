@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AfterViewInit, ViewEncapsulation   } from '@angular/core';
 import * as L from 'leaflet';
 import { CookieService } from 'ngx-cookie-service';
+import { CheckService } from '../check.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -15,15 +17,17 @@ import { CookieService } from 'ngx-cookie-service';
 export class HomeComponent implements AfterViewInit  {
   public comuni: City[] = [];
 
-  constructor(private route : ActivatedRoute, private comuneService : ComuneService, private router : Router) {
-     }
+  constructor(private route : ActivatedRoute, private comuneService : ComuneService,
+     private router : Router, private checkService : CheckService) {}
 
   private map: any;
   private marker: any;
-  city = 'https://i.postimg.cc/GpP8xRfs/Authority.png';
-  empty = 'https://i.postimg.cc/ZngYcZfq/immagine-2024-01-24-113850127-png.png';
+  private city = 'https://i.postimg.cc/GpP8xRfs/Authority.png';
+  private empty = 'https://i.postimg.cc/ZngYcZfq/immagine-2024-01-24-113850127-png.png';
+  private isManager : boolean = false;
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit(): Promise<void> {
+    this.isManager = (await firstValueFrom(this.checkService.checkManager())).response == 'true';
     this.route.queryParams.subscribe(params => {
       let id = params['id'] ? params['id'] : '';
       this.comuneService.getCities(id).subscribe((comuniBE) => {
@@ -54,11 +58,13 @@ export class HomeComponent implements AfterViewInit  {
       iconSize: [28, 40],
       popupAnchor: [0, -26]
   });
-    this.marker = L.marker([lat, lng], {icon:myIcon}).addTo(this.map)
-    .bindPopup(`<button onClick="location.href='/makecity/${lat}/${lng}'">Crea Comune</button>`,  {closeButton: false})
-    .on('click', (event: any) => {
-      this.marker.openPopup();
-    });
+    this.marker = L.marker([lat, lng], {icon:myIcon}).addTo(this.map);
+    if(this.isManager){
+      this.marker.bindPopup(`<button onClick="location.href='/makecity/${lat}/${lng}'">Crea Comune</button>`,  {closeButton: false})
+      .on('click', (event: any) => {
+        this.marker.openPopup();
+      });
+    }
   }
 
   
@@ -69,16 +75,17 @@ export class HomeComponent implements AfterViewInit  {
       iconSize: [28, 40],
       popupAnchor: [0, -26]
   });
-    const marker = L.marker([city.pos.lat, city.pos.lng], {icon:myIcon}).addTo(this.map).on('click', (event: any) => {
+    const marker = L.marker([city.pos.lat, city.pos.lng], {icon:myIcon}).addTo(this.map);
+    marker.on('click', (event: any) => {
       this.router.navigateByUrl("/"+city.id) ;
-
     });
-    marker.bindPopup(`<p style="text-align: center"><b>${city.name}<br>${city.cap}</b></p>`,  {closeButton: false})
-    .on('mouseover', (event: any) => {
+    if(this.isManager){
+    marker.bindPopup(`<p style="text-align: center"><b>${city.name}<br>${city.cap}</b></p><br><button onClick="location.href='/city/${city.id}'">Visita Comune</button><br><button onClick="location.href='/updatecity/${city.id}'">Visita Comune</button><br><button onClick="location.href='/deletecity/${city.id}'">Elimina Comune</button>`,  {closeButton: false})
+    } else {
+      marker.bindPopup(`<p style="text-align: center"><b>${city.name}<br>${city.cap}</b></p><br><button onClick="location.href='/city/${city.id}'">Visita Comune</button>`,  {closeButton: false})
+    }
+    marker.on('click', (event: any) => {
       marker.openPopup();
-    });
-    marker.on('mouseout', (event : any) =>{
-      marker.closePopup();
     });
   }
 

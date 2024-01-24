@@ -62,24 +62,22 @@ public class RestCheckController {
 		return new ResponseEntity<Object>(wrc.make(this.authorizer.isNotLimited(username, cityId)), HttpStatus.OK);
 	}
 	
-	@GetMapping(value="/api/v1/city/{cityId}/check/follow/content")
+	@GetMapping(value="/api/v1/check/follow/content")
 	public ResponseEntity<Object> alreadyFollowingContent(@RequestHeader(name="auth") String token,
-													@PathVariable("cityId") String cityId,
 													@RequestParam("contentId")	String contentId) {
 		String username = authenticator.getUsername(token);
 		return new ResponseEntity<Object>(this.uh.alreadyFollowing(username, contentId), HttpStatus.OK);
 	}
 	
-	@GetMapping(value="/api/v1/city/{cityId}/check/follow/city")
+	@GetMapping(value="/api/v1/check/follow/city")
 	public ResponseEntity<Object> alreadyFollowingCity(@RequestHeader(name="auth") String token,
-														@PathVariable("cityId") String cityId) {
+														@RequestParam("cityId") String cityId) {
 		String username = authenticator.getUsername(token);
 		return new ResponseEntity<Object>(this.uh.alreadyFollowing(username, cityId), HttpStatus.OK);
 	}
 	
-	@GetMapping(value="/api/v1/city/{cityId}/check/follow/contributor")
+	@GetMapping(value="/api/v1/check/follow/contributor")
 	public ResponseEntity<Object> alreadyFollowingContributor(@RequestHeader(name="auth") String token,
-														@PathVariable("cityId") String cityId,
 														@RequestParam("contributor") String contributor) {
 		String username = authenticator.getUsername(token);
 		return new ResponseEntity<Object>(this.uh.alreadyFollowingContributor(username, contributor), HttpStatus.OK);

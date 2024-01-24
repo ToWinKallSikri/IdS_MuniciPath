@@ -23,7 +23,9 @@ export class AppComponent {
 
   logout(){
     this.cookieService.delete('jwt');
-    this.router.navigateByUrl('/');
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate([this.router.url]);
   }
 
   share(){
