@@ -9,7 +9,7 @@ import { ComuneService } from '../comune.service';
   styleUrl: './comune.component.scss'
 })
 export class ComuneComponent {
-  public comune: City | undefined;
+  public comune?: City;
 
   constructor(private route : ActivatedRoute, private comuneService : ComuneService, private router : Router) {
     this.route.params.subscribe(params => {
@@ -22,5 +22,16 @@ export class ComuneComponent {
       });
     });
     
+  }
+
+  correctCap() : string{
+    let numero = this.comune?.cap;
+    if(!numero)
+      numero = 0;
+    let stringa = numero.toString();
+    while (stringa.length < 5) {
+        stringa = '0' + stringa;
+    }
+    return stringa;
   }
 }

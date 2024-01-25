@@ -98,7 +98,7 @@ public class CityHandler implements RoleProvider {
 	public List<City> getCities(String search) {
 		String cityName = search == null ? "" : search;
     	return StreamSupport.stream(cityRepository.findAll().spliterator(), true)
-    			.filter(c -> (c.getName()+c.getCap()).toLowerCase()
+    			.filter(c -> (c.getName()+" "+c.getCap()).toLowerCase()
     					.startsWith(cityName.toLowerCase())).toList();
     }
 

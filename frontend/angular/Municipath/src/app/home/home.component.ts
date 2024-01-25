@@ -94,4 +94,12 @@ export class HomeComponent implements AfterViewInit  {
     this.markers.push(marker);
   }
 
+  correctCap(numero : number) : string{
+    let stringa = numero.toString();
+    while (stringa.length < 5) {
+        stringa = '0' + stringa;
+    }
+    return stringa;
+  }
+
 }
