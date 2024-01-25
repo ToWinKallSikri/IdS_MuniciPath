@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms'; 
 import { ActivatedRoute, Router } from '@angular/router';
-import { MakecityService } from '../makecity.service';
 import { Position } from '../Position';
 import { SharedService } from '../shared.service';
+import { ComuneService } from '../comune.service';
 
 @Component({
   selector: 'app-makecity',
@@ -15,7 +15,7 @@ export class MakecityComponent {
   pos!: Position;
   
   constructor( private cookieService: SharedService, private router: Router, 
-    private mkService : MakecityService, private route : ActivatedRoute) {
+    private mkService : ComuneService, private route : ActivatedRoute) {
     this.myForm = new FormGroup({ 
       txtNomeDelComune: new FormControl(),
       txtCuratore: new FormControl(),

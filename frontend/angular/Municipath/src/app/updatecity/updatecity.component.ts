@@ -6,7 +6,6 @@ import { SharedService } from '../shared.service';
 import { ComuneService } from '../comune.service';
 import { City } from '../City';
 import * as L from 'leaflet';
-import { UpdatecityService } from '../updatecity.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -28,7 +27,7 @@ export class UpdatecityComponent implements AfterViewInit {
   curator = '';
   
   constructor( private cookieService: SharedService, private router: Router, 
-    private upCity : UpdatecityService, private route : ActivatedRoute, private comuneService : ComuneService) {
+    private route : ActivatedRoute, private comuneService : ComuneService) {
       this.myForm = new FormGroup({ 
         txtNomeDelComune: new FormControl(),
         txtCuratore: new FormControl(),
@@ -72,7 +71,7 @@ export class UpdatecityComponent implements AfterViewInit {
         pos : this.pos
       };
       let cityId = (await firstValueFrom(this.route.params))['id'];
-      this.upCity.updateCity(this.cookieService.get('jwt'), city, cityId).subscribe({
+      this.comuneService.updateCity(this.cookieService.get('jwt'), city, cityId).subscribe({
         next: (result) => {
           alert('Comune Aggiornato.');
           this.router.navigateByUrl('/');

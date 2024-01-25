@@ -4,7 +4,7 @@
     <div class="half text">
         <div *ngFor="let comune of comuni">
             <p style="color: aliceblue; font-size: large;" [routerLink]="'/city/'+[comune.id]">
-                {{comune.name}} {{correctCap(comune.cap)}}
+                {{comune.name}} {{comune.cap}}
             </p>
         </div>
         <input type="text" class="down" [(ngModel)]="search" (ngModelChange)="onChange($event)"/>

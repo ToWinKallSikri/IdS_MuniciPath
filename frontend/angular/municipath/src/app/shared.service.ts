@@ -17,7 +17,7 @@ export class SharedService {
   }
 
   public delete(name : string) {
-    this.cookieService.delete(name);
+    this.cookieService.delete(name, '/');
   }
 
   public check(name : string) : boolean{

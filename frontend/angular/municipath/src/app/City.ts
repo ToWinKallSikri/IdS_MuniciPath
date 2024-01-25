@@ -4,6 +4,6 @@ export interface City{
     id : string;
 	name : string;
     curator : string;
-    cap : number;
+    cap : string;
     pos : Position;
 }

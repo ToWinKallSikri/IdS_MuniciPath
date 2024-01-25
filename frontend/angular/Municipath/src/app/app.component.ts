@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedService } from './shared.service';
 import { CheckService } from './check.service';
-import { firstValueFrom } from 'rxjs';
 import { ChangeAccountService } from './change-account.service';
 
 @Component({

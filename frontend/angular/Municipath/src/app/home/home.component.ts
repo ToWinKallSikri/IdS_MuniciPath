@@ -30,11 +30,7 @@ export class HomeComponent implements AfterViewInit  {
 
   async ngAfterViewInit(): Promise<void> {
     this.isManager = (await firstValueFrom(this.checkService.checkManager())).response == 'true';
-    this.route.queryParams.subscribe(params => {
-      this.search = params['id'] ? params['id'] : '';
-      this.comuneService.getCities(this.search).subscribe((comuniBE) => {
-        this.comuni = comuniBE;
-        this.map = L.map('map').setView([44, 13], 5.5);
+    this.map = L.map('map').setView([44, 13], 5.5);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
         this.map.setMaxZoom(12);
         this.map.setMinZoom(5.5);
@@ -42,6 +38,10 @@ export class HomeComponent implements AfterViewInit  {
           [47.0, 6.0],
           [35.0, 19.0]
         ]);
+    this.route.queryParams.subscribe(params => {
+      this.search = params['id'] ? params['id'] : '';
+      this.comuneService.getCities(this.search).subscribe((comuniBE) => {
+        this.comuni = comuniBE.map(c => this.comuneService.makeCity(c));
         this.comuni.forEach(c =>  this.addMarker(c));
         this.map.on('click', (event: any) => {
           this.addEmptyMarker(event.latlng.lat, event.latlng.lng);
@@ -92,14 +92,6 @@ export class HomeComponent implements AfterViewInit  {
       marker.openPopup();
     });
     this.markers.push(marker);
-  }
-
-  correctCap(numero : number) : string{
-    let stringa = numero.toString();
-    while (stringa.length < 5) {
-        stringa = '0' + stringa;
-    }
-    return stringa;
   }
 
 }
