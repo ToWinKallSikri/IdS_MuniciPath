@@ -1,6 +1,6 @@
-<div *ngFor="let user of users; index as i">
-    <div>
-        <p>{{user}}</p>
-        <button (click)="validate(user)">Convalida</button>
+<div class="container" *ngFor="let user of users; index as i">
+    <div class="user">
+        <p>Username: {{user}}</p>
+        <button class="btn" (click)="validate(user)">Convalida</button>
     </div>
 </div>

@@ -1,3 +1,26 @@
 p {
     color:white;
+    font-size: 200%;
+}
+.btn {
+    background-color: #ca0202;
+    color: rgb(255, 255, 255);
+    font-size: 200%;
+}
+.btn:hover {
+    background-color: #a70606;
+}
+.btn:active {
+    background-color: #7c0202;
+}
+.container {
+    text-align: center;
+    align-items: center;
+}
+.user{
+    border: 2px solid white;
+    width: 40%;
+    margin: auto;
+    margin-top: 10px;
+    padding: 1%;
 }

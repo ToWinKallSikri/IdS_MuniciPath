@@ -3,6 +3,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LogService } from '../log.service';
 import { SharedService } from '../shared.service';
+import { ChangeAccountService } from '../change-account.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,8 @@ export class LoginComponent {
   signinForm: FormGroup; 
   isLogin = false;
 
-  constructor(private route : ActivatedRoute, private cookieService: SharedService, private router: Router, private logService : LogService) {
+  constructor(private route : ActivatedRoute, private cookieService: SharedService, private router: Router,
+     private logService : LogService, private changeAccount : ChangeAccountService) {
     this.loginForm = new FormGroup({ 
       txtUsername: new FormControl(),
       txtPassword: new FormControl()
@@ -35,6 +37,7 @@ export class LoginComponent {
       next: (lol) => {
         this.cookieService.set('jwt', lol.response);
         this.router.navigateByUrl('/');
+        this.changeAccount.publish('');
       },
       error: (error) => alert('Dati inseriti non validi.')});
     } else alert('Compila tutti i campi.');

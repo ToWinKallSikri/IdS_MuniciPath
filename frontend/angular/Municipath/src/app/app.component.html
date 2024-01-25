@@ -1,21 +1,21 @@
 <p>
   <mat-toolbar color="primary">
     <mat-toolbar-row>
-      <span style="color: black; ">MuniciPath</span>
+      <span style="color: black; margin-right: 10px;">MuniciPath</span>
       <span class="spacer"></span>
-        <button mat-icon-button [routerLink]="['']" [ngClass]="{'selected': isHomePage()}">
+        <button mat-icon-button class="menubutton" [routerLink]="['']" [ngClass]="{'selected': isHomePage()}">
           <mat-icon class="icon" [ngClass]="{'selected': isHomePage()}">
             home
           </mat-icon>
         </button>
-        <button mat-icon-button (click)="share()" >
+        <button mat-icon-button class="menubutton" (click)="share()" >
           <mat-icon style="color: black;">
             share
           </mat-icon>
         </button>
         <div *ngIf="!isLogged(); then bloccoVero else bloccoFalso"></div>
         <ng-template #bloccoVero>
-          <button mat-icon-button [matMenuTriggerFor]="menu" [ngClass]="{'selected': isLogged()} ">
+          <button mat-icon-button  class="menubutton" [matMenuTriggerFor]="menu" [ngClass]="{'selected': isLogged()} ">
             <mat-icon [ngClass]="{'selected': isLogged()}" [ngClass]="{'black': !isLogged()}"> 
               account_circle
             </mat-icon>
@@ -26,7 +26,7 @@
           </mat-menu>
         </ng-template>
         <ng-template #bloccoFalso>
-          <button mat-icon-button [matMenuTriggerFor]="menu" [ngClass]="{'selected': isLogged()} ">
+          <button mat-icon-button  class="menubutton" [matMenuTriggerFor]="menu" [ngClass]="{'selected': isLogged()} ">
             <mat-icon [ngClass]="{'selected': isLogged()}" [ngClass]="{'black': !isLogged()}"> 
               account_circle
             </mat-icon>
@@ -36,13 +36,14 @@
             <button mat-menu-item (click)="logout()">Logout</button>
           </mat-menu>
         </ng-template>
-        <div *ngIf="isManager">
-          <button mat-icon-button [routerLink]="['/accountValidation']">
+        <div *ngIf="isManager; then bloccoValidazione"></div>
+        <ng-template #bloccoValidazione>
+          <button mat-icon-button  class="menubutton" [routerLink]="['/accountValidation']">
             <mat-icon style="color: black;">
-              like
+              check_circle_outline
             </mat-icon>
           </button>
-        </div>
+        </ng-template>
     </mat-toolbar-row>
   </mat-toolbar>
 </p>

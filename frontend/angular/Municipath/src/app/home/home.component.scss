@@ -12,8 +12,17 @@ a{
     margin: 1%;
 }
 .text{
+    position: relative;
     border: 2px solid white;
     border-radius: 10px;
     padding: 20px;
     height: 74%; 
+}
+
+.down {
+    position: absolute;
+    bottom: 2%;
+    width: 80%;
+    left: 10%;
+    height: 3%;
 }

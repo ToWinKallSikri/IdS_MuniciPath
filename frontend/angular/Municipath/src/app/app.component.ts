@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedService } from './shared.service';
 import { CheckService } from './check.service';
+import { firstValueFrom } from 'rxjs';
+import { ChangeAccountService } from './change-account.service';
 
 @Component({
   selector: 'app-root',
@@ -13,14 +15,22 @@ export class AppComponent {
   like:boolean= false;
   isManager:boolean=false;
 
-  constructor(private router: Router, private cookieService: SharedService, private checkService : CheckService) {
+  constructor(private router: Router, private cookieService: SharedService,
+     private checkService : CheckService, private changeAccount : ChangeAccountService) {
+    this.changeManager();
+    this.changeAccount.eventState.subscribe(data => {
+      this.changeManager();
+    });
+  }
+
+  changeManager(){
     this.checkService.checkManager().subscribe((wr) => {
       this.isManager = wr.response == 'true';
     })
   }
 
   isHomePage(): boolean {
-    return this.router.url === '/';
+    return this.router.url === '/' || this.router.url.startsWith('/?id=');
   }
 
   isLogged() : boolean{
@@ -29,9 +39,7 @@ export class AppComponent {
 
   logout(){
     this.cookieService.delete('jwt');
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate([this.router.url]);
+    this.changeManager();
   }
 
   share(){

@@ -21,17 +21,18 @@ export class HomeComponent implements AfterViewInit  {
      private router : Router, private checkService : CheckService) {}
 
   private map: any;
+  private markers : any[] = []
   private marker: any;
   private city = 'https://i.postimg.cc/GpP8xRfs/Authority.png';
   private empty = 'https://i.postimg.cc/ZngYcZfq/immagine-2024-01-24-113850127-png.png';
   private isManager : boolean = false;
+  search = '';
 
   async ngAfterViewInit(): Promise<void> {
     this.isManager = (await firstValueFrom(this.checkService.checkManager())).response == 'true';
     this.route.queryParams.subscribe(params => {
-      let id = params['id'] ? params['id'] : '';
-      this.comuneService.getCities(id).subscribe((comuniBE) => {
-        console.log(comuniBE);
+      this.search = params['id'] ? params['id'] : '';
+      this.comuneService.getCities(this.search).subscribe((comuniBE) => {
         this.comuni = comuniBE;
         this.map = L.map('map').setView([44, 13], 5.5);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
@@ -44,7 +45,6 @@ export class HomeComponent implements AfterViewInit  {
         this.comuni.forEach(c =>  this.addMarker(c));
         this.map.on('click', (event: any) => {
           this.addEmptyMarker(event.latlng.lat, event.latlng.lng);
-          console.log(event.latlng);
         });
       });
     });
@@ -67,7 +67,14 @@ export class HomeComponent implements AfterViewInit  {
     }
   }
 
-  
+  onChange(valore : string) {
+    this.markers.forEach(m => this.map.removeLayer(m));
+    this.comuneService.getCities(this.search).subscribe((comuniBE) => {
+      this.comuni = comuniBE;
+      this.comuni.forEach(c =>  this.addMarker(c));
+      this.router.navigateByUrl('/?id='+valore);
+    });
+  }
 
   private addMarker(city: City): void {
     var myIcon = L.icon({
@@ -84,6 +91,7 @@ export class HomeComponent implements AfterViewInit  {
     marker.on('click', (event: any) => {
       marker.openPopup();
     });
+    this.markers.push(marker);
   }
 
 }
