@@ -112,7 +112,7 @@ public class RestViewController {
         }
     }
 
-    @GetMapping(value="/api/v1/city/{cityId}/posts")
+    @GetMapping(value="/api/v1/city/{cityId}/post")
     public ResponseEntity<Object> viewPost(@RequestHeader(name="auth") String token,
     										@RequestParam("postId") String postId,
                                            @PathVariable("cityId") String cityId) {
