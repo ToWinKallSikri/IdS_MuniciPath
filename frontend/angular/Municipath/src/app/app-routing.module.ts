@@ -10,6 +10,7 @@ import { MakecityComponent } from './makecity/makecity.component';
 import { UpdatecityComponent } from './updatecity/updatecity.component';
 import { RemovecityComponent } from './removecity/removecity.component';
 import { UservalidationComponent } from './uservalidation/uservalidation.component';
+import { PointComponent } from './point/point.component';
 
 const routes: Routes = [{
   path: "",
@@ -46,6 +47,10 @@ const routes: Routes = [{
 {
   path: "city/:id",
   component: ComuneComponent
+},
+{
+  path: "viewPoint/:id",
+  component: PointComponent
 },
 {
   path: "**",

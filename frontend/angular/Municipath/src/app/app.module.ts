@@ -29,6 +29,8 @@ import { ProfileComponent } from './profile/profile.component';
 import { UpdatecityComponent } from './updatecity/updatecity.component';
 import { RemovecityComponent } from './removecity/removecity.component';
 import { UservalidationComponent } from './uservalidation/uservalidation.component';
+import { PostComponent } from './post/post.component';
+import { PointComponent } from './point/point.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { UservalidationComponent } from './uservalidation/uservalidation.compone
     ProfileComponent,
     UpdatecityComponent,
     RemovecityComponent,
-    UservalidationComponent
+    UservalidationComponent,
+    PostComponent,
+    PointComponent
   ],
   imports: [
     BrowserModule,
