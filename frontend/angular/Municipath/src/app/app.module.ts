@@ -30,6 +30,7 @@ import { UpdatecityComponent } from './updatecity/updatecity.component';
 import { RemovecityComponent } from './removecity/removecity.component';
 import { UservalidationComponent } from './uservalidation/uservalidation.component';
 import { PointComponent } from './point/point.component';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { PointComponent } from './point/point.component';
     ReactiveFormsModule,
     MatInputModule,
     MatMenuModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatDividerModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

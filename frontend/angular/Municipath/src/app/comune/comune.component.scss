@@ -1,3 +1,49 @@
 p, h1{
     color: white;
 }
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.container {
+    width: 300px;
+    padding: 16px;
+    margin: 0 auto;
+    margin-top: 10%;
+    border-radius: 4px;
+    box-sizing: border-box;
+    
+}
+.posts {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+input[type=text]:focus, input[type=password]:focus, input[type=number]:focus{
+    background-color: #ddd;
+    outline: none;
+}
+label{
+    color:white;
+}
+#map {
+    height: 100%; 
+    width: 50%;
+}
+.half{
+    flex: 60%;
+    margin: 1%;
+}
+.text{
+    border: 2px solid white;
+    border-radius: 10px;
+    padding: 20px;
+    height: 100%; 
+}
