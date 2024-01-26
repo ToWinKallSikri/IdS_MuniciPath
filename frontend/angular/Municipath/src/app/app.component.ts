@@ -32,13 +32,17 @@ export class AppComponent {
     return this.router.url === '/' || this.router.url.startsWith('/?id=');
   }
 
+  isValidation() : boolean {
+    return this.router.url === '/accountValidation';
+  }
+
   isLogged() : boolean{
     return this.cookieService.check('jwt');
   }
 
   logout(){
     this.cookieService.delete('jwt');
-    this.changeManager();
+    this.isManager = false;
   }
 
   share(){

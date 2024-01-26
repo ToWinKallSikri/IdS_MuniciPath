@@ -1,9 +1,9 @@
-<h1>Comune di {{comune.name}} - {{this.comune.cap}}</h1>
-<div style="display:flex; height: 100%;">
+<h1 style="text-align: center;">Comune di {{this.comune? this.comune.name : ''}} - {{this.comune ? this.comune.cap : ''}}</h1>
+<div style="display:flex; height: 88%;">
     <div id="map" class="half">
     </div>
-    <mat-divider [vertical]="true"></mat-divider>
-    <div id="posts" class="half">
+    <div class="half text">
+        <p>aaa</p>
+        <mat-divider></mat-divider>
     </div>
 </div>
-

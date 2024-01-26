@@ -1,49 +1,28 @@
-p, h1{
+a, h1, p{
+    text-decoration: none;
     color: white;
 }
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-.container {
-    width: 300px;
-    padding: 16px;
-    margin: 0 auto;
-    margin-top: 10%;
-    border-radius: 4px;
-    box-sizing: border-box;
-    
-}
-.posts {
-    width: 100%;
-    padding: 15px;
-    margin: 5px 0 22px 0;
-    display: inline-block;
-    border: none;
-    background: #f1f1f1;
-    box-sizing: border-box;
-    border-radius: 10px;
-}
-input[type=text]:focus, input[type=password]:focus, input[type=number]:focus{
-    background-color: #ddd;
-    outline: none;
-}
-label{
-    color:white;
-}
+
 #map {
-    height: 100%; 
+    height: 80%; 
     width: 50%;
 }
 .half{
-    flex: 60%;
+    flex: 46%;
     margin: 1%;
 }
 .text{
+    position: relative;
     border: 2px solid white;
     border-radius: 10px;
     padding: 20px;
-    height: 100%; 
+    height: 74%; 
+}
+
+.down {
+    position: absolute;
+    bottom: 2%;
+    width: 80%;
+    left: 10%;
+    height: 3%;
 }

@@ -18,7 +18,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
 
 @Entity
@@ -52,8 +51,6 @@ public class Post implements MetaData {
     private int viewsCount;
     @Transient
     private Score vote;
-    @ManyToOne
-    private Point point;
     
 	public Post() {
 	    this.groups = new ArrayList<>();
@@ -224,16 +221,6 @@ public class Post implements MetaData {
 
 	public void setVote(Score vote) {
 		this.vote = vote;
-	}
-
-
-	public Point getPoint() {
-		return point;
-	}
-
-
-	public void setPoint(Point point) {
-		this.point = point;
 	}
 
 

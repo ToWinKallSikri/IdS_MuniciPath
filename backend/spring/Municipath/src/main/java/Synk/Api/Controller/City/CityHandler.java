@@ -123,7 +123,9 @@ public class CityHandler implements RoleProvider {
         city.setName(cityName);
         city.setCap(cap);
         city.setCurator(curator);
+        Position oldPos = city.getPos();
         city.setPos(pos);
+        this.mediator.updateCityPrime(city, oldPos);
         this.cityRepository.save(city);
 		return true;
     }

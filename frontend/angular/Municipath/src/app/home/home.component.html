@@ -6,6 +6,7 @@
             <p style="color: aliceblue; font-size: large;" [routerLink]="'/city/'+[comune.id]">
                 {{comune.name}} {{comune.cap}}
             </p>
+            <mat-divider></mat-divider>
         </div>
         <input type="text" class="down" [(ngModel)]="search" (ngModelChange)="onChange($event)"/>
     </div>

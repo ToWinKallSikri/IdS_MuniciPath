@@ -38,8 +38,8 @@
         </ng-template>
         <div *ngIf="isManager; then bloccoValidazione"></div>
         <ng-template #bloccoValidazione>
-          <button mat-icon-button  class="menubutton" [routerLink]="['/accountValidation']">
-            <mat-icon style="color: black;">
+          <button mat-icon-button  class="menubutton" [routerLink]="['/accountValidation']" [ngClass]="{'selected': isValidation()}">
+            <mat-icon [ngClass]="{'selected': isValidation()}" [ngClass]="{'black': !isValidation()}">
               check_circle_outline
             </mat-icon>
           </button>

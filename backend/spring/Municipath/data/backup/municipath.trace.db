@@ -32941,3 +32941,6 @@ alter table POST add row point_point_id character varying (255) [42001-224]
 2024-01-20 17:05:02.734276+01:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]remove index idx_post on post"; expected "ROLLBACK, REVOKE, RUNSCRIPT, RELEASE, REFRESH"; SQL statement:
 remove index idx_post on post [42001-224]
+2024-01-26 00:55:20.498811+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]POINT_POINT_ID"; expected "PREPARE"; SQL statement:
+POINT_POINT_ID [42001-224]

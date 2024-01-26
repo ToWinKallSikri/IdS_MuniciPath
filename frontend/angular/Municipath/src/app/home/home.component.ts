@@ -4,7 +4,6 @@ import { City } from '../City';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AfterViewInit, ViewEncapsulation   } from '@angular/core';
 import * as L from 'leaflet';
-import { CookieService } from 'ngx-cookie-service';
 import { CheckService } from '../check.service';
 import { firstValueFrom } from 'rxjs';
 

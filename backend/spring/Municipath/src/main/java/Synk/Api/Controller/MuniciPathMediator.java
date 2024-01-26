@@ -227,6 +227,10 @@ public class MuniciPathMediator {
     	this.point.deleteCityPoints(cityId);
 	}
 	
+	public void updateCityPrime(City city, Position oldPos) {
+		this.point.updatePrime(city, oldPos);
+	}
+	
 	/**
 	 * metodo che controlla se un dato username esiste
 	 * @param username username da controllare

@@ -3,7 +3,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,11 +13,12 @@ import Synk.Api.Controller.MuniciPathMediator;
 import Synk.Api.Controller.Post.Contribute.ContributeHandler;
 import Synk.Api.Controller.WeatherService.WeatherForecastProxy;
 import Synk.Api.Controller.WeatherService.WeatherService;
+import Synk.Api.Model.City.City;
 import Synk.Api.Model.Pending.PendingRequest;
 import Synk.Api.Model.Post.Point;
-import Synk.Api.Model.Post.PointRepository;
 import Synk.Api.Model.Post.Position;
 import Synk.Api.Model.Post.Post;
+import Synk.Api.Model.Post.PostPointRepository;
 import Synk.Api.Model.Post.PostRepository;
 import Synk.Api.Model.Post.PostType;
 import Synk.Api.Model.Post.Contribute.Contribute;
@@ -44,7 +44,7 @@ public class PointHandler implements AuthorProvider {
      * beans iniettati per la persistenza
      */
 	@Autowired
-	private PointRepository pointRepository;
+	private PostPointRepository pointRepository;
 	@Autowired
     private ContributeHandler contributes;
 	@Autowired
@@ -94,7 +94,6 @@ public class PointHandler implements AuthorProvider {
     	creator.setIds(point.getNewPostId(), point.getPointId(), cityId);
     	Post newPost = creator.createPost();
         point.getPosts().add(newPost);
-        newPost.setPoint(point);
         postRepository.save(newPost);
     	pointRepository.save(point);
         if(level == CONTR_NOT_AUTH_LEVEL)
@@ -193,6 +192,28 @@ public class PointHandler implements AuthorProvider {
     	post.updateInfo(request);
         postRepository.save(post);
     }
+    
+
+    /**
+     * metodo per aggiornare il prime nel caso del cambio di posizione del comune
+     * @param city nuovi dati cambiati del comune
+     */
+	public void updatePrime(City city, Position oldPos) {
+		Post post = this.postRepository.findById(city.getId()+"."+oldPos+".0").get();
+		Point point = this.pointRepository.findById(post.getPointId());
+		this.pointRepository.deleteById(point.getPointId());
+		this.postRepository.deleteById(post.getId());
+		point.setPos(city.getPos());
+		String pid = city.getId()+"."+city.getPos();
+		point.setPointId(pid);
+		post.setPos(city.getPos());
+		post.setAuthor(city.getCurator());
+		post.setTitle("Comune di "+city.getName());
+		post.setPointId(pid);
+		post.setId(pid+".0");
+		postRepository.save(post);
+		pointRepository.save(point);
+	}
 	
 	/**
 	 * metodo privato per controllare se una modifica di un post
@@ -343,20 +364,6 @@ public class PointHandler implements AuthorProvider {
     }
     
     /**
-     * metodo privato per cercare un punto dato un id di comune e una posizone
-     * @param cityId id del comune
-     * @param positon posizione
-     * @return point ricercato
-     */
-    private Point searchPoint (String cityId,Position position) {
-    	if(cityId == null || position == null)
-    		return null;
-        return this.pointRepository.findByCityId(cityId).stream()
-        		.filter(p -> p.getPos().equals(position))
-        		.findFirst().orElse(new Point());
-    }
-    
-    /**
      * metodo per elimanare un post. e' destinato 
      * all'uso dell'autore
      * @param postId id del post
@@ -399,8 +406,7 @@ public class PointHandler implements AuthorProvider {
     private boolean deletePost(Post post) {
     	if(post.getType() == PostType.CONTEST)
     		this.contributes.removeContest(post.getId());
-    	Point point = post.getPoint();
-    	post.setPoint(null);
+    	Point point = this.pointRepository.findById(post.getPointId());
     	this.postRepository.save(post);
     	point.getPosts().remove(post);
     	if(point.getPosts().isEmpty()) {
@@ -420,9 +426,8 @@ public class PointHandler implements AuthorProvider {
      * @return true se il post e' prime, false altrimenti
      */
 	private boolean isPrime(Post post) {
-		Position posCity = this.mediator.getCity(post.getCityId()).getPos();
-		Point point = searchPoint(post.getCityId(), posCity);
-		return post.getId().equals(point.getPointId()+".0");
+		City city = this.mediator.getCity(post.getCityId());
+		return post.getId().equals(city.getId()+"."+city.getPos()+".0");
 	}
 	
 	/**
@@ -558,7 +563,7 @@ public class PointHandler implements AuthorProvider {
 		if(winnercontent == null)
 			return false;
 		showWinner(post.getId(), post.getTitle(), winnercontent, winnerId);
-		Point point = pointRepository.findById(post.getPointId()).get();
+		Point point = pointRepository.findById(post.getPointId());
 		this.pointRepository.save(point);
 		return true;
 	}
@@ -581,7 +586,7 @@ public class PointHandler implements AuthorProvider {
 	public void checkEndingPosts() {
 		LocalDateTime date = LocalDateTime.now();
 		List<Post> toDelete = new ArrayList<>();
-		StreamSupport.stream(pointRepository.findAll().spliterator(), true)
+		pointRepository.findAll().stream().parallel()
 				.map(poi -> poi.getPosts()).forEach( l -> l.stream()
 				.filter(pos -> ! pos.isPersistence())
 				.filter(pos -> pos.getType() == PostType.EVENT)
