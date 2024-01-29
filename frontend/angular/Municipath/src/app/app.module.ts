@@ -37,6 +37,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { Validators } from '@angular/forms';
 import { DeletepostComponent } from './deletepost/deletepost.component';
 import { UpdatepostComponent } from './updatepost/updatepost.component';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { UpdatepostComponent } from './updatepost/updatepost.component';
     RemovecityComponent,
     UservalidationComponent,
     DeletepostComponent,
-    UpdatepostComponent
+    UpdatepostComponent,
+    StaffComponent
   ],
   imports: [
     BrowserModule,
@@ -76,7 +78,8 @@ import { UpdatepostComponent } from './updatepost/updatepost.component';
     MatDatepickerModule,
     MatNativeDateModule,
     MatRadioModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSelectModule
   ],
   providers: [CookieService,
     MatDatepickerModule,

@@ -1,1 +1,20 @@
-<p>staff works!</p>
+<form class="container" [formGroup]="myForm">
+    <h1 style="color:white; text-align: center;">Gestisci Autorizzazione</h1>
+    <div class="container">
+        <mat-form-field class="example-full-width">
+            <mat-label>Username</mat-label>
+            <input matInput placeholder="Inserisci l'username" required formControlName="txtToSet">
+          </mat-form-field>
+        <mat-form-field>
+        <mat-label>Ruolo</mat-label>
+        <mat-select required formControlName="txtRole">
+            <mat-option value="CONTR_AUTH">Contributor Autorizzato</mat-option>
+            <mat-option value="CONTR_NOT_AUTH">Contributor Non Autorizzato</mat-option>
+            <mat-option value="TOURIST">Turista</mat-option>
+            <mat-option value="LIMITED">Utente Limitato</mat-option>
+        </mat-select>
+        </mat-form-field>
+        <button type="submit" class="btn" (click)="setRole()">Salva</button>
+    </div>
+</form>
+

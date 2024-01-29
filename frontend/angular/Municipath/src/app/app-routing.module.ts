@@ -15,6 +15,7 @@ import { DeletepostComponent } from './deletepost/deletepost.component';
 import { UpdatepostComponent } from './updatepost/updatepost.component';
 import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
+import { StaffComponent } from './staff/staff.component';
 
 registerLocaleData(localeIt, 'it-IT');
 
@@ -61,6 +62,10 @@ const routes: Routes = [{
 {
   path: "deletecity/:id",
   component: RemovecityComponent
+},
+{
+  path: "city/:id/staff",
+  component: StaffComponent
 },
 {
   path: "city/:id",
