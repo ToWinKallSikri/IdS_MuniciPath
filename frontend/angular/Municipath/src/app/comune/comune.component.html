@@ -5,8 +5,8 @@
     <div class="half text">
         <div *ngIf="this.inPost; then bloccopost else bloccopoint"></div>
         <ng-template #bloccopost>
-            <div>
-                <button mat-button [matMenuTriggerFor]="menu">
+            <div *ngIf="canEdit">
+                <button mat-button style="transform:translate(2%, 0) scale(130%); position: absolute; border: solid 1px" [matMenuTriggerFor]="menu">
                     <mat-icon> 
                         settings
                     </mat-icon>

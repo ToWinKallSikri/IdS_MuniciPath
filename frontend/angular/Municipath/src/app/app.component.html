@@ -44,6 +44,13 @@
             </mat-icon>
           </button>
         </ng-template>
+        <div *ngIf="isCityPage() && isStaff;">
+          <button mat-icon-button  class="menubutton" (click)="navigateToStaff()">
+            <mat-icon class="black">
+              settings
+            </mat-icon>
+          </button>
+        </div>
     </mat-toolbar-row>
   </mat-toolbar>
 </p>

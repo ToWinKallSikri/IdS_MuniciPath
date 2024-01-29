@@ -7,6 +7,7 @@ import * as L from 'leaflet';
 import { Post } from '../Post';
 import { formatDate } from '@angular/common';
 import { CheckService } from '../check.service';
+import { IsStaffService } from '../is-staff.service';
 
 @Component({
   selector: 'app-comune',
@@ -24,6 +25,7 @@ export class ComuneComponent implements AfterViewInit {
   marker: any;
   inPost = false;
   canMake = false;
+  canEdit = false;
 
   authority = 'https://i.postimg.cc/GpP8xRfs/Authority.png';
   event = 'https://i.postimg.cc/q7H6Kq1T/Event.png';
@@ -34,7 +36,10 @@ export class ComuneComponent implements AfterViewInit {
 color: any;
 
   constructor(private route : ActivatedRoute, private comuneService : ComuneService, 
-    private router : Router, private pointService : PointService, private checkService : CheckService) {}
+    private router : Router, private pointService : PointService,
+     private checkService : CheckService, private isStaffService : IsStaffService) {
+      this.isStaffService.publish(this.route.url);
+    }
 
   ngAfterViewInit(): void {
     this.route.params.subscribe((params) => {
@@ -82,6 +87,7 @@ color: any;
             next: (post) => {
             this.post = post;
             this.inPost = true;
+            this.checkService.havePowerWithIt(post.id).subscribe((wr)=> this.canEdit = wr.response === 'true');
           }, error: (error) => this.router.navigateByUrl("/Error/404")});
         } else this.inPost = false;
       } else this.point = prime;
