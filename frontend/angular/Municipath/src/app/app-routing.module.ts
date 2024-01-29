@@ -13,6 +13,10 @@ import { UservalidationComponent } from './uservalidation/uservalidation.compone
 import { MakepostComponent } from './makepost/makepost.component';
 import { DeletepostComponent } from './deletepost/deletepost.component';
 import { UpdatepostComponent } from './updatepost/updatepost.component';
+import { registerLocaleData } from '@angular/common';
+import localeIt from '@angular/common/locales/it';
+
+registerLocaleData(localeIt, 'it-IT');
 
 const routes: Routes = [{
   path: "",

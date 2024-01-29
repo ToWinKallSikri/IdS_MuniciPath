@@ -171,7 +171,7 @@ color: any;
  }
 
   rightFormatDate(date: Date) {
-    return formatDate(date, 'dd/MM/yyyy HH:mm:ss', 'it-IT', 'Europe/Rome');
+    return formatDate(date, 'HH:mm - dd/MM/yyyy', 'it-IT', 'Europe/Rome');
   }
 
 

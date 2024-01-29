@@ -5,13 +5,30 @@
     <div class="half text">
         <div *ngIf="this.inPost; then bloccopost else bloccopoint"></div>
         <ng-template #bloccopost>
+            <div>
+                <button mat-button [matMenuTriggerFor]="menu">
+                    <mat-icon> 
+                        settings
+                    </mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item>Modifica</button>
+                    <button mat-menu-item>Elimina</button>
+                </mat-menu>
+            </div>
             <h2 >{{this.post.title}}</h2>
             <h3 [style.background-color]= getColor(post) style="color:black">{{getItalianName(this.post)}}</h3>
-            <img [src]=this.post.meteo>
+            <div *ngIf="this.post.meteo !== '?' ">
+                <img style="transform: translate(1200%, -40px);" [src]=this.post.meteo>
+            </div>
             <p>Autore: {{this.post.ofCity ? "Comune di " + this.comune.name : this.post.author}}</p>
-            <p>Inizio: {{rightFormatDate(this.post.startTime)}}</p>
-            <p>Fine: {{rightFormatDate(this.post.endTime)}}</p>
-            <div *ngIf="this.post.text !== null">
+            <div *ngIf="post.type === 'EVENT'">
+                <p>Inizio: {{rightFormatDate(this.post.startTime)}}</p>
+            </div>
+            <div *ngIf="post.type === 'EVENT' || post.type === 'CONTEST' ">
+                <p>Fine: {{rightFormatDate(this.post.endTime)}}</p>
+            </div>
+            <div *ngIf="this.post.text !== null && this.post.text !== ''">
                 <p class="cool-border">{{this.post.text}}</p>
             </div>
         </ng-template>
