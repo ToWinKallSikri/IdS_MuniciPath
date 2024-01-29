@@ -1,1 +1,57 @@
-<p>makepost works!</p>
+<form class="container" [formGroup]="postForm">
+    <h1 style="color:white; text-align: center;">Crea un nuovo Contenuto.</h1>
+    <div class="container">
+
+        <mat-form-field>
+            <mat-label>Titolo</mat-label>
+            <input matInput placeholder="Inserisci il titolo" required formControlName="txtTitle">
+          </mat-form-field>
+          <br/>
+        <mat-form-field>
+            <mat-label>Testo</mat-label>
+            <textarea matInput placeholder="Inserisci il testo" formControlName="txtText"></textarea>
+        </mat-form-field>
+        <br/>
+        <button mat-icon-button class="ico" [ngClass]="{emtpy: this.filesToUpload.length == 0, full: this.filesToUpload.length != 0}" (click)="f_input.click()">
+            <mat-icon>perm_media</mat-icon>
+        </button>
+        <span  *ngIf="this.filesToUpload.length != 0">
+            <button mat-icon-button class="clear" (click)="clearFile()">
+                <mat-icon>clear</mat-icon>
+            </button>
+        </span>
+        <input type="file" multiple hidden #f_input (change)="onFileChange($event)" />
+        <br/>
+        <mat-radio-group aria-label="Select an option" (change)="toggle()" required formControlName="txtType">
+            <mat-radio-button value="INSTITUTIONAL">Istituzione</mat-radio-button>
+            <mat-radio-button value="SOCIAL">Sociale</mat-radio-button>
+            <mat-radio-button value="TOURISTIC">Turismo</mat-radio-button>
+            <mat-radio-button value="HEALTHandWELLNESS">Salute e Benessere</mat-radio-button>
+            <mat-radio-button value="EVENT">Evento</mat-radio-button>
+            <mat-radio-button value="CONTEST">Contest</mat-radio-button>
+        </mat-radio-group>
+        <div *ngIf="showStart()">
+            <section>
+                <mat-checkbox class="example-margin" [formControl]="persist" name="persist">Persistenza</mat-checkbox>
+            </section>
+            <mat-form-field>
+                <mat-label>Momento di Inizio</mat-label>
+                <input matInput [matDatepicker]="picker1" [required]="showStart()" formControlName="startDate">
+                <mat-hint style="color:white">MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div *ngIf="showEnd()">
+            <mat-form-field>
+                <mat-label>Momento di Fine</mat-label>
+                <input matInput [matDatepicker]="picker2" [required]="showEnd()" formControlName="endDate">
+                <mat-hint style="color:white">MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <button type="submit" class="btn" (click)="save()">Salva</button>
+    </div>
+</form>

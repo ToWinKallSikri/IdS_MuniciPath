@@ -1,4 +1,4 @@
-import { Point } from "./Point";
+
 import { Score} from "./Score";
 
 export interface Post {    
@@ -21,5 +21,4 @@ export interface Post {
     ofCity : boolean;
     viewsCount : number;
     vote : Score;
-    point : Point;
 }

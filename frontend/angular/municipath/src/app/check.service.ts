@@ -58,6 +58,12 @@ export class CheckService {
     return this.HttpClient.get<WebResponse>(environment.baseUrl+'/api/v1/check/follow/contributor', {headers : header, params : param});
   }
 
+  public getRole(cityId : string) : Observable<WebResponse> {
+    let header = new HttpHeaders().append('auth', this.sharedService.get('jwt'));
+    let param = new HttpParams().append('cityId', cityId);
+    return this.HttpClient.get<WebResponse>(environment.baseUrl+'/api/v1/check/role', {headers : header, params : param});
+  }
+
 
 }
 /**

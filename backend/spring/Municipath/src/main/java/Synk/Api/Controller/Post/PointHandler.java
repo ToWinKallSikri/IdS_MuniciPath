@@ -90,7 +90,9 @@ public class PointHandler implements AuthorProvider {
 		PostCreator creator = buildingPost(author, pos, level, post);
     	if(!creator.correctPost())
     		return false;
-        Point point = getPoint(pos, cityId);
+        Point point = this.pointRepository.findById(cityId+"."+pos);
+        if(point == null)
+        	point = new Point(pos, cityId);
     	creator.setIds(point.getNewPostId(), point.getPointId(), cityId);
     	Post newPost = creator.createPost();
         point.getPosts().add(newPost);
@@ -101,6 +103,8 @@ public class PointHandler implements AuthorProvider {
         else this.mediator.notifyCreation(newPost);
         return true;
 	}
+	
+	
 
 	/**
 	 * metodo che inserisce le corrette informazioni dentro ad un post
@@ -226,30 +230,6 @@ public class PointHandler implements AuthorProvider {
 		if (type == PostType.CONTEST && newType != PostType.CONTEST)
 				this.contributes.removeContest(id);
 	}
-    
-    /**
-     * meotod privato per ottenere un punto partendo da una posizione
-     * e l'id di un comune
-     * @param pos posizione del punto
-     * @param cityId id del comune
-     * @return punto trovato, o un nuovo punto vuoto
-     */
-    private Point getPoint(Position pos, String cityId) {
-    	return this.pointRepository.findByCityId(cityId).stream().filter(p -> p.getPos().equals(pos))
-    			.findFirst().orElse(makeNewPoint(pos, cityId));
-    }
-    
-    /**
-     * crea un nuovo punto partendo da una posizione e un id di un comune
-     * @param pos posizione
-     * @param cityId id del comune
-     * @return nuovo punto creato
-     */
-    private Point makeNewPoint(Position pos, String cityId) {
-    	Point point = new Point(cityId+"."+pos, pos, cityId);
-    	this.pointRepository.save(point);
-    	return point;
-    }
     
     /**
      * metodo che ritorna tutti i punti di una citta'

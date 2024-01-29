@@ -10,7 +10,7 @@ import { MakecityComponent } from './makecity/makecity.component';
 import { UpdatecityComponent } from './updatecity/updatecity.component';
 import { RemovecityComponent } from './removecity/removecity.component';
 import { UservalidationComponent } from './uservalidation/uservalidation.component';
-import { PointComponent } from './point/point.component';
+import { MakepostComponent } from './makepost/makepost.component';
 
 const routes: Routes = [{
   path: "",
@@ -37,6 +37,10 @@ const routes: Routes = [{
   component: MakecityComponent
 },
 {
+  path: "makepost/:cityId/:lat/:lng",
+  component: MakepostComponent
+},
+{
   path: "updatecity/:id",
   component: UpdatecityComponent
 },
@@ -47,10 +51,6 @@ const routes: Routes = [{
 {
   path: "city/:id",
   component: ComuneComponent
-},
-{
-  path: "viewPoint/:id",
-  component: PointComponent
 },
 {
   path: "**",

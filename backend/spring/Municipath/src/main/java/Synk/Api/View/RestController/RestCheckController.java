@@ -28,6 +28,13 @@ public class RestCheckController {
         this.wrc = new WebResponseCreator();
     }
     
+    @GetMapping(value="/api/v1/check/role")
+	public ResponseEntity<Object> getRole(@RequestHeader(name="auth") String token,
+			  									@RequestParam("cityId") String cityId) {
+		String username = authenticator.getUsername(token);
+		return new ResponseEntity<Object>(wrc.make(this.authorizer.getRole(username, cityId)), HttpStatus.OK);
+	}
+    
 	@GetMapping(value="/api/v1/check/isManager")
 	public ResponseEntity<Object> isManager(@RequestHeader(name="auth") String token) {
 		String username = authenticator.getUsername(token);
@@ -47,7 +54,6 @@ public class RestCheckController {
 		String username = authenticator.getUsername(token);
 		return new ResponseEntity<Object>(wrc.make(this.authorizer.havePowerWithIt(username, contentId)), HttpStatus.OK);
 	}
-
 	
 	@GetMapping(value="/api/v1/check/usernameExists")
 	public ResponseEntity<Object> usernameExists(@RequestParam("username") String username) {

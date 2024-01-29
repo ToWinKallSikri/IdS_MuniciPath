@@ -6,6 +6,8 @@ import { Post } from './Post';
 import { environment } from '../environments/environment.development';
 import { catchError } from 'rxjs/operators';
 import { SharedService } from './shared.service';
+import { WebResponse } from './Response';
+import { Position } from './Position';
 
 
 @Injectable({
@@ -17,19 +19,29 @@ export class PointService {
 
   public getPoints(cityId : string) : Observable<Point[]> {
     let header = new HttpHeaders().append('auth', this.cookieService.get('jwt'));
-    return this.HttpClient.get<Point[]>(environment.baseUrl+'/api/v1/city/'+cityId+'/points', { headers: header });
+    return this.HttpClient.get<Point[]>(environment.baseUrl+'/api/v1/city/'+cityId+'/points', { headers: header })
+    .pipe(catchError(error => throwError(() => error)));
   }
 
   public getPoint(cityId : string, pointId : string) : Observable<Point> {
     let header = new HttpHeaders().append('auth', this.cookieService.get('jwt'));
     let param = new HttpParams().append('pointId', pointId);
-    return this.HttpClient.get<Point>(environment.baseUrl+'/api/v1/city/'+cityId+'/point', { headers: header, params: param });
+    return this.HttpClient.get<Point>(environment.baseUrl+'/api/v1/city/'+cityId+'/point', { headers: header, params: param })
+    .pipe(catchError(error => throwError(() => error)));
   }
 
   public getPost(cityId : string, postId : string) : Observable<Post> {
     let header = new HttpHeaders().append('auth', this.cookieService.get('jwt'));
     let param = new HttpParams().append('postId', postId);
-    return this.HttpClient.get<Post>(environment.baseUrl+'/api/v1/city/'+cityId+'/post', { headers: header, params: param });
+    return this.HttpClient.get<Post>(environment.baseUrl+'/api/v1/city/'+cityId+'/post', { headers: header, params: param })
+    .pipe(catchError(error => throwError(() => error)));
+  }
+
+  public createPost(cityId : string, pos : Position, postData : any) : Observable<WebResponse> {
+    let header = new HttpHeaders().append('auth', this.cookieService.get('jwt'));
+    let param = new HttpParams().append('lat', pos.lat).append('lng', pos.lng);
+    return this.HttpClient.post<WebResponse>(environment.baseUrl+'/api/v1/city/'+cityId+'/posts', postData, { headers: header, params: param })
+    .pipe(catchError(error => throwError(() => error)));
   }
   
 }

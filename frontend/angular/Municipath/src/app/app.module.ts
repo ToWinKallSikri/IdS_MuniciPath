@@ -29,8 +29,12 @@ import { ProfileComponent } from './profile/profile.component';
 import { UpdatecityComponent } from './updatecity/updatecity.component';
 import { RemovecityComponent } from './removecity/removecity.component';
 import { UservalidationComponent } from './uservalidation/uservalidation.component';
-import { PointComponent } from './point/point.component';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { Validators } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -47,8 +51,7 @@ import {MatDividerModule} from '@angular/material/divider';
     ProfileComponent,
     UpdatecityComponent,
     RemovecityComponent,
-    UservalidationComponent,
-    PointComponent
+    UservalidationComponent
   ],
   imports: [
     BrowserModule,
@@ -65,9 +68,15 @@ import {MatDividerModule} from '@angular/material/divider';
     MatInputModule,
     MatMenuModule,
     MatExpansionModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatRadioModule,
+    MatCheckboxModule
   ],
-  providers: [CookieService],
+  providers: [CookieService,
+    MatDatepickerModule,
+    MatNativeDateModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

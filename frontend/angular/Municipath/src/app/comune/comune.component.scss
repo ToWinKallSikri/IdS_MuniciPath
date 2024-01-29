@@ -1,4 +1,4 @@
-a, h1, p{
+a, h1, h2, h3, p{
     text-decoration: none;
     color: white;
 }
@@ -25,4 +25,19 @@ a, h1, p{
     width: 80%;
     left: 10%;
     height: 3%;
+}
+h3{
+    border-radius: 10px;
+    text-align: center;
+    width: 50%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+h2{
+    text-align: center;
+}
+.center-button{
+    background-color: crimson;
+    margin-left: 45%;
 }

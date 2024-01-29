@@ -5,6 +5,9 @@ import { ComuneService } from '../comune.service';
 import { Point } from '../Point';
 import { PointService } from '../point.service';
 import * as L from 'leaflet';
+import { Post } from '../Post';
+import { LogService } from '../log.service';
+import { CheckService } from '../check.service';
 
 @Component({
   selector: 'app-comune',
@@ -16,8 +19,11 @@ export class ComuneComponent implements AfterViewInit {
   public comune: any;
   public points: any[] = [];
   public point: any;
+  public post: any;
   private map: any;
   marker: any;
+  inPost = false;
+  canMake = false;
 
   authority = 'https://i.postimg.cc/GpP8xRfs/Authority.png';
   event = 'https://i.postimg.cc/q7H6Kq1T/Event.png';
@@ -25,66 +31,94 @@ export class ComuneComponent implements AfterViewInit {
   social = 'https://i.postimg.cc/RFM3P8rp/Social.png';
   turistic = 'https://i.postimg.cc/QxV7GRFR/Turistic.png';
   empty = 'https://i.postimg.cc/ZngYcZfq/immagine-2024-01-24-113850127-png.png';
+color: any;
 
   constructor(private route : ActivatedRoute, private comuneService : ComuneService, 
-    private router : Router, private pointService : PointService) {}
+    private router : Router, private pointService : PointService, private checkService : CheckService) {}
 
   ngAfterViewInit(): void {
     this.route.params.subscribe((params) => {
-      this.comuneService.getCity(params['id']).subscribe((comuniBE) => {
-        this.comune = this.comuneService.makeCity(comuniBE);
-        if(this.comune == undefined){
-          this.router.navigateByUrl("/Error/404");
-        }
-        this.pointService.getPoints(params['id']).subscribe((poi) => {
-          this.points = poi;
-          this.map = L.map('map').setView([this.comune.pos.lat, this.comune.pos.lng], 12);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
-          this.map.setMaxZoom(20).setMinZoom(12).setMaxBounds([
-            [47.0, 6.0],
-            [35.0, 19.0]
-          ]);
-          this.map.on('click', (event: any) => {
-            this.addEmptyMarker(event.latlng.lat, event.latlng.lng);
-          });
-          this.points.forEach(p => {
-            if(this.comune.pos.lat === p.pos.lat && this.comune.pos.lng === p.pos.lng) 
-              this.addPrimeMarker(this.comune.pos.lat, this.comune.pos.lng);
-            else this.addMarker(p.pos.lat, p.pos.lng);
-            console.log(this.comune.pos);
-            console.log(p.pos);
-          });
-        });
+      this.comuneService.getCity(params['id']).subscribe({ 
+        next: (comuniBE) => {
+          this.comune = this.comuneService.makeCity(comuniBE);
+          this.getAllPoint(params['id']);
+        }, error: (error) => this.router.navigateByUrl("/Error/404")});
+    });
+  }
+
+  private getAllPoint(id: string){
+    this.pointService.getPoints(id).subscribe((poi) => {
+      this.points = poi;
+      this.map = L.map('map').setView([this.comune.pos.lat, this.comune.pos.lng], 14);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
+      let dis = 0.11;
+      this.map.setMaxZoom(20).setMinZoom(12).setMaxBounds([
+        [this.comune.pos.lat + dis, this.comune.pos.lng + dis],
+        [this.comune.pos.lat - dis, this.comune.pos.lng - dis]
+      ]);
+      this.map.on('click', (event: any) => {
+        this.addEmptyMarker(event.latlng.lat, event.latlng.lng);
       });
+      let prime : any;
+      this.points.forEach(p => {
+        if(this.comune.pos.lat === p.pos.lat && this.comune.pos.lng === p.pos.lng) {
+          this.addPrimeMarker(p);
+          prime = p;
+        } else this.addMarker(p);
+      });
+      this.findPoint(prime, id);
+    });
+  }
+
+  private findPoint(prime : any, id : string){
+    this.route.queryParams.subscribe({next:(qParams) => {
+      if(qParams['point']){
+        let point = this.points.find(p => p.pointId === qParams['point']);
+        if(point){
+          this.point = point;
+        } else this.router.navigateByUrl("/Error/404");
+        if(qParams['post']){
+          this.pointService.getPost(id, qParams['post']).subscribe({
+            next: (post) => {
+            this.post = post;
+            this.inPost = true;
+          }, error: (error) => this.router.navigateByUrl("/Error/404")});
+        } else this.inPost = false;
+      } else this.point = prime;
+      this.checkRole();
+    }, error: (error) => this.router.navigateByUrl("/Error/404")});
+  }
+
+  private checkRole(){
+    this.checkService.getRole(this.comune.id).subscribe(wr => {
+      let role = wr.response;
+      this.canMake = role != 'LIMITED' && role != 'TOURIST';
     })
   }
 
-  private addPrimeMarker(lat: number, lng: number): void {
+  private addPrimeMarker(point : Point): void {
     var myIcon = L.icon({
       iconUrl: this.authority,
       iconSize: [42, 60],
       popupAnchor: [0, -26]
   });
-    const marker = L.marker([lat, lng], {icon:myIcon}).addTo(this.map);
-    marker.bindPopup(`<p> ciao </p>`,  {closeButton: false})
-    
+    const marker = L.marker([point.pos.lat, point.pos.lng], {icon:myIcon}).addTo(this.map);
     marker.on('click', (event: any) => {
-      marker.openPopup();
+      this.router.navigateByUrl(`/city/${point.cityId}?point=${point.pointId}`);
     });
   }
 
 
-  private addMarker(lat: number, lng: number): void {
+  private addMarker(point : Point): void {
     var myIcon = L.icon({
       iconUrl: this.getMarker(),
       iconSize: [28, 40],
       popupAnchor: [0, -26]
   });
-    const marker = L.marker([lat, lng], {icon:myIcon}).addTo(this.map);
-    marker.bindPopup(`<p> ciao </p>`,  {closeButton: false})
+    const marker = L.marker([point.pos.lat, point.pos.lng], {icon:myIcon}).addTo(this.map);
     
     marker.on('click', (event: any) => {
-      marker.openPopup();
+      this.router.navigateByUrl(`/city/${point.cityId}?point=${point.pointId}`);
     });
   }
 
@@ -107,6 +141,34 @@ export class ComuneComponent implements AfterViewInit {
       popupAnchor: [0, -26]
     });
     this.marker = L.marker([lat, lng], {icon:myIcon}).addTo(this.map);
+    if(this.canMake) {
+      this.marker.bindPopup(`<button onClick="location.href='/makepost/${this.comune.id}/${lat}/${lng}'">Crea Post</button>`,  {closeButton: false})
+      .on('click', (event: any) => {
+        this.marker.openPopup();
+      });
+    }
   }
+
+  getColor(post : Post) : string{
+     switch (post.type) {
+      case 'INSTITUTIONAL': return 'blue';
+      case 'SOCIAL': return 'yellow';
+      case 'TOURISTIC': return 'orange';
+      case 'HEALTHandWELLNESS': return 'green' ;
+      default: return 'red';
+    }
+  }
+
+  getItalianName(post : Post) : string{
+    switch (post.type) {
+     case 'INSTITUTIONAL': return 'Istituzione';
+     case 'SOCIAL': return 'Sociale';
+     case 'TOURISTIC': return 'Turismo';
+     case 'HEALTHandWELLNESS': return 'Salute e Benessere' ;
+     case 'EVENT': return 'Evento' ;
+     default: return 'Contest';
+   }
+ }
+
 
 }

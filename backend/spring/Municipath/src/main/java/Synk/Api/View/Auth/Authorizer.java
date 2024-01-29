@@ -53,6 +53,14 @@ public class Authorizer {
 		Role role = this.roleProvider.getRole(username, cityId);
 		return role == Role.CURATOR || role == Role.MODERATOR;
 	}
+	
+	
+	public Role getRole(String username, String cityId) {
+		if(username == null || cityId == null)
+			return Role.LIMITED;
+		Role role = this.roleProvider.getRole(username, cityId);
+		return role;
+	}
 
     
 	public boolean isAuthorOf(String username, String contentId) {

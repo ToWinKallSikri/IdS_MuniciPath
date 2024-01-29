@@ -1,9 +1,10 @@
 import { Position } from "./Position";
+import { Post } from "./Post";
     
 export interface Point {
-    id : string;
+    pointId : string;
 	pos : Position;
 	cityId : string;
-	posts : string[];
+	posts : Post[];
 	idCount : number;
 }

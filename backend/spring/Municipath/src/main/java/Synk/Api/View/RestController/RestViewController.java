@@ -87,8 +87,6 @@ public class RestViewController {
     public ResponseEntity<Object> getPoints(@RequestHeader(name="auth") String token,
                                             @PathVariable("cityId") String cityId) {
         String username = authenticator.getUsername(token);
-        if(username.equals("unregistered_tourist") && (!token.equals("?")))
-        	return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         List<Point> list = this.poh.getPoints(cityId, username);
         if(list != null) {
             return new ResponseEntity<Object>(list, HttpStatus.OK);
@@ -102,8 +100,6 @@ public class RestViewController {
                                             @RequestParam("pointId") String pointId,
                                             @PathVariable("cityId") String cityId) {
         String username = authenticator.getUsername(token);
-        if(username.equals("unregistered_tourist") && (!token.equals("?")))
-        	return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         List<Post> list = this.poh.viewPosts(pointId, username);
         if(list != null) {
             return new ResponseEntity<Object>(list, HttpStatus.OK);
@@ -117,8 +113,6 @@ public class RestViewController {
     										@RequestParam("postId") String postId,
                                            @PathVariable("cityId") String cityId) {
         String username = authenticator.getUsername(token);
-        if(username.equals("unregistered_tourist") && (!token.equals("?")))
-        	return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         Post post = this.poh.getPost(postId, username);
         if(post != null) {
             return new ResponseEntity<Object>(post, HttpStatus.OK);

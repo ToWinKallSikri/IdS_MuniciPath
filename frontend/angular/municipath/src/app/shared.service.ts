@@ -13,7 +13,7 @@ export class SharedService {
   }
 
   public set(name : string, value : string) {
-    this.cookieService.set(name, value);
+    this.cookieService.set(name, value, 1, '/');
   }
 
   public delete(name : string) {

@@ -36,17 +36,6 @@ public class Point {
     }
     
     /**
-     * costruttore con parametri del Point,
-     * per le logiche del model
-     * @param id id del punto
-     * @param pos poszione del punto
-     * @param cityId id del comune
-     */
-    public Point(String id, Position pos, String cityId) {
-    	this(id, pos, cityId, new ArrayList<>());
-    }
-    
-    /**
      * costruttore con paramentri del Point,
      * per le logiche del model.
      * accetta anche una lista di Post.
@@ -55,11 +44,11 @@ public class Point {
      * @param cityId id della citta'
      * @param posts Posts da inserire
      */
-    public Point(String id, Position pos, String cityId, ArrayList<Post> posts) {
-    	this.pointId = id;
+    public Point(Position pos, String cityId) {
+    	this.pointId = cityId+"."+pos;
 		this.pos = pos;
 		this.cityId = cityId;
-		this.posts = posts;
+		this.posts = new ArrayList<>();
 		this.idCount = 0;
 	}
     

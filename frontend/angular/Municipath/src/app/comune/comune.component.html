@@ -3,7 +3,30 @@
     <div id="map" class="half">
     </div>
     <div class="half text">
-        <p>aaa</p>
-        <mat-divider></mat-divider>
+        <div *ngIf="this.inPost; then bloccopost else bloccopoint"></div>
+        <ng-template #bloccopost>
+            <h2 >{{this.post.title}}</h2>
+            <h3 [style.background-color]= getColor(post)>{{getItalianName(this.post)}}</h3>
+            <img [src]=this.post.meteo>
+            <p>Autore: {{this.post.ofCity ? "Comune di " + this.comune.name : this.post.author}}</p>
+            <p>{{this.post.text}}</p>
+        </ng-template>
+        <ng-template #bloccopoint>
+            <div *ngIf="this.point">
+                <div *ngIf="this.canMake">
+                    <button mat-icon-button  class="center-button" [routerLink]="['/makepost', this.comune.id, this.point.pos.lat, this.point.pos.lng]">
+                        <mat-icon> 
+                            add
+                        </mat-icon>
+                    </button>
+                </div>
+                <div *ngFor="let post of this.point.posts">
+                    <p [routerLink]="['/city', this.comune.id]" [queryParams]="{point: post.pointId, post: post.id}">
+                        {{post.title}}
+                    </p>
+                    <mat-divider></mat-divider>
+                </div>
+            </div>
+        </ng-template>
     </div>
 </div>
