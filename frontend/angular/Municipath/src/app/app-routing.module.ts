@@ -12,6 +12,7 @@ import { RemovecityComponent } from './removecity/removecity.component';
 import { UservalidationComponent } from './uservalidation/uservalidation.component';
 import { MakepostComponent } from './makepost/makepost.component';
 import { DeletepostComponent } from './deletepost/deletepost.component';
+import { UpdatepostComponent } from './updatepost/updatepost.component';
 
 const routes: Routes = [{
   path: "",
@@ -46,8 +47,8 @@ const routes: Routes = [{
   component: DeletepostComponent
 },
 {
-  path: "updatepsot/:id",
-  component: DeletepostComponent
+  path: "updatepost",
+  component: UpdatepostComponent
 },
 {
   path: "updatecity/:id",

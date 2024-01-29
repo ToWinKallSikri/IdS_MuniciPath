@@ -1,0 +1,58 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 50vh;
+}
+.container {
+    width: 55%;
+    padding: 16px;
+    margin: 0 auto;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.btn {
+    background-color: #ca0202;
+    color: rgb(255, 255, 255);
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+}
+.btn:hover {
+    background-color: #a70606;
+}
+.btn:active {
+    background-color: #7c0202;
+}
+label{
+    color:white;
+}
+.ico{
+    margin-left: 45%; 
+    margin-bottom: 10%;
+}
+.emtpy{
+    background-color: rgb(238, 238, 238);
+}
+.full{
+    background-color: rgb(173, 26, 58);
+}
+
+.clear{
+    transform: scale(60%) translate(0, 30px); 
+    background-color: rgb(124, 18, 41);
+    animation: muovi-destra 0.3s linear;
+}
+
+@keyframes muovi-destra {
+    0% { transform: translateX(-25px) scale(100%) translate(0, 0);}
+    100% { transform: translateX(0) scale(60%) translate(0, 30px);}
+}
+
+.ls{
+    margin-left: 10px;
+}
