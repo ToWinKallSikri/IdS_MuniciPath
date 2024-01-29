@@ -2,12 +2,12 @@
     <h1 style="color:white; text-align: center;">Crea un nuovo Contenuto.</h1>
     <div class="container">
 
-        <mat-form-field>
+        <mat-form-field style="width: 100%;">
             <mat-label>Titolo</mat-label>
             <input matInput placeholder="Inserisci il titolo" required formControlName="txtTitle">
           </mat-form-field>
           <br/>
-        <mat-form-field>
+        <mat-form-field style="width: 100%;">
             <mat-label>Testo</mat-label>
             <textarea matInput placeholder="Inserisci il testo" formControlName="txtText"></textarea>
         </mat-form-field>
@@ -22,11 +22,11 @@
         </span>
         <input type="file" multiple hidden #f_input (change)="onFileChange($event)" />
         <br/>
-        <mat-radio-group aria-label="Select an option" (change)="toggle()" required formControlName="txtType">
+        <mat-radio-group style="margin-left: 20%;" aria-label="Select an option" (change)="toggle()" required formControlName="txtType">
             <mat-radio-button value="INSTITUTIONAL">Istituzione</mat-radio-button>
             <mat-radio-button value="SOCIAL">Sociale</mat-radio-button>
             <mat-radio-button value="TOURISTIC">Turismo</mat-radio-button>
-            <mat-radio-button value="HEALTHandWELLNESS">Salute e Benessere</mat-radio-button>
+            <mat-radio-button style="margin-left: 15%;" value="HEALTHandWELLNESS">Salute e Benessere</mat-radio-button>
             <mat-radio-button value="EVENT">Evento</mat-radio-button>
             <mat-radio-button value="CONTEST">Contest</mat-radio-button>
         </mat-radio-group>
@@ -41,6 +41,10 @@
                 <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
+            <mat-form-field class="ls">
+                <mat-label>Orario</mat-label>
+                <input matInput type="time" value="12:00" formControlName="startTime">
+            </mat-form-field>
         </div>
         <div *ngIf="showEnd()">
             <mat-form-field>
@@ -50,8 +54,13 @@
                 <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
+            <mat-form-field class="ls">
+                <mat-label>Orario</mat-label>
+                <input matInput type="time" value="12:00" formControlName="endTime">
+            </mat-form-field>
         </div>
 
         <button type="submit" class="btn" (click)="save()">Salva</button>
+        <button type="submit" class="btn" [routerLink]="['/city', this.cityId]">Annulla</button>
     </div>
 </form>

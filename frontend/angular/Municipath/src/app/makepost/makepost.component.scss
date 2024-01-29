@@ -5,25 +5,11 @@ body {
     min-height: 50vh;
 }
 .container {
-    width: 300px;
+    width: 55%;
     padding: 16px;
     margin: 0 auto;
     border-radius: 4px;
     box-sizing: border-box;
-}
-input[type=text], input[type=password] {
-    width: 100%;
-    padding: 15px;
-    margin: 5px 0 22px 0;
-    display: inline-block;
-    border: none;
-    background: #f1f1f1;
-    box-sizing: border-box;
-    border-radius: 10px;
-}
-input[type=text]:focus, input[type=password]:focus {
-    background-color: #ddd;
-    outline: none;
 }
 .btn {
     background-color: #ca0202;
@@ -46,7 +32,7 @@ label{
     color:white;
 }
 .ico{
-    margin-left: 25%; 
+    margin-left: 45%; 
     margin-bottom: 10%;
 }
 .emtpy{
@@ -65,4 +51,8 @@ label{
 @keyframes muovi-destra {
     0% { transform: translateX(-25px) scale(100%) translate(0, 0);}
     100% { transform: translateX(0) scale(60%) translate(0, 30px);}
+}
+
+.ls{
+    margin-left: 10px;
 }

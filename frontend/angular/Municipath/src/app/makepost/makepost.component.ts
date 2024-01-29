@@ -31,6 +31,8 @@ export class MakepostComponent {
       multimediaData : new FormControl(),
       startDate : new FormControl(),
       endDate : new FormControl(),
+      startTime : new FormControl(),
+      endTime : new FormControl(),
       persist : this.persist
     });
     this.route.params.subscribe(params => {
@@ -86,8 +88,8 @@ export class MakepostComponent {
         type: this.postForm.value.txtType,
         text: this.postForm.value.txtText,
         multimediaData: list,
-        startTime: this.showStart() ? this.postForm.value.startDate : null,
-        endTime: this.showEnd() ? this.postForm.value.endDate : null,
+        startTime: this.showStart() ? this.getStartTime() : null,
+        endTime: this.showEnd() ? this.getEndTime() : null,
         persistence: this.showStart() ? this.postForm.value.persist : true,
       }
       this.pointService.createPost(this.cityId, this.pos, data).subscribe({
@@ -100,4 +102,22 @@ export class MakepostComponent {
       });
     } else alert('Compila tutti i campi.');
   }
+
+  private getStartTime(){
+    return this.setTime(this.postForm.value.startDate, this.postForm.value.startTime);
+  }
+
+  private getEndTime(){
+    return this.setTime(this.postForm.value.endDate, this.postForm.value.endTime);
+  }
+
+  private setTime(date : Date , time : string) : Date{
+    let partiOrario = time.split(':');
+    let ore = partiOrario[0];
+    let minuti = partiOrario[1];
+    date.setHours(Number(ore));
+    date.setMinutes(Number(minuti));
+    return date;
+  }
+
 }
