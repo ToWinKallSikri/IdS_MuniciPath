@@ -11,6 +11,7 @@ import { UpdatecityComponent } from './updatecity/updatecity.component';
 import { RemovecityComponent } from './removecity/removecity.component';
 import { UservalidationComponent } from './uservalidation/uservalidation.component';
 import { MakepostComponent } from './makepost/makepost.component';
+import { DeletepostComponent } from './deletepost/deletepost.component';
 
 const routes: Routes = [{
   path: "",
@@ -39,6 +40,10 @@ const routes: Routes = [{
 {
   path: "makepost/:cityId/:lat/:lng",
   component: MakepostComponent
+},
+{
+  path: "deletepost",
+  component: DeletepostComponent
 },
 {
   path: "updatecity/:id",
