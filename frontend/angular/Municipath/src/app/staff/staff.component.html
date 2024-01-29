@@ -4,17 +4,18 @@
         <mat-form-field class="example-full-width">
             <mat-label>Username</mat-label>
             <input matInput placeholder="Inserisci l'username" required formControlName="txtToSet">
-          </mat-form-field>
+        </mat-form-field>
         <mat-form-field>
-        <mat-label>Ruolo</mat-label>
-        <mat-select required formControlName="txtRole">
-            <mat-option value="CONTR_AUTH">Contributor Autorizzato</mat-option>
-            <mat-option value="CONTR_NOT_AUTH">Contributor Non Autorizzato</mat-option>
-            <mat-option value="TOURIST">Turista</mat-option>
-            <mat-option value="LIMITED">Utente Limitato</mat-option>
-        </mat-select>
+            <mat-label>Ruolo</mat-label>
+            <mat-select required formControlName="txtRole">
+                <mat-option value="CONTR_AUTH">Contributor Autorizzato</mat-option>
+                <mat-option value="CONTR_NOT_AUTH">Contributor Non Autorizzato</mat-option>
+                <mat-option value="TOURIST">Turista</mat-option>
+                <mat-option value="LIMITED">Utente Limitato</mat-option>
+            </mat-select>
         </mat-form-field>
         <button type="submit" class="btn" (click)="setRole()">Salva</button>
+        <button type="submit" class="btn" [routerLink]="['/city', this.cityId]">Torna Indietro</button>
     </div>
 </form>
 

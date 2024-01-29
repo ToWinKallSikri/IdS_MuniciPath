@@ -15,27 +15,25 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 export class StaffComponent {
   cityId! : string;
-  role! : string;
-  toSet! : string;
   myForm: FormGroup;
 
 
-  constructor(private staffService : StaffService, private sharedService : SharedService
-    , private route : ActivatedRoute, private router: Router){
+  constructor(private staffService : StaffService, private route : ActivatedRoute){
       this.myForm = new FormGroup({ 
         txtToSet: new FormControl(),
         txtRole: new FormControl()
       });
       this.route.url.subscribe((url)=> this.cityId = url[1].toString());
-    console.log(this.cityId);
   }
 
   public setRole() {
     if(this.myForm.valid){
-      this.staffService.setRole(this.toSet, this.role, this.cityId).subscribe({
+      console.log(this.myForm.value.txtToSet);
+      console.log(this.myForm.value.txtRole);
+      console.log(this.cityId);
+      this.staffService.setRole(this.myForm.value.txtToSet, this.myForm.value.txtRole, this.cityId).subscribe({
         next: (result) => {
           alert('Autorizzazione aggiornata');
-          this.router.navigateByUrl('/city/'+this.cityId+'/staff');
         },
         error: (error) => 
         alert('Dati inseriti non validi.')});

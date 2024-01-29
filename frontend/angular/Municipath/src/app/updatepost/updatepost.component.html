@@ -1,15 +1,15 @@
 <form class="container" [formGroup]="postForm">
-    <h1 style="color:white; text-align: center;">Modifica il post "{{title}}".</h1>
+    <h1 style="color:white; text-align: center;">Modifica il post "{{post ? post.title : ''}}".</h1>
     <div class="container">
 
         <mat-form-field style="width: 100%;">
             <mat-label>Titolo</mat-label>
-            <input matInput placeholder="Inserisci il titolo" required formControlName="txtTitle">
+            <input matInput [value]="post ? post.title : ''" required formControlName="txtTitle">
           </mat-form-field>
           <br/>
         <mat-form-field style="width: 100%;">
             <mat-label>Testo</mat-label>
-            <textarea matInput placeholder="Inserisci il testo" formControlName="txtText"></textarea>
+            <textarea matInput [value]="post ? post.text : ''" required formControlName="txtText"></textarea>
         </mat-form-field>
         <br/>
         <button mat-icon-button class="ico" [ngClass]="{emtpy: this.filesToUpload.length == 0, full: this.filesToUpload.length != 0}" (click)="f_input.click()">
@@ -22,14 +22,17 @@
         </span>
         <input type="file" multiple hidden #f_input (change)="onFileChange($event)" />
         <br/>
-        <mat-radio-group aria-label="Select an option" (change)="toggle()" required formControlName="txtType">
-            <mat-radio-button value="INSTITUTIONAL">Istituzione</mat-radio-button>
-            <mat-radio-button value="SOCIAL">Sociale</mat-radio-button>
-            <mat-radio-button value="TOURISTIC">Turismo</mat-radio-button>
-            <mat-radio-button value="HEALTHandWELLNESS">Salute e Benessere</mat-radio-button>
-            <mat-radio-button value="EVENT">Evento</mat-radio-button>
-            <mat-radio-button value="CONTEST">Contest</mat-radio-button>
-        </mat-radio-group>
+        <mat-form-field style="width: 100%;">
+            <mat-label>Tipo di Post</mat-label>
+            <mat-select aria-label="Select an option" (change)="toggle()"  [value]="post ? post.type : ''" required formControlName="txtType">
+                <mat-option value="INSTITUTIONAL">Istituzione</mat-option>
+                <mat-option value="SOCIAL">Sociale</mat-option>
+                <mat-option value="TOURISTIC">Turistico</mat-option>
+                <mat-option value="HEALTHandWELLNESS">Salute e Benessere</mat-option>
+                <mat-option value="EVENT">Evento</mat-option>
+                <mat-option value="CONTEST">Contest</mat-option>
+            </mat-select>
+        </mat-form-field>
         <div *ngIf="showStart()">
             <section>
                 <mat-checkbox class="example-margin" [formControl]="persist" name="persist">Persistenza</mat-checkbox>

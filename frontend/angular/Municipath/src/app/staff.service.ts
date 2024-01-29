@@ -16,7 +16,7 @@ export class StaffService {
   public setRole(toSet : string, role : string, cityId : string) : Observable<WebResponse>{
     let header = new HttpHeaders().append('auth', this.cookieService.get('jwt'));
     let params = new HttpParams().append('toSet',toSet).append('role', role);
-    return this.HttpClient.put<WebResponse>(environment.baseUrl+'/api/v1/city/'+cityId+'/staff/setRole', { headers: header, params: params })
+    return this.HttpClient.put<WebResponse>(environment.baseUrl+'/api/v1/city/'+cityId+'/staff/setRole', "", { headers: header, params: params })
     .pipe(catchError(error => throwError(() => error)));
   }
 }

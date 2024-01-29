@@ -5,6 +5,7 @@ import { PointService } from '../point.service';
 import { Validators } from '@angular/forms';
 import { MediaService } from '../media.service';
 import { firstValueFrom } from 'rxjs';
+import { Post } from '../Post';
 
 @Component({
   selector: 'app-updatepost',
@@ -17,7 +18,7 @@ export class UpdatepostComponent {
     postId! : string;
     persist: FormControl<any>;
     filesToUpload: File[] = [];
-    title : string = '';
+    post!: Post;
 
     constructor(private router: Router, private pointService : PointService,
       private route : ActivatedRoute, private mediaService : MediaService) {
@@ -37,7 +38,7 @@ export class UpdatepostComponent {
       this.postId = params['postId'];
       this.cityId = this.postId.split(".")[0];
       this.pointService.getPost (this.cityId, this.postId).subscribe({
-        next: (post) => {this.title = post.title;},
+        next: (post) => {this.post = post;},
         error: (error) => {this.router.navigateByUrl('/Error/404');}
       }
     )});

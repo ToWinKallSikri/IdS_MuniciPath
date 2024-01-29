@@ -3,15 +3,18 @@
         <form class="container" [formGroup]="myForm">
             <h1 style="color:white; text-align: center;">Modifica il Comune</h1>
             <div class="container">
-                <label for="uname"><b>Nome del Comune</b></label>
-                <input type="text" placeholder={{name}} name="uname" id="uname" required formControlName="txtNomeDelComune">
-
-                <label for="cura"><b>Curatore</b></label>
-                <input type="text" placeholder={{curator}} name="cura" id="cura" required formControlName="txtCuratore">
-                
-                <label for="cap"><b>CAP</b></label>
-                <input type="text" placeholder={{cap}} name="cap" id="cap" required formControlName="txtCap">
-            
+                <mat-form-field>
+                    <mat-label>Nome del Comune</mat-label>
+                    <input matInput [value]=name formControlName="txtNomeDelComune">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Curatore</mat-label>
+                    <input matInput [value]=curator formControlName="txtCuratore">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>CAP</mat-label>
+                    <input matInput [value]=cap formControlName="txtCap">
+                </mat-form-field>
                 <button type="submit" class="btn" (click)="modifica()">Modifica</button>
             </div>
         </form>
