@@ -22,11 +22,11 @@
         </span>
         <input type="file" multiple hidden #f_input (change)="onFileChange($event)" />
         <br/>
-        <mat-radio-group style="margin-left: 20%;" aria-label="Select an option" (change)="toggle()" required formControlName="txtType">
+        <mat-radio-group aria-label="Select an option" (change)="toggle()" required formControlName="txtType">
             <mat-radio-button value="INSTITUTIONAL">Istituzione</mat-radio-button>
             <mat-radio-button value="SOCIAL">Sociale</mat-radio-button>
             <mat-radio-button value="TOURISTIC">Turismo</mat-radio-button>
-            <mat-radio-button style="margin-left: 15%;" value="HEALTHandWELLNESS">Salute e Benessere</mat-radio-button>
+            <mat-radio-button value="HEALTHandWELLNESS">Salute e Benessere</mat-radio-button>
             <mat-radio-button value="EVENT">Evento</mat-radio-button>
             <mat-radio-button value="CONTEST">Contest</mat-radio-button>
         </mat-radio-group>
