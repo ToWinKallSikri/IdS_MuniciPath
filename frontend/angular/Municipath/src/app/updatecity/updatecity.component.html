@@ -5,15 +5,15 @@
             <div class="container">
                 <mat-form-field>
                     <mat-label>Nome del Comune</mat-label>
-                    <input matInput [value]=name formControlName="txtNomeDelComune">
+                    <input matInput [value]=name required formControlName="txtNomeDelComune">
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Curatore</mat-label>
-                    <input matInput [value]=curator formControlName="txtCuratore">
+                    <input matInput [value]=curator required formControlName="txtCuratore">
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>CAP</mat-label>
-                    <input matInput [value]=cap formControlName="txtCap">
+                    <input matInput [value]=cap required formControlName="txtCap">
                 </mat-form-field>
                 <button type="submit" class="btn" (click)="modifica()">Modifica</button>
             </div>
