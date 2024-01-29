@@ -3,4 +3,5 @@
         Sei sicuro di voler eliminare "{{title}}"?
     </p>
     <button class="item, btn" (click)="delete()">Elimina</button>
+    <button type="submit" class="btn" [routerLink]="['/city', this.cityId]">Annulla</button>
 </div>
