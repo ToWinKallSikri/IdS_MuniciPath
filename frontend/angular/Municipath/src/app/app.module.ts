@@ -36,6 +36,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { Validators } from '@angular/forms';
 import { DeletepostComponent } from './deletepost/deletepost.component';
+import { UpdatepostComponent } from './updatepost/updatepost.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { DeletepostComponent } from './deletepost/deletepost.component';
     UpdatecityComponent,
     RemovecityComponent,
     UservalidationComponent,
-    DeletepostComponent
+    DeletepostComponent,
+    UpdatepostComponent
   ],
   imports: [
     BrowserModule,

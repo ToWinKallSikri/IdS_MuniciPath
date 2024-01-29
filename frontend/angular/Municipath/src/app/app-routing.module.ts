@@ -46,6 +46,10 @@ const routes: Routes = [{
   component: DeletepostComponent
 },
 {
+  path: "updatepsot/:id",
+  component: DeletepostComponent
+},
+{
   path: "updatecity/:id",
   component: UpdatecityComponent
 },

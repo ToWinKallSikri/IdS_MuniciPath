@@ -50,5 +50,11 @@ export class PointService {
     return this.HttpClient.delete<WebResponse>(environment.baseUrl+'/api/v1/city/'+cityId+'/posts', { headers: header, params: param })
     .pipe(catchError(error => throwError(() => error)));
   }
-  
+
+  public updatePost(cityId : string, postId : string, postData : any) : Observable<WebResponse> {
+    let header = new HttpHeaders().append('auth', this.cookieService.get('jwt'));
+    let param = new HttpParams().append('postId', postId);
+    return this.HttpClient.put<WebResponse>(environment.baseUrl+'/api/v1/city/'+cityId+'/posts', postData, { headers: header, params: param })
+    .pipe(catchError(error => throwError(() => error)));
+  }
 }
