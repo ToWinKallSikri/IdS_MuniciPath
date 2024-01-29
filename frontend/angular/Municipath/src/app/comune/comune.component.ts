@@ -1,12 +1,11 @@
 import { Component, AfterViewInit, ViewEncapsulation } from '@angular/core';
-import { City } from '../City';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComuneService } from '../comune.service';
 import { Point } from '../Point';
 import { PointService } from '../point.service';
 import * as L from 'leaflet';
 import { Post } from '../Post';
-import { LogService } from '../log.service';
+import { formatDate } from '@angular/common';
 import { CheckService } from '../check.service';
 
 @Component({
@@ -16,6 +15,7 @@ import { CheckService } from '../check.service';
   encapsulation: ViewEncapsulation.None
 })
 export class ComuneComponent implements AfterViewInit {
+
   public comune: any;
   public points: any[] = [];
   public point: any;
@@ -151,7 +151,7 @@ color: any;
 
   getColor(post : Post) : string{
      switch (post.type) {
-      case 'INSTITUTIONAL': return 'blue';
+      case 'INSTITUTIONAL': return 'deepskyblue';
       case 'SOCIAL': return 'yellow';
       case 'TOURISTIC': return 'orange';
       case 'HEALTHandWELLNESS': return 'green' ;
@@ -169,6 +169,10 @@ color: any;
      default: return 'Contest';
    }
  }
+
+  rightFormatDate(date: Date) {
+    return formatDate(date, 'dd/MM/yyyy HH:mm:ss', 'it-IT', 'Europe/Rome');
+  }
 
 
 }

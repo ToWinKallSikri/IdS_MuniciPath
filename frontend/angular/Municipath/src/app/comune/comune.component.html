@@ -6,10 +6,14 @@
         <div *ngIf="this.inPost; then bloccopost else bloccopoint"></div>
         <ng-template #bloccopost>
             <h2 >{{this.post.title}}</h2>
-            <h3 [style.background-color]= getColor(post)>{{getItalianName(this.post)}}</h3>
+            <h3 [style.background-color]= getColor(post) style="color:black">{{getItalianName(this.post)}}</h3>
             <img [src]=this.post.meteo>
             <p>Autore: {{this.post.ofCity ? "Comune di " + this.comune.name : this.post.author}}</p>
-            <p>{{this.post.text}}</p>
+            <p>Inizio: {{rightFormatDate(this.post.startTime)}}</p>
+            <p>Fine: {{rightFormatDate(this.post.endTime)}}</p>
+            <div *ngIf="this.post.text !== null">
+                <p class="cool-border">{{this.post.text}}</p>
+            </div>
         </ng-template>
         <ng-template #bloccopoint>
             <div *ngIf="this.point">
