@@ -16,6 +16,11 @@
                     <button mat-menu-item [routerLink]="['/deletepost']" [queryParams]="{postId: post.id}">Elimina</button>
                 </mat-menu>
             </div>
+            <button mat-button style="transform:translate(2%, 45px) scale(130%); position: absolute; border: solid 1px" [routerLink]="['/city', this.comune.id]" [queryParams]="{point: post.pointId}">
+                <mat-icon> 
+                    arrow_back
+                </mat-icon>
+            </button>
             <h2 >{{this.post.title}}</h2>
             <h3 [style.background-color]= getColor(post) style="color:black">{{getItalianName(this.post)}}</h3>
             <div *ngIf="this.post.meteo !== '?' ">
@@ -27,6 +32,9 @@
             </div>
             <div *ngIf="post.type === 'EVENT' || post.type === 'CONTEST' ">
                 <p>Fine: {{rightFormatDate(this.post.endTime)}}</p>
+            </div>
+            <div *ngIf="this.post.multimediaData !== []">
+                <app-pictures [pictures]="this.post.multimediaData"></app-pictures>
             </div>
             <div *ngIf="this.post.text !== null && this.post.text !== ''">
                 <p class="cool-border">{{this.post.text}}</p>

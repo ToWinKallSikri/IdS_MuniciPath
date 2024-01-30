@@ -8,6 +8,8 @@ import { Post } from '../Post';
 import { formatDate } from '@angular/common';
 import { CheckService } from '../check.service';
 import { IsStaffService } from '../is-staff.service';
+import { MediaService } from '../media.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-comune',
@@ -80,7 +82,7 @@ color: any;
       if(qParams['point']){
         let point = this.points.find(p => p.pointId === qParams['point']);
         if(point){
-          this.point = point;
+          this.point = this.sortPosts(point);
         } else this.router.navigateByUrl("/Error/404");
         if(qParams['post']){
           this.pointService.getPost(id, qParams['post']).subscribe({
@@ -93,6 +95,11 @@ color: any;
       } else this.point = prime;
       this.checkRole();
     }, error: (error) => this.router.navigateByUrl("/Error/404")});
+  }
+
+  private sortPosts(point : Point) : Point {
+    point.posts = point.posts.sort((a, b) => new Date(b.publicationTime).getTime()-new Date(a.publicationTime).getTime());
+    return point;
   }
 
   private checkRole(){
@@ -117,7 +124,7 @@ color: any;
 
   private addMarker(point : Point): void {
     var myIcon = L.icon({
-      iconUrl: this.getMarker(),
+      iconUrl: this.getMarker(point),
       iconSize: [28, 40],
       popupAnchor: [0, -26]
   });
@@ -128,15 +135,37 @@ color: any;
     });
   }
 
-  private getMarker() : string {
-    switch (Math.round(Math.random()*5)) {
+  private getMarker(point : Point) : string {
+    let list = [0, 0, 0, 0, 0];
+    for(let post of point.posts){
+      list[this.getTypeIndex(post)] += 1;
+    }
+    let result = 0;
+    let count = 0;
+    for(let i = 0; i < 5; i++){
+      if(list[i] > count){
+        count = list[i];
+        result = i;
+      }
+    }
+    switch (result) {
       case 0: return this.authority;
-      case 1: return this.event;
-      case 2: return this.health;
-      case 3: return this.social;
-      default: return this.turistic;
+      case 1: return this.social;
+      case 2: return this.turistic;
+      case 3: return this.health;
+      default: return this.event;
     }
   }
+
+  getTypeIndex(post : Post) : number{
+    switch (post.type) {
+     case 'INSTITUTIONAL': return 0;
+     case 'SOCIAL': return 1;
+     case 'TOURISTIC': return 2;
+     case 'HEALTHandWELLNESS': return 3 ;
+     default: return 4;
+   }
+ }
 
   private addEmptyMarker(lat : number, lng: number){
     if(this.marker)
@@ -179,6 +208,5 @@ color: any;
   rightFormatDate(date: Date) {
     return formatDate(date, 'HH:mm - dd/MM/yyyy', 'it-IT', 'Europe/Rome');
   }
-
 
 }

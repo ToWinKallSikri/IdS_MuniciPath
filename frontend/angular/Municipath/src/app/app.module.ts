@@ -38,6 +38,7 @@ import { Validators } from '@angular/forms';
 import { DeletepostComponent } from './deletepost/deletepost.component';
 import { UpdatepostComponent } from './updatepost/updatepost.component';
 import {MatSelectModule} from '@angular/material/select';
+import { PicturesComponent } from './pictures/pictures.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import {MatSelectModule} from '@angular/material/select';
     UservalidationComponent,
     DeletepostComponent,
     UpdatepostComponent,
-    StaffComponent
+    StaffComponent,
+    PicturesComponent
   ],
   imports: [
     BrowserModule,
