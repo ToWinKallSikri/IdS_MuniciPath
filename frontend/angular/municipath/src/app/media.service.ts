@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../environments/environment.development';
 
 @Injectable({
@@ -23,8 +23,9 @@ export class MediaService {
     return this.http.post<string[]>(environment.baseUrl + this.pathUrl, formData);
   }
 
-  getFiles(paths: string[]): Observable<File[]> {
-    return this.http.post<File[]>(environment.baseUrl + this.fileUrl, paths);
+  getFile(path: string): Observable<any> {
+    let header = new HttpHeaders().append("path", path);
+    return this.http.get(environment.baseUrl + this.fileUrl, { headers: header, responseType: 'blob'});
   }
 
 }

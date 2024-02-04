@@ -16,9 +16,8 @@ public class FileHandler {
 	private final String url = "./files/";
 	
 	public String getName(MultipartFile file) {
-		String name = getActualName();
-		String ext = getExtension(file);
-		File newFile = new File(url + name + ext);
+		String name = getActualName() + getExtension(file);
+		File newFile = new File(url + name);
 		try {
 			newFile.createNewFile();
 			FileOutputStream fileOut = new FileOutputStream(newFile);
@@ -30,18 +29,17 @@ public class FileHandler {
 		}
 	}
 	
-	public Resource getFile(String name){
-		Path path = Paths.get(url + name);
-        Resource resource;
-		try {
-			resource = new UrlResource(path.toUri());
-
-	        if (resource.exists() || resource.isReadable()) 
-	        	return resource; 
-			else return null;
-		} catch (Exception e) {
-			return null;
-		}
+	public Resource getFile(String name) {
+	    try {
+	        Path file = Paths.get(url + name);
+	        Resource resource = new UrlResource(file.toUri());
+	        if (resource != null && resource.exists() && resource.isReadable()) {
+                return resource;
+            }
+            return null;
+	    } catch (Exception e) {
+	        return null;
+	    }
 	}
 	
 	private String getActualName() {

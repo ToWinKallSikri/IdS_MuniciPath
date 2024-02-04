@@ -80,7 +80,6 @@ export class MakepostComponent {
   }
 
   async save() {
-    console.log(this.filesToUpload)
     if(this.postForm.valid){
       let list = this.filesToUpload.length == 0 ? [] : await firstValueFrom(this.mediaService.getPath(this.filesToUpload));
       let data = {
