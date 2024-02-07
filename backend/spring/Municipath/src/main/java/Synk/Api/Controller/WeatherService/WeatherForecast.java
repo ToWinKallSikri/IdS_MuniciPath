@@ -22,7 +22,7 @@ public class WeatherForecast implements WeatherService {
     	LocalDateTime now = LocalDateTime.now();
     	int day = time.getDayOfYear() - now.getDayOfYear();
     	day = day < 0 ? day + 365 : day;
-    	if(day > 13) return "?";
+    	if(day > 2) return "?";
     	return callService(day, time.getHour(), position);
     }
     
