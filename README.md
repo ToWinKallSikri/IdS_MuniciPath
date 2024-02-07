@@ -12,7 +12,7 @@ Progetto per Ingegneria del Software (Prof. Morichetta - Prof. Polini) [ST0496] 
 
 Il file UML compatibile con visual paradigm è disponibile nella cartella documents, insieme ad un pdf con la relazione del progetto e un pdf con i requisiti considerati.
 
-Per eseguire il progetto di back end basta andare nella cartella backend ed, una volta arrivato al progetto spring, aprire un terminale ed eseguire mvn clean install. Preventivamente, è stato preparato un file jar nella cartella result con dentro anche file di memoria già pronti per visualizzare dei contenuti. Nel caso si volesse accedere dentro al sito si possono usare le credenziali User e 123. Nel caso si volesse accedere alla console di h2 le credenziali sono user e pass.
+Per eseguire il progetto di back end basta andare nella cartella backend ed, una volta arrivato al progetto spring, aprire un terminale ed eseguire mvn clean install. Il sito sarà disponibile sulla porta 1234. Preventivamente, è stato preparato un file jar nella cartella result con dentro anche file di memoria già pronti per visualizzare dei contenuti. Nel caso si volesse accedere dentro al sito si possono usare le credenziali User e 123. Nel caso si volesse accedere alla console di h2 le credenziali sono user e pass.
 
 Per eseguire il progetto di front end bisogna andare nella cartella frontend ed una volta arrivato al progetto aprire un terminale e fare: prima npm i, poi ng serve.
 
