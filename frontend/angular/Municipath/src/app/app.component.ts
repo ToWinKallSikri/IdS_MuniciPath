@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SharedService } from './shared.service';
-import { CheckService } from './check.service';
-import { ChangeAccountService } from './change-account.service';
-import { IsStaffService } from './is-staff.service';
+import { SharedService } from './services/shared.service';
+import { CheckService } from './services/check.service';
+import { ChangeAccountService } from './services/change-account.service';
+import { IsStaffService } from './services/is-staff.service';
 
 @Component({
   selector: 'app-root',

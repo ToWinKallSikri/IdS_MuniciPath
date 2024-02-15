@@ -1,9 +1,9 @@
 import { Component,  } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms'; 
 import { ActivatedRoute, Router } from '@angular/router';
-import { LogService } from '../log.service';
-import { SharedService } from '../shared.service';
-import { ChangeAccountService } from '../change-account.service';
+import { LogService } from '../services/log.service';
+import { SharedService } from '../services/shared.service';
+import { ChangeAccountService } from '../services/change-account.service';
 
 @Component({
   selector: 'app-login',

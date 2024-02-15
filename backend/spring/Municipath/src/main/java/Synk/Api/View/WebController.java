@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class WebController {
 
-    @GetMapping({"/", "/makecity/{lat:\\w+}/{lng:\\w+}", "/updatecity/{id:\\w+}", "/deletecity/{id:\\w+}",
+    @GetMapping({"/", "/makecity/{lat:[-+]?[0-9]*\\.?[0-9]+}/{lng:[-+]?[0-9]*\\.?[0-9]+}", "/updatecity/{id:\\w+}", "/deletecity/{id:\\w+}",
     	"/log/login", "log/signin", "/accountValidation", "/deletepost", "/updatepost", 
-    	"/makepost/{id:\\w+}/{lat:\\w+}/{lng:\\w+}", "/city/{id:\\w+}", "/city/{id:\\w+}/staff"})
+    	"/makepost/{cityId:\\w+}/{lat:[-+]?[0-9]*\\.?[0-9]+}/{lng:[-+]?[0-9]*\\.?[0-9]+}", "/city/{id:\\w+}", "/city/{id:\\w+}/staff"})
     public String index() {
         return "index";
     }
-	
-    
 }

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { ComuneService } from '../comune.service';
-import { City } from '../City';
+import { ComuneService } from '../services/comune.service';
+import { City } from '../models/City';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AfterViewInit, ViewEncapsulation   } from '@angular/core';
 import * as L from 'leaflet';
-import { CheckService } from '../check.service';
+import { CheckService } from '../services/check.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({

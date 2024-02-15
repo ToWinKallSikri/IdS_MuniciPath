@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms'; 
 import { ActivatedRoute, Router } from '@angular/router';
-import { PointService } from '../point.service';
+import { PointService } from '../services/point.service';
 import { Validators } from '@angular/forms';
-import { MediaService } from '../media.service';
+import { MediaService } from '../services/media.service';
 import { firstValueFrom } from 'rxjs';
-import { Post } from '../Post';
+import { Post } from '../models/Post';
 
 @Component({
   selector: 'app-updatepost',

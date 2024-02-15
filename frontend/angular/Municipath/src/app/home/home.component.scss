@@ -26,3 +26,19 @@ a{
     left: 10%;
     height: 3%;
 }
+.box{
+    display:flex; 
+    height: 88%;
+}
+@media screen and (max-width: 600px) {
+    .box{
+        display: block;
+    }
+    .half {
+        flex: 100%;
+        margin: 0;
+    }
+    #map {
+        width: 100%;
+    }
+}

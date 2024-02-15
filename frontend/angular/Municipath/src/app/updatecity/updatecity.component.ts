@@ -1,10 +1,10 @@
 import { Component, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms'; 
 import { ActivatedRoute, Router } from '@angular/router';
-import { Position } from '../Position';
-import { SharedService } from '../shared.service';
-import { ComuneService } from '../comune.service';
-import { City } from '../City';
+import { Position } from '../models/Position';
+import { SharedService } from '../services/shared.service';
+import { ComuneService } from '../services/comune.service';
+import { City } from '../models/City';
 import * as L from 'leaflet';
 import { firstValueFrom } from 'rxjs';
 

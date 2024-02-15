@@ -34,7 +34,6 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import { Validators } from '@angular/forms';
 import { DeletepostComponent } from './deletepost/deletepost.component';
 import { UpdatepostComponent } from './updatepost/updatepost.component';
 import {MatSelectModule} from '@angular/material/select';

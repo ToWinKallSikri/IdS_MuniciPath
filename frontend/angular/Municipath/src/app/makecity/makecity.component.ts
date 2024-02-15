@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms'; 
 import { ActivatedRoute, Router } from '@angular/router';
-import { Position } from '../Position';
-import { SharedService } from '../shared.service';
-import { ComuneService } from '../comune.service';
+import { Position } from '../models/Position';
+import { SharedService } from '../services/shared.service';
+import { ComuneService } from '../services/comune.service';
 
 @Component({
   selector: 'app-makecity',

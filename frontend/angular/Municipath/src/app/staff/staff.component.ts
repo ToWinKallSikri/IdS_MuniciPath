@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { LogService } from '../log.service';
-import { SharedService } from '../shared.service';
+import { LogService } from '../services/log.service';
+import { SharedService } from '../services/shared.service';
 import { firstValueFrom } from 'rxjs';
-import { StaffService } from '../staff.service';
+import { StaffService } from '../services/staff.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 

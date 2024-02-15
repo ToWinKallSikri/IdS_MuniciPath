@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms'; 
 import { ActivatedRoute, Router } from '@angular/router';
-import { Position } from '../Position';
-import { PointService } from '../point.service';
+import { Position } from '../models/Position';
+import { PointService } from '../services/point.service';
 import { Validators } from '@angular/forms';
-import { MediaService } from '../media.service';
+import { MediaService } from '../services/media.service';
 import { firstValueFrom } from 'rxjs';
 
 

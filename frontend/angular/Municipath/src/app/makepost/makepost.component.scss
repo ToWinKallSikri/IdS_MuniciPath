@@ -56,3 +56,12 @@ label{
 .ls{
     margin-left: 10px;
 }
+@media screen and (max-width: 600px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+        margin: 0 auto;
+        border-radius: opx;
+        box-sizing: border-box;
+    }
+}

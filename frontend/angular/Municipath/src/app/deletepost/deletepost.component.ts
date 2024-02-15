@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PointService } from '../point.service';
+import { PointService } from '../services/point.service';
 
 @Component({
   selector: 'app-deletepost',

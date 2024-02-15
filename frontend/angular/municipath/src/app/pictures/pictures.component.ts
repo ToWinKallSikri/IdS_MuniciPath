@@ -1,7 +1,7 @@
 import { Component} from '@angular/core';
-import { MediaService } from '../media.service';
+import { MediaService } from '../services/media.service';
 import { ActivatedRoute } from '@angular/router';
-import { PointService } from '../point.service';
+import { PointService } from '../services/point.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { firstValueFrom } from 'rxjs';
 

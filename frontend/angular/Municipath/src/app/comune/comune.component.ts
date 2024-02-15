@@ -1,14 +1,14 @@
 import { Component, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ComuneService } from '../comune.service';
-import { Point } from '../Point';
-import { PointService } from '../point.service';
+import { ComuneService } from '../services/comune.service';
+import { Point } from '../models/Point';
+import { PointService } from '../services/point.service';
 import * as L from 'leaflet';
-import { Post } from '../Post';
+import { Post } from '../models/Post';
 import { formatDate } from '@angular/common';
-import { CheckService } from '../check.service';
-import { IsStaffService } from '../is-staff.service';
-import { MediaService } from '../media.service';
+import { CheckService } from '../services/check.service';
+import { IsStaffService } from '../services/is-staff.service';
+import { MediaService } from '../services/media.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({

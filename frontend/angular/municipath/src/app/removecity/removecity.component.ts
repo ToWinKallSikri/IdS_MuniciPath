@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { City } from '../City';
+import { City } from '../models/City';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ComuneService } from '../comune.service';
-import { SharedService } from '../shared.service';
+import { ComuneService } from '../services/comune.service';
+import { SharedService } from '../services/shared.service';
 
 
 @Component({
