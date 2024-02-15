@@ -1,5 +1,5 @@
 <form class="container" [formGroup]="postForm">
-    <h1 style="color:white; text-align: center;">Crea un nuovo Contenuto.</h1>
+    <h1 style="color:rgb(0, 0, 0); text-align: center;">Crea un nuovo Contenuto.</h1>
     <div class="container">
 
         <mat-form-field style="width: 100%;">
@@ -40,7 +40,7 @@
             <mat-form-field>
                 <mat-label>Momento di Inizio</mat-label>
                 <input matInput [matDatepicker]="picker1" [required]="showStart()" formControlName="startDate">
-                <mat-hint style="color:white">MM/DD/YYYY</mat-hint>
+                <mat-hint style="color:rgb(0, 0, 0)">MM/DD/YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
@@ -53,7 +53,7 @@
             <mat-form-field>
                 <mat-label>Momento di Fine</mat-label>
                 <input matInput [matDatepicker]="picker2" [required]="showEnd()" formControlName="endDate">
-                <mat-hint style="color:white">MM/DD/YYYY</mat-hint>
+                <mat-hint style="color:rgb(0, 0, 0)">MM/DD/YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>

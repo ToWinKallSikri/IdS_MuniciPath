@@ -1,26 +1,30 @@
 p {
-    color:white;
+    color:black;
     font-size: 200%;
 }
 .btn {
-    background-color: #ca0202;
+    background-color: rgb(30,136,229);
     color: rgb(255, 255, 255);
-    font-size: 200%;
+    font-size: 150%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
 }
 .btn:hover {
-    background-color: #a70606;
+    background-color: rgb(22, 94, 156);
 }
 .btn:active {
-    background-color: #7c0202;
+    background-color: rgb(16, 63, 104);
 }
 .container {
     text-align: center;
     align-items: center;
 }
 .user{
-    border: 2px solid white;
+    border: 2px solid rgb(177, 177, 177);
     width: 40%;
     margin: auto;
     margin-top: 10px;
     padding: 1%;
+    border-radius: 10px;
 }

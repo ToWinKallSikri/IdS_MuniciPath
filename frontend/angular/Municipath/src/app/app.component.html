@@ -1,7 +1,11 @@
 <p>
   <mat-toolbar color="primary">
     <mat-toolbar-row>
-      <span style="color: black; margin-right: 10px;">MuniciPath</span>
+      <span style="margin-right: 10px;">
+        <span style="color: rgb(1, 212, 1);">Mun</span>
+        <span style="color: white;">iciP</span>
+        <span style="color: red;">ath</span>
+      </span>
       <span class="spacer"></span>
         <button mat-icon-button class="menubutton" [routerLink]="['']" [ngClass]="{'selected': isHomePage()}">
           <mat-icon class="icon" [ngClass]="{'selected': isHomePage()}">
@@ -9,14 +13,14 @@
           </mat-icon>
         </button>
         <button mat-icon-button class="menubutton" (click)="share()" >
-          <mat-icon style="color: black;">
+          <mat-icon class="icon">
             share
           </mat-icon>
         </button>
         <div *ngIf="!isLogged(); then bloccoVero else bloccoFalso"></div>
         <ng-template #bloccoVero>
           <button mat-icon-button  class="menubutton" [matMenuTriggerFor]="menu" [ngClass]="{'selected': isLogged()} ">
-            <mat-icon [ngClass]="{'selected': isLogged()}" [ngClass]="{'black': !isLogged()}"> 
+            <mat-icon [ngClass]="{'selected': isLogged()}" [ngClass]="{'icon': !isLogged()}"> 
               account_circle
             </mat-icon>
           </button>
@@ -27,7 +31,7 @@
         </ng-template>
         <ng-template #bloccoFalso>
           <button mat-icon-button  class="menubutton" [matMenuTriggerFor]="menu" [ngClass]="{'selected': isLogged()} ">
-            <mat-icon [ngClass]="{'selected': isLogged()}" [ngClass]="{'black': !isLogged()}"> 
+            <mat-icon [ngClass]="{'selected': isLogged()}" [ngClass]="{'icon': !isLogged()}"> 
               account_circle
             </mat-icon>
           </button>
@@ -39,14 +43,14 @@
         <div *ngIf="isManager; then bloccoValidazione"></div>
         <ng-template #bloccoValidazione>
           <button mat-icon-button  class="menubutton" [routerLink]="['/accountValidation']" [ngClass]="{'selected': isValidation()}">
-            <mat-icon [ngClass]="{'selected': isValidation()}" [ngClass]="{'black': !isValidation()}">
+            <mat-icon [ngClass]="{'selected': isValidation()}" [ngClass]="{'icon': !isValidation()}">
               check_circle_outline
             </mat-icon>
           </button>
         </ng-template>
         <div *ngIf="isCityPage() && isStaff;">
           <button mat-icon-button  class="menubutton" (click)="navigateToStaff()">
-            <mat-icon class="black">
+            <mat-icon class="icon">
               settings
             </mat-icon>
           </button>

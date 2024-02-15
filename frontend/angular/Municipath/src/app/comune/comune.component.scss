@@ -1,11 +1,12 @@
 a, h1, h2, h3, p{
     text-decoration: none;
-    color: white;
+    color: black;
 }
 
 #map {
     height: 80%; 
     width: 50%;
+    border-radius: 20px;
 }
 .half{
     flex: 46%;
@@ -13,7 +14,7 @@ a, h1, h2, h3, p{
 }
 .text{
     position: relative;
-    border: 2px solid white;
+    border: 2px solid black;
     border-radius: 10px;
     padding: 20px;
     height: 74%; 
@@ -38,11 +39,11 @@ h2{
     text-align: center;
 }
 .center-button{
-    background-color: crimson;
+    background-color: rgb(30,136,229);
     margin-left: 45%;
 }
 .cool-border{
-    border: 2px solid white;
+    border: 2px solid black;
     border-radius: 10px;
     padding: 20px;
 }

@@ -1,6 +1,11 @@
 p{
-    color:bisque;
+    color:rgb(0, 0, 0);
     text-align: center;
-    line-height: 1300%;
-    font-size: 250%;
+    font-size: 200%;
+}
+.marginauto {
+    margin: 10px auto 20px;
+    display: block;
+    width: 300px; 
+    height: auto;
 }

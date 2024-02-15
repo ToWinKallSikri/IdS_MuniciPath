@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ComuneComponent } from './comune/comune.component';
 import { HomeComponent } from './home/home.component';
-import { MapComponent } from './map/map.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
@@ -38,13 +37,13 @@ import { DeletepostComponent } from './deletepost/deletepost.component';
 import { UpdatepostComponent } from './updatepost/updatepost.component';
 import {MatSelectModule} from '@angular/material/select';
 import { PicturesComponent } from './pictures/pictures.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
   declarations: [
     AppComponent,
     ComuneComponent,
     HomeComponent,
-    MapComponent,
     NotFoundComponent,
     LoginComponent,
     MakecityComponent,
@@ -84,7 +83,8 @@ import { PicturesComponent } from './pictures/pictures.component';
   ],
   providers: [CookieService,
     MatDatepickerModule,
-    MatNativeDateModule],
+    MatNativeDateModule,
+    provideAnimationsAsync()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

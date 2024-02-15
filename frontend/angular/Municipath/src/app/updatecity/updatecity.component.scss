@@ -28,7 +28,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=number]:focus{
     outline: none;
 }
 .btn {
-    background-color: #ca0202;
+    background-color: rgb(30,136,229);
     color: rgb(255, 255, 255);
     padding: 16px 20px;
     margin: 8px 0;
@@ -39,24 +39,25 @@ input[type=text]:focus, input[type=password]:focus, input[type=number]:focus{
     opacity: 0.9;
 }
 .btn:hover {
-    background-color: #a70606;
+    background-color: rgb(22, 94, 156);
 }
 .btn:active {
-    background-color: #7c0202;
+    background-color: rgb(16, 63, 104);
 }
 label{
-    color:white;
+    color:black;
 }
 #map {
     height: 100%; 
     width: 50%;
+    border-radius: 20px;
 }
 .half{
     flex: 60%;
     margin: 1%;
 }
 .text{
-    border: 2px solid white;
+    border: 2px solid black;
     border-radius: 10px;
     padding: 20px;
     height: 100%; 

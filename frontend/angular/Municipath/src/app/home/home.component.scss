@@ -1,11 +1,12 @@
 a{
     text-decoration: none;
-    color: white;
+    color: rgb(0, 0, 0);
 }
 
 #map {
     height: 80%; 
     width: 50%;
+    border-radius: 20px;
 }
 .half{
     flex: 46%;
@@ -13,7 +14,7 @@ a{
 }
 .text{
     position: relative;
-    border: 2px solid white;
+    border: 2px solid rgb(0, 0, 0);
     border-radius: 10px;
     padding: 20px;
     height: 74%; 
@@ -21,6 +22,7 @@ a{
 
 .down {
     position: absolute;
+    border-radius: 5px;
     bottom: 2%;
     width: 80%;
     left: 10%;

@@ -3,11 +3,11 @@
     </div>
     <div class="half text">
         <div *ngFor="let comune of comuni">
-            <p style="color: aliceblue; font-size: large;" [routerLink]="'/city/'+[comune.id]">
+            <p style="color: rgb(0, 0, 0); font-size: large;" [routerLink]="'/city/'+[comune.id]">
                 {{comune.name}} {{comune.cap}}
             </p>
             <mat-divider></mat-divider>
         </div>
-        <input type="text" class="down" [(ngModel)]="search" (ngModelChange)="onChange($event)"/>
+        <input type="text" placeholder="Cerca la città..." class="down" [(ngModel)]="search" (ngModelChange)="onChange($event)"/>
     </div>
 </div>

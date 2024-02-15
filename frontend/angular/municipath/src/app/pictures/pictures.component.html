@@ -1,6 +1,6 @@
 <div style="display: flex; justify-content: center; align-items: center;">
-    <button mat-icon-button (click)="getBack()"  class="controlB">
-        <mat-icon>arrow_back</mat-icon>
+    <button mat-icon-button (click)="getBack()" class="controlB, picicon">
+        <mat-icon clss="picicon">arrow_back</mat-icon>
     </button>
     <div *ngIf="this.isImage then imageBlock else videoBlock"></div>
     <ng-template #imageBlock>
@@ -11,19 +11,19 @@
             <video #videoPlayer [src]="fileUrl" controlsList="nodownload" style="width: 100%; height: auto;"></video>
             <div style="display: flex; justify-content: center; margin-top: 10px;">
                 <div *ngIf="!this.play && !this.isImage">
-                    <button mat-icon-button (click)="videoPlayer.play(); this.play = !this.play;" class="controlB">
-                        <mat-icon>play_arrow</mat-icon>
+                    <button mat-icon-button (click)="videoPlayer.play(); this.play = !this.play;" class="controlB, picincon">
+                        <mat-icon class="picicon">play_arrow</mat-icon>
                       </button>
                 </div>
                 <div *ngIf="this.play && !this.isImage">
-                    <button mat-icon-button (click)="videoPlayer.pause(); this.play = !this.play;"  class="controlB">
-                        <mat-icon>pause</mat-icon>
+                    <button mat-icon-button (click)="videoPlayer.pause(); this.play = !this.play;"  class="controlB, picicon">
+                        <mat-icon class="picicon">pause</mat-icon>
                     </button>
                 </div>
             </div>
           </div>
     </ng-template>
-    <button mat-icon-button (click)="getNext()"  class="controlB">
-        <mat-icon>arrow_forward</mat-icon>
+    <button mat-icon-button (click)="getNext()"  class="controlB, picicon">
+        <mat-icon class="picicon">arrow_forward</mat-icon>
     </button>
 </div>

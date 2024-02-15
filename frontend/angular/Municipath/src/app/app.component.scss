@@ -4,26 +4,18 @@
 
 
 .footercontent{
-    color: azure;
+    color:  rgb(226, 224, 224);
 }
 
 .icon{
-    color:black
+    color:  rgb(226, 224, 224);
 }
 
 .selected {
-    background-color: rgb(66, 16, 16);
-    color:rgb(255, 33, 81);
+    background-color: rgb(226, 224, 224);
+    color:rgb(0, 0, 0);
 }
 .black{
     color:black;
 }
 
-footer {
-    text-align: center;
-    padding: 0;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    color:rgb(208, 208, 208);
-}

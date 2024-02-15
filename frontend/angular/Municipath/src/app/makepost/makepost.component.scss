@@ -12,8 +12,8 @@ body {
     box-sizing: border-box;
 }
 .btn {
-    background-color: #ca0202;
-    color: rgb(255, 255, 255);
+    background-color: rgb(30,136,229);
+    color: black;
     padding: 16px 20px;
     margin: 8px 0;
     border: none;
@@ -23,10 +23,10 @@ body {
     opacity: 0.9;
 }
 .btn:hover {
-    background-color: #a70606;
+    background-color: rgb(22, 94, 156);
 }
 .btn:active {
-    background-color: #7c0202;
+    background-color: rgb(16, 63, 104);
 }
 label{
     color:white;
@@ -36,15 +36,15 @@ label{
     margin-bottom: 10%;
 }
 .emtpy{
-    background-color: rgb(238, 238, 238);
+    background-color: rgb(206, 206, 206);
 }
 .full{
-    background-color: rgb(173, 26, 58);
+    background-color: rgb(30,136,229);
 }
 
 .clear{
     transform: scale(60%) translate(0, 30px); 
-    background-color: rgb(124, 18, 41);
+    background-color: rgb(22, 94, 156);
     animation: muovi-destra 0.3s linear;
 }
 

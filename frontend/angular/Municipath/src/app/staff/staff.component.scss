@@ -27,7 +27,7 @@ input[type=text]:focus, input[type=password]:focus {
     outline: none;
 }
 .btn {
-    background-color: #ca0202;
+    background-color: rgb(30,136,229);
     color: rgb(255, 255, 255);
     padding: 16px 20px;
     margin: 8px 0;
@@ -38,10 +38,10 @@ input[type=text]:focus, input[type=password]:focus {
     opacity: 0.9;
 }
 .btn:hover {
-    background-color: #a70606;
+    background-color: rgb(22, 94, 156);
 }
 .btn:active {
-    background-color: #7c0202;
+    background-color: rgb(16, 63, 104);
 }
 label{
     color:white;
